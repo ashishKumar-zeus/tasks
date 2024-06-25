@@ -1,0 +1,259 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    height: 100vh;
+    font-family: "Quicksand", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+
+.mainContainer {
+    height: 100%;
+    background-color: #EEEEEE;
+    display: grid;
+    grid-template-rows: 8% 82% 5% 5%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    background-color: #222222;
+    padding: 20px;
+    border-bottom: 2px solid #31B9E4;
+}
+
+.icon {
+    display: flex;
+}
+
+.icon img {
+    height: 35px;
+    width: 35px;
+    transform: rotate(-30deg);
+}
+
+.icon h4 {
+    display: inline;
+    margin: 0px;
+    align-content: center;
+    color: white;
+    font-size: 28px;
+    margin-left: 8px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.loginSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.loginBox {
+    width: 450px;
+    border-top: 4px solid #3AC7EC;
+    background-color: white;
+}
+
+.loginBox>.title {
+    height: 10%;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    padding: 0px 2vw;
+}
+
+
+
+.title>img {
+    height: 25px;
+    width: 25px;
+    margin: 10px 0px;
+    position: fixed;
+}
+
+.title>p {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 24px;
+}
+
+.my2 {
+    margin: 3vh 0px;
+}
+
+.formPart {
+    padding: 0vh 2vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 500px;
+}
+
+
+.selectOpt {
+    display: flex;
+    align-items: center;
+}
+
+.selectOpt>label {
+    margin-right: 2vw;
+    margin-left: 0.5vw;
+}
+
+.selectOpt>input[type='radio'] {
+    accent-color: green;
+    height: 15px;
+    border: 1px solid green;
+    border-radius: 50%;
+    width: 15px;
+    margin: 0px;
+    appearance: none;
+
+}
+
+.selectOpt>input[type='radio']:checked {
+    appearance: auto;
+
+}
+
+.selects {
+    display: flex;
+    flex-direction: column;
+}
+
+.selects>label {
+    margin-bottom: 1vh;
+    font-size: 10px;
+    color: rgb(172, 170, 170);
+}
+
+.selects>select {
+    border: none;
+    border-bottom: 1px solid rgb(212, 212, 212);
+    outline: none;
+    padding: 0px;
+}
+
+
+.inputs>input {
+    border: none;
+    outline: none;
+    border-bottom: 1px solid rgb(212, 212, 212);
+    width: 100%;
+}
+
+.toRight {
+    text-decoration: none;
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    color: #19aa6e;
+    font-weight: bold;
+    margin: 5px 0px;
+}
+
+
+.rememberMeDiv>input[type="checkbox"] {
+    accent-color: green;
+    height: 15px;
+    width: 15px;
+}
+
+
+.rememberMeDiv>input[type="checkbox"]:checked {
+    appearance: auto;
+}
+
+.btn {
+    text-align: center;
+}
+
+#loginBtn {
+    padding: 10px 55px;
+    background-color: #3FD28B;
+    border: none;
+    font-size: 12px;
+    font-weight: bold;
+
+}
+
+.text-decor-none {
+    text-decoration: none;
+    color: #1F7A54;
+}
+
+.moreInfo {
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.footer {
+    background-color: #E0E1E1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer>.icon>h4 {
+    font-size: 16px;
+    color: black;
+}
+
+.footer>.icon>img {
+    height: 25px;
+    width: 25px;
+}
+footer > p{
+    overflow-wrap: break-word;
+    text-align: center;
+}
+
+.important {
+    font-weight: bold;
+}
+
+.inputs{
+position: relative;
+}
+
+input,
+select {
+    font-family: "Quicksand", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.inputs>img {
+    position: absolute;
+    height: 20px;
+    width: 22px;
+    top: 0;
+    right: 0;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .footer p {
+        font-size: 12px;
+    }
+
+    .loginBox {
+        width: 90%;
+    }
+
+    .title>p {
+        font-size: 20px;
+    }
+
+    
+.mainContainer {
+    grid-template-rows: 8% 78% 5% 9%;
+}
+
+    .footer{
+        flex-direction: column;
+    }
+}

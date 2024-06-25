@@ -1,0 +1,99 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(152, 255, 175);
+    box-sizing: border-box;
+
+}
+
+.container{
+    width: 457px;
+    height: 138px;
+    background-color: white;
+
+
+}
+
+.subcontainer{
+    margin: 4px;
+    display: flex;
+}
+
+.imgSection img{
+    height: 130px;
+    width: 130px;
+    cursor: pointer;
+}
+
+.resetP{
+    padding: 0px;
+    margin: 0px;
+}
+
+.roboto-regular {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .roboto-medium {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  .roboto-bold {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+.textSection{
+    margin-left: 14px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sizeAndColor{
+    font-size: 20px;
+    color: #000000;
+}
+.name{
+    margin-bottom: 14px;
+    cursor: pointer;
+}
+
+.content{
+    margin-bottom: 24px;
+}
+
+.options{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.options img{
+    height: 20px;
+    width: 20px;
+}
+
+.count{
+    display: flex;
+    font-size: 15px;
+    color: #858991;
+    margin-left: 14px;
+    align-items: center;
+}
+
+.item{
+    display: flex;
+    margin-right: 24px;
+    cursor: pointer;
+}
