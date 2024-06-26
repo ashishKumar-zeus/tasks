@@ -15,165 +15,165 @@
 </head>
 
 <body>
-    <div class="mainContainer">
-        <div class="header">
-            <div class="icon">
-                <img src="images/icon_bulb.png" alt="icons">
-                <h4>Quantum</h4>
-            </div>
-            <ul class="navigate">
-                <li class="onlyPC"><a>DASHBOARD</a></li>
-                <li class="onlyPC"><a>CONTENT</a></li>
-                <li class="onlyPC"><a>USERS</a></li>
-                <li class="onlyPC"><a>REPORTS</a></li>
-                <li class="onlyPC"><a>ADMIN</a></li>
-                <a class="links"><i class="fa-solid fa-bell"></i><span>2</span></a>
-                <a class="links"><i class="fa-solid fa-bullhorn"></i><span>1</span></a>
-                <a class="links profile" style="padding: 0px;"><img src="images/profile.jpg" alt=""><span>T</span></a>
-                <span class="onlyPhone"><i class="  fa-solid fa-bars fa-xl "
-                        style="color: #3FD28B;margin-left: 5px;padding: 8px 10px;"></i></span>
-            </ul>
+    <header class="header">
+        <div class="icon">
+            <img src="icons/logo used in header.svg" alt="icons">
+            <!-- <h4>Quantum</h4> -->
         </div>
-        <div class="dashboard">
+        <ul class="navigate">
+            <li class="onlyPC"><a>DASHBOARD</a></li>
+            <li class="onlyPC"><a>CONTENT</a></li>
+            <li class="onlyPC"><a>USERS</a></li>
+            <li class="onlyPC"><a>REPORTS</a></li>
+            <li class="onlyPC"><a>ADMIN</a></li>
+            <a class="links"><img src="icons/alerts.svg" class="navBarIcons"></img><span>2</span></a>
+            <a class="links"><img  src="icons/announcements.svg" ></img><span>1</span></a>
+            <a class="links profile" style="padding: 0px;"><img src="images/profile.jpg" alt=""><span>T</span></a>
+            <span class="onlyPhone"><i class="  fa-solid fa-bars fa-xl "
+                    style="color: #3FD28B;margin-left: 5px;padding: 8px 10px;"></i></span>
+        </ul>
+    </header>
+    <div class="dashboard">
 
-            <div class="section">
-                <div class="course"><i class="fa-solid fa-book-bookmark"
-                        style="margin-right: 5px; font-size: 20px;"></i><span style="font-size: 20px;">4</span> &nbsp;
-                    Courses</div>
-                <div class="classes"><i class="fa-solid fa-user-group"
-                        style="margin-right: 5px; font-size: 20px;"></i><span style="font-size: 20px;">4</span>
-                    &nbsp;Classes</div>
-            </div>
-            <div class="sort">
-                <p>Showing 4 of 4 Courses</p>
-                <div class="filter">
-                    <label for="sortOption">Sort By:</label>
-                    <select name="sortOption" id="sortOption">
-                        <option value="courseName">Course Name</option>
-                    </select>
-                    <i class="fa-solid fa-arrow-up" style="color:#3FD28B ; font-size: 18px; margin-left: 8px;"></i>
-                </div>
-            </div>
-            <div class="cards">
-
-                <div class="individualCard">
-                    <div class="details">
-                        <img src="images/imageMask.png" alt="">
-                        <div class="content">
-                            <p class="headingOfCards" style="font-size: 20px; font-weight: bold;margin-top: 0px;">
-                                Acceleration</p>
-                            <p>Physics &nbsp; | &nbsp;Grade 7 <span style="color: green;font-weight: bold;">+2</span>
-                            </p>
-                            <p><b>4 </b>Units &nbsp;<b>18</b> Lessons &nbsp;<b>24</b> Topics</p>
-                            <select name="classType" id="classType">
-                                <option value="mrFranksClassB">Mr. Franks Class B</option>
-                            </select>
-                            <p>50 Students &nbsp; | &nbsp; 21-Jan-2020 - 21-Aug-2020</p>
-                        </div>
-                        <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-
-                    </div>
-                    <div class="operations">
-                        <i class="fa-solid fa-eye" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-calendar-day" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-briefcase" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-square-poll-vertical" style="color:#1F7A54;font-size: 22px;"></i>
-                    </div>
-                    <!-- <span class="expired">Expired</span> -->
-                </div>
-                <div class="individualCard">
-                    <div class="details">
-                        <img src="images/imageMask-1.png" alt="">
-                        <div class="content">
-                            <p class="headingOfCards" style="font-size: 20px; font-weight: bold;margin-top: 0px;">
-                                Displacement, Velocity and Speed</p>
-                            <p>Physics 2&nbsp; | &nbsp;Grade 6 <span style="color: green;font-weight: bold;">+3</span>
-                            </p>
-                            <p><b>2 </b>Units &nbsp;<b>15</b> Lessons &nbsp;<b>20</b> Topics</p>
-                            <select disabled name="classType" id="classType">
-                                <option value="noClass">No Classes</option>
-                            </select>
-                            <p></p>
-                        </div>
-                        <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-
-                    </div>
-                    <div class="operations">
-                        <i class="fa-solid fa-eye" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-calendar-day" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-briefcase" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-square-poll-vertical" style="color:#1F7A54;font-size: 22px;"></i>
-                    </div>
-                    <!-- <span class="expired">Expired</span> -->
-
-                </div>
-                <div class="individualCard">
-                    <div class="details">
-                        <img src="images/imageMask-3.png" alt="">
-                        <div class="content">
-                            <p class="headingOfCards" style="font-size: 20px; font-weight: bold;margin-top: 0px;">
-                                Introduction to Biology: Micro organisms and how they affect environment</p>
-                            <p>Biology &nbsp; | &nbsp;Grade 4 <span style="color: green;font-weight: bold;">+1</span>
-                            </p>
-                            <p><b>5 </b>Units &nbsp;<b>16</b> Lessons &nbsp;<b>22</b> Topics</p>
-                            <select name="classType" id="classType">
-                                <option value="allClasses">All Classes</option>
-                            </select>
-                            <p>300 Students &nbsp; &nbsp; </p>
-                        </div>
-                        <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-
-                    </div>
-                    <div class="operations">
-                        <i class="fa-solid fa-eye" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-calendar-day" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-briefcase" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-square-poll-vertical" style="color:#1F7A54;font-size: 22px;"></i>
-                    </div>
-                    <!-- <span class="expired">Expired</span> -->
-
-                </div>
-                <div class="individualCard">
-                    <div class="details">
-                        <img src="images/imageMask-2.png" alt="">
-                        <div class="content">
-                            <p class="headingOfCards" style="font-size: 20px; font-weight: bold;margin-top: 0px;">
-                                Introduction to High School Mathematics</p>
-                            <p>Mathematics &nbsp; | &nbsp;Grade 8 <span
-                                    style="color: green;font-weight: bold;">+3</span></p>
-                            <p></p>
-                            <select name="classType" id="classType">
-                                <option value="mrFranksClassA">Mr. Franks Class A</option>
-                            </select>
-                            <p>44 Students &nbsp; | &nbsp;14-Oct-2019 - 20-Oct-2020</p>
-                        </div>
-                        <i class="fa-solid fa-star" style="color: #EEEEEE;"></i>
-
-                    </div>
-                    <div class="operations">
-                        <i class="fa-solid fa-eye" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-calendar-day" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-briefcase" style="color:#1F7A54;font-size: 22px;"></i>
-                        <i class="fa-solid fa-square-poll-vertical" style="color:#1F7A54;font-size: 22px;"></i>
-                    </div>
-                    <span class="expired">Expired</span>
-
-                </div>
-            </div>
-
+        <div class="section">
+            <div class="course"><img src="icons/courses.svg"  style="margin-right: 5px;"></img><span style="font-size: 20px;">4</span> &nbsp;
+                Courses</div>
+            <div class="classes"><img src="icons/classes.svg" style="margin-right: 5px;"></img><span
+                    style="font-size: 20px;">4</span>
+                &nbsp;Classes</div>
         </div>
+        <div class="sort">
+            <p>Showing 4 of 4 Courses</p>
+            <div class="filter">
+                <label for="sortOption">Sort By:</label>
+                <select name="sortOption" id="sortOption">
+                    <option value="courseName">Course Name</option>
+                </select>
+                <img src="icons/sort.svg" style="margin-left: 8px;"></img>
+            </div>
+        </div>
+        <div class="cards">
+
+            <div class="individualCard">
+                <div class="details">
+                    <img src="images/imageMask.png" alt="CourseImg">
+                    <div class="content">
+                        <p class="headingOfCards" style="font-size: 20px; font-weight: bold;margin-top: 0px;">
+                            Acceleration</p>
+                        <p>Physics &nbsp; | &nbsp;Grade 7 <span style="color: green;font-weight: bold;">+2</span>
+                        </p>
+                        <p><b>4 </b>Units &nbsp;<b>18</b> Lessons &nbsp;<b>24</b> Topics</p>
+                        <select name="classType" id="classType">
+                            <option value="mrFranksClassB">Mr. Franks Class B</option>
+                        </select>
+                        <p>50 Students &nbsp; | &nbsp; 21-Jan-2020 - 21-Aug-2020</p>
+                    </div>
+                    <img class="favIcon" src="icons/favourite.svg" style="height: 35px;"></img>
+
+                </div>
+                <div class="operations">
+                    <img src="icons/preview.svg"  style="font-size: 22px;"></img>
+                    <img src="icons/manage course.svg"  style="font-size: 22px;"></img>
+                    <img src="icons/grade submissions.svg" style="font-size: 22px;"></img>
+                    <img src="icons/reports.svg"  style="font-size: 22px;"></img>
+                </div>
+                <!-- <span class="expired">Expired</span> -->
+            </div>
+            <div class="individualCard">
+                <div class="details">
+                    <img src="images/imageMask-1.png" alt="">
+                    <div class="content">
+                        <p class="headingOfCards" style="font-size: 20px; font-weight: bold;margin-top: 0px;">
+                            Displacement, Velocity and Speed</p>
+                        <p>Physics 2&nbsp; | &nbsp;Grade 6 <span style="color: green;font-weight: bold;">+3</span>
+                        </p>
+                        <p><b>2 </b>Units &nbsp;<b>15</b> Lessons &nbsp;<b>20</b> Topics</p>
+                        <select disabled name="classType" id="classType">
+                            <option value="noClass">No Classes</option>
+                        </select>
+                        <p></p>
+                    </div>
+                    <img  class="favIcon" src="icons/favourite.svg" style="height: 35px;"></img>
+
+                </div>
+                <div class="operations">
+                    <img src="icons/preview.svg"  style="font-size: 22px;"></img>
+                    <img src="icons/manage course.svg" class="opacityMedium"  style="font-size: 22px;"></img>
+                    <img src="icons/grade submissions.svg" class="opacityMedium" style="font-size: 22px;"></img>
+                    <img src="icons/reports.svg"  style="font-size: 22px;"></img>
+                </div>
+                <!-- <span class="expired">Expired</span> -->
+
+            </div>
+            <div class="individualCard">
+                <div class="details">
+                    <img src="images/imageMask-3.png" alt="">
+                    <div class="content">
+                        <p class="headingOfCards" style="font-size: 20px; font-weight: bold;margin-top: 0px;">
+                            Introduction to Biology: Micro organisms and how they affect environment</p>
+                        <p>Biology &nbsp; | &nbsp;Grade 4 <span style="color: green;font-weight: bold;">+1</span>
+                        </p>
+                        <p><b>5 </b>Units &nbsp;<b>16</b> Lessons &nbsp;<b>22</b> Topics</p>
+                        <select name="classType" id="classType">
+                            <option value="allClasses">All Classes</option>
+                        </select>
+                        <p>300 Students &nbsp; &nbsp; </p>
+                    </div>
+                    <img class="favIcon"  src="icons/favourite.svg" style="height: 35px;"></img>
+
+                </div>
+                <div class="operations">
+                    <img src="icons/preview.svg"  style="font-size: 22px;"></img>
+                    <img src="icons/manage course.svg" class="opacityMedium"  style="font-size: 22px;"></img>
+                    <img src="icons/grade submissions.svg" class="opacityMedium" style="font-size: 22px;"></img>
+                    <img src="icons/reports.svg"  style="font-size: 22px;"></img>
+                </div>
+                <!-- <span class="expired">Expired</span> -->
+
+            </div>
+            <div class="individualCard">
+                <div class="details">
+                    <img src="images/imageMask-2.png" alt="">
+                    <div class="content">
+                        <p class="headingOfCards" style="font-size: 20px; font-weight: bold;margin-top: 0px;">
+                            Introduction to High School Mathematics</p>
+                        <p>Mathematics &nbsp; | &nbsp;Grade 8 <span style="color: green;font-weight: bold;">+3</span>
+                        </p>
+                        <p></p>
+                        <select name="classType" id="classType">
+                            <option value="mrFranksClassA">Mr. Franks Class A</option>
+                        </select>
+                        <p>44 Students &nbsp; | &nbsp;14-Oct-2019 - 20-Oct-2020</p>
+                    </div>
+                    <img class="favIcon"   src="icons/favourite.svg"  style="height: 35px;opacity: 0.2;"></img>
+
+                </div>
+                <div class="operations">
+                    <img src="icons/preview.svg"  style="font-size: 22px;"></img>
+                    <img src="icons/manage course.svg"  style="font-size: 22px;"></img>
+                    <img src="icons/grade submissions.svg" style="font-size: 22px;"></img>
+                    <img src="icons/reports.svg"  style="font-size: 22px;"></img>
+                </div>
+                <span class="expired">Expired</span>
+
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+
         <div class="moreInfo">
             <a href="" class="text-decor-none">About</a> | <a href="" class="text-decor-none">Contact Us</a>
         </div>
         <div class="footer">
             <div class="icon">
-                <img src="images/icon_bulb.png" alt="icons">
-                <h4>Quantum</h4>
+                <img src="icons/logo used in footer.svg" alt="icons">
             </div>
             <p>&nbsp | &nbsp Copywrite &copy 2020-2021 <span class="important">Zeus Systems Pvt. Ltd.</span> &nbsp All
                 rights reserved</p>
         </div>
-    </div>
+    </footer>
 </body>
 
 </html>
