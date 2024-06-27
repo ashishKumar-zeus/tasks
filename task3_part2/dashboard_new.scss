@@ -1,0 +1,282 @@
+$bg_body : #EEEEEE;
+$body_padding: 0px 5%;
+$header_icon_height: 40px;
+$header_items_color: #3FD28B;
+$primary_greenColor: #3FD28B;
+
+
+@mixin resetToNormal {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+@mixin alignCenterFlex {
+    display: flex;
+    align-items: center;
+}
+
+@mixin gapFromSide {
+    padding: 0px 5%;
+}
+
+@mixin setSelectElement {
+
+    font-size: 18px;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid gray;
+}
+
+body {
+
+    font-family: "Quicksand", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+    @include resetToNormal();
+    background-color: $bg_body;
+
+
+    .header {
+        @include alignCenterFlex();
+        @include gapFromSide();
+        justify-content: space-between;
+        background-color: #222222;
+        height: 8vh;
+        border-bottom: 2px solid #31B9E4;
+
+        .icon {
+            display: flex;
+            height: $header_icon_height;
+        }
+
+        ul {
+            @include resetToNormal();
+            display: flex;
+            justify-content: space-around;
+            height: 100%;
+
+            li {
+                @include alignCenterFlex();
+                list-style-type: none;
+
+                &:active {
+                    border-bottom: 5px solid white;
+                }
+
+                a {
+                    color: $header_items_color;
+                    text-decoration: none;
+                    padding: 8px 8px;
+                    font-weight: bold;
+                }
+
+                &:hover a {
+                    color: white;
+                }
+            }
+
+            .links {
+                padding: 8px 10px;
+                margin: auto 10px;
+                position: relative;
+
+                span {
+
+                    height: 20px;
+                    width: 20px;
+                    border-radius: 50%;
+                    background-color: #2A7FF3;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    color: white;
+                    text-align: center;
+                }
+            }
+
+            .profile {
+
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                background-color: #3FD28B;
+                text-align: center;
+                justify-content: center;
+                padding: 0px;
+
+                span {
+
+                    top: -20%;
+                    right: -20%;
+                    background-color: white;
+                    color: black;
+                    font-weight: bold;
+                }
+
+                img {
+
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+            }
+
+            .onlyPhone {
+                display: none;
+
+            }
+
+        }
+
+    }
+
+
+
+    .dashboard {
+        @include gapFromSide();
+        padding-top: 30px;
+        padding-bottom: 30px;
+
+
+        .section {
+            background-color: $primary_greenColor;
+            display: flex;
+            height: 10vh;
+
+
+            .course,
+            .classes {
+                @include alignCenterFlex();
+                width: 50%;
+                justify-content: center;
+                font-weight: bold;
+                box-sizing: border-box;
+
+
+                &:hover {
+                    border-bottom: 5px solid black;
+                }
+
+            }
+        }
+
+        .sort {
+            @include alignCenterFlex();
+            justify-content: space-between;
+            font-size: 14px;
+            height: 10vh;
+            border-bottom: 1px solid gray;
+
+
+            .filter {
+
+                width: 35%;
+                text-align: right;
+
+
+                select {
+                    @include setSelectElement();
+                    width: 75%;
+                }
+
+            }
+        }
+
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+            padding: 20px 0px;
+
+
+
+            .individualCard {
+                position: relative;
+                height: 280px;
+                background-color: white;
+                display: flex;
+                flex-direction: column;
+
+                .details {
+                    @include alignCenterFlex();
+                    height: 78%;
+                    position: relative;
+                    margin: 30px 30px;
+
+                    .content {
+                        width: 100%;
+                        padding: 0px 20px;
+                        font-size: 12px;
+
+
+                        .headingOfCards {
+                            width: 90%;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 2;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+
+                        p {
+                            margin: 8px 0px;
+                        }
+
+                        select {
+                            @include setSelectElement();
+                        }
+
+                    }
+
+
+                    .favIcon {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                    }
+
+                }
+
+
+                .operations {
+                    @include alignCenterFlex();
+                    height: 22%;
+                    margin: 0px 30px;
+                    border-top: 1px solid gray;
+                    justify-content: space-around;
+
+                    .opacityMedium {
+                        opacity: 0.4;
+                    }
+                }
+
+                .expired {
+
+                    color: red;
+                    background-color: #FFE4E6;
+                    width: fit-content;
+                    padding: 2px 10px;
+                    position: absolute;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                }
+            }
+
+
+        }
+
+
+
+
+    }
+
+
+
+}
