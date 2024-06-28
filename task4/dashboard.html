@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="dashboard_new.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
@@ -26,12 +26,62 @@
             <li class="onlyPC"><a>USERS</a></li>
             <li class="onlyPC"><a>REPORTS</a></li>
             <li class="onlyPC"><a>ADMIN</a></li>
-            <a class="links"><img src="icons/alerts.svg" class="navBarIcons"></img><span>2</span></a>
-            <a class="links"><img src="icons/announcements.svg"></img><span>1</span></a>
-            <a class="links profile" style="padding: 0px;"><img src="images/profile.jpg" alt=""><span>T</span></a>
-            <span class="onlyPhone"><i class="  fa-solid fa-bars fa-xl "
-                    style="color: #3FD28B;margin-left: 5px;padding: 8px 10px;"></i></span>
+            <a class="links">
+                <div class="img">
+                    <img src="icons/alerts.svg"></img><span>2</span>
+                </div>
+
+                <div class="alertDetails">
+                    <li class="nav">DASHBOARD</li>
+                    <li class="nav">CONTENT
+                        <div class="subNav">COURSE CATELOG</div>
+                    </li>
+                    <li class="nav">USERS
+                        <div class="subNav">SHIV</div>
+                        <div class="subNav">ROHAN</div>
+                    </li>
+                    <li class="nav">REPORTS
+                        <div class="subNav">REPORT 1</div>
+                        <div class="subNav">REPORT 2</div>
+
+                    </li>
+                    <li class="nav">ADMIN
+                        <div class="subNav">PROFILE</div>
+                        <div class="subNav">LOGOUT</div>
+
+                    </li>
+                </div>
+            </a>
+            <a class="links"><div class="img">
+                <img src="icons/announcements.svg"></img><span>1</span>
+            </div></a>
+            <a class="links profile" style="padding: 0px;"><div class="img">
+                <img src="images/profile.jpg" alt=""><span>T</span>
+            </div></a>
+            <a class="links onlyPhone"><img src="icons/hamburger-menu.svg"></img>
+            </a>
         </ul>
+        <div class="horizontalNav">
+            <li class="nav">DASHBOARD</li>
+            <li class="nav">CONTENT
+                <div class="subNav">COURSE CATELOG</div>
+            </li>
+            <li class="nav">USERS
+                <div class="subNav">SHIV</div>
+                <div class="subNav">ROHAN</div>
+            </li>
+            <li class="nav">REPORTS
+                <div class="subNav">REPORT 1</div>
+                <div class="subNav">REPORT 2</div>
+
+            </li>
+            <li class="nav">ADMIN
+                <div class="subNav">PROFILE</div>
+                <div class="subNav">LOGOUT</div>
+
+            </li>
+        </div>
+
     </header>
     <div class="dashboard">
 
@@ -163,7 +213,6 @@
     </div>
 
     <footer>
-
         <div class="moreInfo">
             <a href="" class="text-decor-none">About</a> | <a href="" class="text-decor-none">Contact Us</a>
         </div>

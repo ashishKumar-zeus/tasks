@@ -7,20 +7,20 @@ body {
   box-sizing: border-box;
   background-color: #EEEEEE;
 }
-body .header {
+body > .header {
   display: flex;
   align-items: center;
   padding: 0px 5%;
   justify-content: space-between;
   background-color: #222222;
-  height: 8vh;
+  height: 10vh;
   border-bottom: 2px solid #31B9E4;
 }
-body .header .icon {
+body > .header > .icon {
   display: flex;
   height: 40px;
 }
-body .header ul {
+body > .header > ul {
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
@@ -28,63 +28,74 @@ body .header ul {
   justify-content: space-around;
   height: 100%;
 }
-body .header ul li {
+body > .header > ul > li {
   display: flex;
   align-items: center;
   list-style-type: none;
 }
-body .header ul li:active {
+body > .header > ul > li:active {
   border-bottom: 5px solid white;
 }
-body .header ul li a {
+body > .header > ul > li > a {
   color: #3FD28B;
   text-decoration: none;
   padding: 8px 8px;
   font-weight: bold;
 }
-body .header ul li:hover a {
+body > .header > ul > li:hover a {
   color: white;
 }
-body .header ul .links {
-  padding: 8px 10px;
-  margin: auto 10px;
+body > .header > ul > .links {
+  padding: auto 20px;
+  margin: 0px 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+body > .header > ul > .links img {
+  height: 30px;
+}
+body > .header > ul > .links > .img {
   position: relative;
 }
-body .header ul .links span {
+body > .header > ul > .links > .img > span {
   height: 20px;
   width: 20px;
   border-radius: 50%;
   background-color: #2A7FF3;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -5px;
+  right: -5px;
   color: white;
   text-align: center;
 }
-body .header ul .profile {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background-color: #3FD28B;
-  text-align: center;
-  justify-content: center;
-  padding: 0px;
+body > .header > ul > .links .alertDetails {
+  border: 2px solid red;
+  background-color: white;
+  position: absolute;
+  top: 0;
+  right: 0px;
 }
-body .header ul .profile span {
+body > .header > ul > .profile > .img > span {
   top: -20%;
   right: -20%;
   background-color: white;
   color: black;
   font-weight: bold;
 }
-body .header ul .profile img {
+body > .header > ul > .profile > .img > img {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   -o-object-fit: cover;
      object-fit: cover;
+  border: 3px solid #3FD28B;
 }
-body .header ul .onlyPhone {
+body > .header > ul > .onlyPhone {
+  display: none;
+  margin: auto 0px;
+}
+body > .header > .horizontalNav {
   display: none;
 }
 body .dashboard {
@@ -129,6 +140,9 @@ body .dashboard .sort .filter select {
   border: none;
   outline: none;
   border-bottom: 1px solid gray;
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
   width: 75%;
 }
 body .dashboard .cards {
@@ -174,6 +188,9 @@ body .dashboard .cards .individualCard .details .content select {
   border: none;
   outline: none;
   border-bottom: 1px solid gray;
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
 }
 body .dashboard .cards .individualCard .details .favIcon {
   position: absolute;
@@ -200,4 +217,101 @@ body .dashboard .cards .individualCard .expired {
   position: absolute;
   font-weight: bold;
   text-transform: uppercase;
+}
+body footer .moreInfo {
+  text-align: center;
+  padding: 20px 0px;
+}
+body footer .moreInfo a {
+  text-decoration: none;
+  color: #3FD28B;
+}
+body footer .footer {
+  background-color: #E0E1E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0px;
+}
+body footer .footer .icon {
+  height: 30px;
+}
+body footer .footer .important {
+  font-weight: bold;
+}
+
+@media only screen and (max-width: 1024px) {
+  body .header {
+    padding: 0px 2%;
+  }
+  body .dashboard {
+    padding: 0px 5%;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  body .dashboard .sort .filter {
+    width: 60%;
+  }
+  body .dashboard .sort .filter label {
+    text-align: center;
+  }
+  body .dashboard .cards .individualCard .details {
+    margin: 15px 15px;
+  }
+}
+@media only screen and (max-width: 1024px) and (min-width: 769px) {
+  .cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media only screen and (max-width: 768px) {
+  body .header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  body .header ul .onlyPC {
+    display: none;
+  }
+  body .header ul .onlyPhone {
+    display: inline;
+  }
+  body .header > .horizontalNav {
+    background-color: white;
+    height: -moz-fit-content;
+    height: fit-content;
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 10vh;
+    right: 5%;
+    z-index: 5;
+    box-shadow: 10px 10px 8px #dadada;
+  }
+  body .header > .horizontalNav > li {
+    padding: 12px 12px;
+    list-style-type: none;
+    color: #2b9c6d;
+    font-weight: bold;
+  }
+  body .header > .horizontalNav > li > div {
+    display: none;
+    margin-top: 15px;
+    padding: 12px 12px;
+    color: #2b9c6d;
+    font-weight: bold;
+  }
+  body .header > .horizontalNav > li:hover {
+    background-color: #F3F3F3;
+  }
+  body .header > .horizontalNav > li:hover div {
+    display: block;
+  }
+  body .dashboard .cards .individualCard {
+    max-width: 90vw;
+  }
+  body footer .footer p {
+    font-size: 10px;
+  }
 }/*# sourceMappingURL=dashboard_new.css.map */
