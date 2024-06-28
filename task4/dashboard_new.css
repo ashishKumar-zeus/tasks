@@ -7,10 +7,13 @@ body {
   box-sizing: border-box;
   background-color: #EEEEEE;
 }
+body .dNone {
+  display: none;
+}
 body > .header {
   display: flex;
   align-items: center;
-  padding: 0px 5%;
+  padding: 0px 2%;
   justify-content: space-between;
   background-color: #222222;
   height: 10vh;
@@ -46,8 +49,7 @@ body > .header > ul > li:hover a {
   color: white;
 }
 body > .header > ul > .links {
-  padding: auto 20px;
-  margin: 0px 10px;
+  padding: 0px 10px;
   position: relative;
   display: flex;
   align-items: center;
@@ -69,12 +71,104 @@ body > .header > ul > .links > .img > span {
   color: white;
   text-align: center;
 }
+body > .header > ul > .links > .announcements,
 body > .header > ul > .links .alertDetails {
-  border: 2px solid red;
   background-color: white;
   position: absolute;
-  top: 0;
+  top: 10vh;
   right: 0px;
+  width: 320px;
+  max-height: 550px;
+  overflow-y: auto;
+  z-index: 5;
+  box-shadow: 10px 10px 8px #dadada;
+}
+> body > .header > ul > .links > .announcements::-webkit-scrollbar,
+> body > .header > ul > .links .alertDetails::-webkit-scrollbar {
+  width: 5px;
+}
+> body > .header > ul > .links > .announcements::-webkit-scrollbar-track,
+> body > .header > ul > .links .alertDetails::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+> body > .header > ul > .links > .announcements::-webkit-scrollbar-thumb,
+> body > .header > ul > .links .alertDetails::-webkit-scrollbar-thumb {
+  background: #888;
+}
+> body > .header > ul > .links > .announcements::-webkit-scrollbar-thumb:hover,
+> body > .header > ul > .links .alertDetails::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+body > .header > ul > .links > .announcements > .individualAnnouncements,
+body > .header > ul > .links > .announcements .individualAlert,
+body > .header > ul > .links .alertDetails > .individualAnnouncements,
+body > .header > ul > .links .alertDetails .individualAlert {
+  padding: 10px;
+  border-bottom: 1px solid grey;
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+body > .header > ul > .links > .announcements > .individualAnnouncements > p,
+body > .header > ul > .links > .announcements .individualAlert > p,
+body > .header > ul > .links .alertDetails > .individualAnnouncements > p,
+body > .header > ul > .links .alertDetails .individualAlert > p {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  margin: 5px 0px;
+}
+body > .header > ul > .links > .announcements > .individualAnnouncements > .author,
+body > .header > ul > .links > .announcements > .individualAnnouncements .information,
+body > .header > ul > .links > .announcements .individualAlert > .author,
+body > .header > ul > .links > .announcements .individualAlert .information,
+body > .header > ul > .links .alertDetails > .individualAnnouncements > .author,
+body > .header > ul > .links .alertDetails > .individualAnnouncements .information,
+body > .header > ul > .links .alertDetails .individualAlert > .author,
+body > .header > ul > .links .alertDetails .individualAlert .information {
+  font-size: 14px;
+}
+body > .header > ul > .links > .announcements > .individualAnnouncements > .title,
+body > .header > ul > .links > .announcements .individualAlert > .title,
+body > .header > ul > .links .alertDetails > .individualAnnouncements > .title,
+body > .header > ul > .links .alertDetails .individualAlert > .title {
+  font-size: 16px;
+  font-weight: bold;
+}
+body > .header > ul > .links > .announcements > .individualAnnouncements .more,
+body > .header > ul > .links > .announcements .individualAlert .more,
+body > .header > ul > .links .alertDetails > .individualAnnouncements .more,
+body > .header > ul > .links .alertDetails .individualAlert .more {
+  display: flex;
+  font-size: 12px;
+  justify-content: space-between;
+}
+body > .header > ul > .links > .announcements > .ticked,
+body > .header > ul > .links .alertDetails > .ticked {
+  background-color: #FFFFEE;
+}
+body > .header > ul > .links > .announcements > .buttons,
+body > .header > ul > .links .alertDetails > .buttons {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  height: 50px;
+}
+body > .header > ul > .links > .announcements > .buttons > button,
+body > .header > ul > .links .alertDetails > .buttons > button {
+  border: none;
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  outline: none;
+  border: 1px solid #dadada;
+  width: 50%;
+  height: 100%;
+  background-color: white;
+  color: #2b9c6d;
+}
+body > .header > ul > .links > .alertDetails > .buttons > button {
+  width: 100%;
 }
 body > .header > ul > .profile > .img > span {
   top: -20%;
@@ -98,18 +192,18 @@ body > .header > ul > .onlyPhone {
 body > .header > .horizontalNav {
   display: none;
 }
-body .dashboard {
-  padding: 0px 5%;
+body > .dashboard {
+  padding: 0px 2%;
   padding-top: 30px;
   padding-bottom: 30px;
 }
-body .dashboard .section {
+body > .dashboard > .section {
   background-color: #3FD28B;
   display: flex;
   height: 10vh;
 }
-body .dashboard .section .course,
-body .dashboard .section .classes {
+body > .dashboard > .section > .course,
+body > .dashboard > .section .classes {
   display: flex;
   align-items: center;
   width: 50%;
@@ -117,11 +211,11 @@ body .dashboard .section .classes {
   font-weight: bold;
   box-sizing: border-box;
 }
-body .dashboard .section .course:hover,
-body .dashboard .section .classes:hover {
+body > .dashboard > .section > .course:hover,
+body > .dashboard > .section .classes:hover {
   border-bottom: 5px solid black;
 }
-body .dashboard .sort {
+body > .dashboard > .sort {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -129,11 +223,11 @@ body .dashboard .sort {
   height: 10vh;
   border-bottom: 1px solid gray;
 }
-body .dashboard .sort .filter {
+body > .dashboard > .sort > .filter {
   width: 35%;
   text-align: right;
 }
-body .dashboard .sort .filter select {
+body > .dashboard > .sort > .filter select {
   font-size: 18px;
   font-weight: bold;
   background-color: transparent;
@@ -145,32 +239,32 @@ body .dashboard .sort .filter select {
   font-style: normal;
   width: 75%;
 }
-body .dashboard .cards {
+body > .dashboard > .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   gap: 20px;
   padding: 20px 0px;
 }
-body .dashboard .cards .individualCard {
+body > .dashboard > .cards > .individualCard {
   position: relative;
   height: 280px;
   background-color: white;
   display: flex;
   flex-direction: column;
 }
-body .dashboard .cards .individualCard .details {
+body > .dashboard > .cards > .individualCard > .details {
   display: flex;
   align-items: center;
   height: 78%;
   position: relative;
   margin: 30px 30px;
 }
-body .dashboard .cards .individualCard .details .content {
+body > .dashboard > .cards > .individualCard > .details > .content {
   width: 100%;
   padding: 0px 20px;
   font-size: 12px;
 }
-body .dashboard .cards .individualCard .details .content .headingOfCards {
+body > .dashboard > .cards > .individualCard > .details > .content .headingOfCards {
   width: 90%;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -178,10 +272,10 @@ body .dashboard .cards .individualCard .details .content .headingOfCards {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-body .dashboard .cards .individualCard .details .content p {
+body > .dashboard > .cards > .individualCard > .details > .content p {
   margin: 8px 0px;
 }
-body .dashboard .cards .individualCard .details .content select {
+body > .dashboard > .cards > .individualCard > .details > .content select {
   font-size: 18px;
   font-weight: bold;
   background-color: transparent;
@@ -192,12 +286,12 @@ body .dashboard .cards .individualCard .details .content select {
   font-optical-sizing: auto;
   font-style: normal;
 }
-body .dashboard .cards .individualCard .details .favIcon {
+body > .dashboard > .cards > .individualCard > .details .favIcon {
   position: absolute;
   top: 0;
   right: 0;
 }
-body .dashboard .cards .individualCard .operations {
+body > .dashboard > .cards > .individualCard > .operations {
   display: flex;
   align-items: center;
   height: 22%;
@@ -205,10 +299,10 @@ body .dashboard .cards .individualCard .operations {
   border-top: 1px solid gray;
   justify-content: space-around;
 }
-body .dashboard .cards .individualCard .operations .opacityMedium {
+body > .dashboard > .cards > .individualCard > .operations .opacityMedium {
   opacity: 0.4;
 }
-body .dashboard .cards .individualCard .expired {
+body > .dashboard > .cards > .individualCard > .expired {
   color: red;
   background-color: #FFE4E6;
   width: -moz-fit-content;
@@ -218,49 +312,45 @@ body .dashboard .cards .individualCard .expired {
   font-weight: bold;
   text-transform: uppercase;
 }
-body footer .moreInfo {
+body > footer > .moreInfo {
   text-align: center;
   padding: 20px 0px;
 }
-body footer .moreInfo a {
+body > footer > .moreInfo > a {
   text-decoration: none;
   color: #3FD28B;
 }
-body footer .footer {
+body > footer > .footer {
   background-color: #E0E1E1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 10px 0px;
 }
-body footer .footer .icon {
+body > footer > .footer > .icon {
   height: 30px;
 }
-body footer .footer .important {
+body > footer > .footer > .important {
   font-weight: bold;
 }
 
 @media only screen and (max-width: 1024px) {
-  body .header {
-    padding: 0px 2%;
-  }
-  body .dashboard {
-    padding: 0px 5%;
+  body > .dashboard {
     padding-top: 30px;
     padding-bottom: 30px;
   }
-  body .dashboard .sort .filter {
+  body > .dashboard .sort .filter {
     width: 60%;
   }
-  body .dashboard .sort .filter label {
+  body > .dashboard .sort .filter label {
     text-align: center;
   }
-  body .dashboard .cards .individualCard .details {
+  body > .dashboard > .cards .individualCard .details {
     margin: 15px 15px;
   }
 }
 @media only screen and (max-width: 1024px) and (min-width: 769px) {
-  .cards {
+  body > .dashboard > .cards {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -281,7 +371,7 @@ body footer .footer .important {
     height: -moz-fit-content;
     height: fit-content;
     width: 280px;
-    display: flex;
+    display: none;
     flex-direction: column;
     position: absolute;
     top: 10vh;
@@ -308,8 +398,13 @@ body footer .footer .important {
   body .header > .horizontalNav > li:hover div {
     display: block;
   }
-  body .dashboard .cards .individualCard {
-    max-width: 90vw;
+  body .header > .dFlex {
+    display: flex;
+  }
+  body > .dashboard > .cards > .individualCard {
+    margin: 0px auto;
+    width: 80vw;
+    max-width: 80vw;
   }
   body footer .footer p {
     font-size: 10px;
