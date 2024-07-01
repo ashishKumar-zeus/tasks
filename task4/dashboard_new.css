@@ -99,9 +99,9 @@ body > .header > ul > .links .alertDetails {
 > body > .header > ul > .links .alertDetails::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-body > .header > ul > .links > .announcements > .individualAnnouncements,
+body > .header > ul > .links > .announcements .individualAnnouncements,
 body > .header > ul > .links > .announcements .individualAlert,
-body > .header > ul > .links .alertDetails > .individualAnnouncements,
+body > .header > ul > .links .alertDetails .individualAnnouncements,
 body > .header > ul > .links .alertDetails .individualAlert {
   padding: 10px;
   border-bottom: 1px solid grey;
@@ -109,53 +109,53 @@ body > .header > ul > .links .alertDetails .individualAlert {
   font-optical-sizing: auto;
   font-style: normal;
 }
-body > .header > ul > .links > .announcements > .individualAnnouncements > p,
+body > .header > ul > .links > .announcements .individualAnnouncements > p,
 body > .header > ul > .links > .announcements .individualAlert > p,
-body > .header > ul > .links .alertDetails > .individualAnnouncements > p,
+body > .header > ul > .links .alertDetails .individualAnnouncements > p,
 body > .header > ul > .links .alertDetails .individualAlert > p {
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
   margin: 5px 0px;
 }
-body > .header > ul > .links > .announcements > .individualAnnouncements > .author,
-body > .header > ul > .links > .announcements > .individualAnnouncements .information,
+body > .header > ul > .links > .announcements .individualAnnouncements > .author,
+body > .header > ul > .links > .announcements .individualAnnouncements .information,
 body > .header > ul > .links > .announcements .individualAlert > .author,
 body > .header > ul > .links > .announcements .individualAlert .information,
-body > .header > ul > .links .alertDetails > .individualAnnouncements > .author,
-body > .header > ul > .links .alertDetails > .individualAnnouncements .information,
+body > .header > ul > .links .alertDetails .individualAnnouncements > .author,
+body > .header > ul > .links .alertDetails .individualAnnouncements .information,
 body > .header > ul > .links .alertDetails .individualAlert > .author,
 body > .header > ul > .links .alertDetails .individualAlert .information {
   font-size: 14px;
 }
-body > .header > ul > .links > .announcements > .individualAnnouncements > .title,
+body > .header > ul > .links > .announcements .individualAnnouncements > .title,
 body > .header > ul > .links > .announcements .individualAlert > .title,
-body > .header > ul > .links .alertDetails > .individualAnnouncements > .title,
+body > .header > ul > .links .alertDetails .individualAnnouncements > .title,
 body > .header > ul > .links .alertDetails .individualAlert > .title {
   font-size: 16px;
   font-weight: bold;
 }
-body > .header > ul > .links > .announcements > .individualAnnouncements .more,
+body > .header > ul > .links > .announcements .individualAnnouncements .more,
 body > .header > ul > .links > .announcements .individualAlert .more,
-body > .header > ul > .links .alertDetails > .individualAnnouncements .more,
+body > .header > ul > .links .alertDetails .individualAnnouncements .more,
 body > .header > ul > .links .alertDetails .individualAlert .more {
   display: flex;
   font-size: 12px;
   justify-content: space-between;
 }
-body > .header > ul > .links > .announcements > .ticked,
-body > .header > ul > .links .alertDetails > .ticked {
+body > .header > ul > .links > .announcements .ticked,
+body > .header > ul > .links .alertDetails .ticked {
   background-color: #FFFFEE;
 }
-body > .header > ul > .links > .announcements > .buttons,
-body > .header > ul > .links .alertDetails > .buttons {
+body > .header > ul > .links > .announcements .buttons,
+body > .header > ul > .links .alertDetails .buttons {
   position: sticky;
   bottom: 0;
   display: flex;
   height: 50px;
 }
-body > .header > ul > .links > .announcements > .buttons > button,
-body > .header > ul > .links .alertDetails > .buttons > button {
+body > .header > ul > .links > .announcements .buttons > button,
+body > .header > ul > .links .alertDetails .buttons > button {
   border: none;
   margin: 0px;
   padding: 0px;
@@ -167,7 +167,7 @@ body > .header > ul > .links .alertDetails > .buttons > button {
   background-color: white;
   color: #2b9c6d;
 }
-body > .header > ul > .links > .alertDetails > .buttons > button {
+body > .header > ul > .links > .alertDetails .buttons > button {
   width: 100%;
 }
 body > .header > ul > .profile > .img > span {
@@ -227,7 +227,7 @@ body > .dashboard > .sort > .filter {
   width: 35%;
   text-align: right;
 }
-body > .dashboard > .sort > .filter select {
+body > .dashboard > .sort > .filter > select {
   font-size: 18px;
   font-weight: bold;
   background-color: transparent;
@@ -285,6 +285,7 @@ body > .dashboard > .cards > .individualCard > .details > .content select {
   font-family: "Quicksand", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
+  width: 80%;
 }
 body > .dashboard > .cards > .individualCard > .details .favIcon {
   position: absolute;

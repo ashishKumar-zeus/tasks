@@ -1,6 +1,4 @@
 $bg_body : #EEEEEE;
-// $body_padding_1024plus: 0px 5%;
-// $body_padding_768plus: 0px 2%;
 $header_icon_height: 40px;
 $header_items_color: #3FD28B;
 $primary_greenColor: #3FD28B;
@@ -156,7 +154,7 @@ body {
                     }
 
 
-                    >.individualAnnouncements,
+                    .individualAnnouncements,
                     .individualAlert {
 
                         padding: 10px;
@@ -189,11 +187,11 @@ body {
 
 
 
-                    >.ticked {
+                    .ticked {
                         background-color: #FFFFEE;
                     }
 
-                    >.buttons {
+                    .buttons {
                         position: sticky;
                         bottom: 0;
                         display: flex;
@@ -220,11 +218,9 @@ body {
 
                 }
 
-
-
                 >.alertDetails {
 
-                    >.buttons {
+                    .buttons {
                         >button {
 
                             width: 100%;
@@ -315,7 +311,7 @@ body {
                 text-align: right;
 
 
-                select {
+                >select {
                     @include setSelectElement();
                     @include setFont();
                     width: 75%;
@@ -367,6 +363,7 @@ body {
                         select {
                             @include setSelectElement();
                             @include setFont();
+                            width: 80%;
                         }
 
                     }
