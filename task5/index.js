@@ -1,3 +1,4 @@
+
 //imports
 import { Scroll } from '../scripts/scroll.js'
 // import {Canvas} from '../scripts/canvas.js'
@@ -5,7 +6,7 @@ import { Scroll } from '../scripts/scroll.js'
 import { MiniCanvas } from './scripts/miniCanvas.js';
 
 
-import {LinkedList} from './scripts/linkedList.js'
+import { LinkedList } from './scripts/linkedList.js'
 
 //onPageLoaded
 document.addEventListener('DOMContentLoaded', (e) => {
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const spreadsheetCanvas = document.getElementById('spreadsheetCanvas')
 
     //intiating ScrollFunctionalities
-    new Scroll(fullCanvas,horizontalBar,horizontalScroll,verticalBar,verticalScroll);
+    new Scroll(fullCanvas, horizontalBar, horizontalScroll, verticalBar, verticalScroll);
 
     //initiating Canvas Formation
     const numOfCols = 20;
@@ -34,32 +35,58 @@ document.addEventListener('DOMContentLoaded', (e) => {
     const initialHeight = 30;
 
 
-    let miniCanvas  = new MiniCanvas(10,10,100,30,60,30)
-    // mini.resizeColumn(1,50)
-    // mini.printArrs()
+    let miniCanvas = new MiniCanvas(10, 10, 100, 30, 60, 30)
 
     const horizontalArr = miniCanvas.horizontalArr;
     const verticalArr = miniCanvas.verticalArr;
 
-    const ll = new LinkedList(horizontalArr,verticalArr);
-    ll.createNewNode(1,1,"a");
-    ll.createNewNode(2,3,"b");
-    ll.createNewNode(1,3,"c");
-    ll.createNewNode(1,2,"d");
-    ll.createNewNode(2,2,"e");
-    ll.createNewNode(5,4,"f");
+    const ll = new LinkedList(horizontalArr, verticalArr, miniCanvas);
+    ll.createNewNode(1, 1, "a");
+    ll.createNewNode(1, 2, "a");
+    ll.createNewNode(1, 3, "a");
+    ll.createNewNode(1, 4, "a");
+
+    ll.createNewNode(2, 1, "b");
+    ll.createNewNode(2, 2, "b");
+    ll.createNewNode(2, 3, "b");
+    ll.createNewNode(2, 4, "b");
+
+    ll.createNewNode(3, 1, "c");
+    ll.createNewNode(3, 2, "c");
+    ll.createNewNode(3, 3, "c");
+    ll.createNewNode(3, 4, "c");
 
 
     for (let i = 0; i < verticalArr.length; i++) {
-       console.log(verticalArr[i].next)
-       if(verticalArr[i].next){
-        let temp = verticalArr[i].next;
-        while(temp.right){
-            // console.log(temp.data)
-            temp=temp.right;
+        console.log(verticalArr[i].next)
+        if (verticalArr[i].next) {
+            let temp = verticalArr[i].next;
+            while (temp.right) {
+                // console.log(temp.data)
+                temp = temp.right;
+            }
         }
-       }
     }
+
+    setTimeout(() => {
+        
+    ll.insertACellInRowBeforeInd(2,2,"newdata")
+
+    for (let i = 0; i < verticalArr.length; i++) {
+        console.log(verticalArr[i].next)
+        if (verticalArr[i].next) {
+            let temp = verticalArr[i].next;
+            while (temp.right) {
+                // console.log(temp.data)
+                temp = temp.right;
+            }
+        }
+    }
+    }, 2000);
+
+    miniCanvas.printArrs()
+
 
 
 })
+
