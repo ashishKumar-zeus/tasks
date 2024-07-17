@@ -14,7 +14,7 @@ class Node {
 export class LinkedList {
 
     // Initialize Class Variables
-    constructor(horizontalArr, verticalArr,miniCanvas) {
+    constructor(horizontalArr, verticalArr, miniCanvas) {
         this.horizontalArr = horizontalArr;
         this.verticalArr = verticalArr;
         this.miniCanvas = miniCanvas;
@@ -32,26 +32,29 @@ export class LinkedList {
 
     createNewNode(row, col, data) {
 
-        let newNode = new Node(this.verticalArr[row].value, this.horizontalArr[col].value, data)
+        let rowInd = row - 1;
+        let colInd = col - 1;
+
+        let newNode = new Node(this.verticalArr[rowInd].value, this.horizontalArr[colInd].value, data)
 
         //keep the head at first element
         if (this.isempty())
             this.head = newNode;
 
         //placing along row
-        if (!this.verticalArr[row].next) {
+        if (!this.verticalArr[rowInd].next) {
             //if first element in row
-            this.verticalArr[row].next = newNode;
+            this.verticalArr[rowInd].next = newNode;
         }
-        else if (this.verticalArr[row].next.col > col) {
+        else if (this.verticalArr[rowInd].next.col > col) {
             //if first element in row but replaced
             let tempNode = this.verticalArr[row].next;
             newNode.right = tempNode;
-            this.verticalArr[row].next = newNode;
+            this.verticalArr[rowInd].next = newNode;
             tempNode.left = newNode;
         }
         else {
-            let temp = this.verticalArr[row].next;
+            let temp = this.verticalArr[rowInd].next;
             while (temp.right != null && temp.right.col.data < col) {
                 temp = temp.right;
             }
@@ -64,18 +67,18 @@ export class LinkedList {
         }
 
         //placing along column
-        if (!this.horizontalArr[col].next) {
+        if (!this.horizontalArr[colInd].next) {
             //first element in col
-            this.horizontalArr[col].next = newNode;
-        } else if (this.horizontalArr[col].next.row > row) {
+            this.horizontalArr[colInd].next = newNode;
+        } else if (this.horizontalArr[colInd].next.row.data > row) {
             //replaced first element in column
-            let tempNode = this.horizontalArr[col].next;
+            let tempNode = this.horizontalArr[colInd].next;
             newNode.bottom = tempNode;
-            this.horizontalArr[col].next = newNode;
+            this.horizontalArr[colInd].next = newNode;
             tempNode.top = newNode;
         }
         else {
-            let temp = this.horizontalArr[col].next;
+            let temp = this.horizontalArr[colInd].next;
             while (temp.bottom != null && temp.bottom.row.data < row) {
                 temp = temp.bottom;
             }
@@ -89,33 +92,36 @@ export class LinkedList {
         this.size += 1
     }
 
-
-
     deleteNode(row, col) {
 
-        if (!this.verticalArr[row].next || this.verticalArr[row].next.row > row) {
+        let rowInd = row - 1;
+        let colInd = col - 1;
+
+        if (!this.verticalArr[rowInd].next || this.verticalArr[rowInd].next.row.data > row) {
             // not found
         }
-        let temp = this.verticalArr[row].next;
+        let temp = this.verticalArr[rowInd].next;
 
-        if (this.verticalArr[row].next.col == col) {
+        if (this.verticalArr[rowInd].next.col.data == col) {
             // first element of row
 
             temp.right ? temp.right.left = null : "";
 
-            this.horizontalArr[col].next == temp ? this.horizontalArr[col].next = temp.bottom : this.horizontalArr[col].next = null;
-            this.verticalArr[row].next = temp.right;
+            this.horizontalArr[colInd].next == temp ? this.horizontalArr[colInd].next = temp.bottom : this.horizontalArr[colInd].next = null;
+            this.verticalArr[rowInd].next = temp.right;
         }
         else {
             // found else where
 
-            while (temp != null && temp.col != col) {
+            while (temp.right != null && temp.col.data != col) {
                 temp = temp.right;
             }
-
-            temp.left ? temp.left.right = temp.right : ""
-            temp.right ? temp.right.left = temp.left : ""
+            if (temp.col.data == col) {
+                temp.left ? temp.left.right = temp.right : ""
+                temp.right ? temp.right.left = temp.left : ""
+            }
         }
+
 
         temp.top ? temp.top.bottom = temp.bottom : "";
         temp.bottom ? temp.bottom.top = temp.top : "";
@@ -125,28 +131,40 @@ export class LinkedList {
         temp.top = null;
         temp.bottom = null;
 
+
     }
 
 
-    insertARow(ind){
-        this.miniCanvas.updateVerticalArrFromIndBy1(ind)
+    insertARow(ind) {
+        let rowInd = ind-1;
+        this.miniCanvas.addRowAtInd(rowInd)
+    }
+
+    insertACol(ind){
+        let colInd = ind-1;
+        this.miniCanvas.addColAtInd(colInd)
+    }
+
+    deleteARow(ind){
+        let rowInd = ind- 1;
+        this.miniCanvas.deleteRowAtInd(rowInd)
+    }
+
+    deleteACol(ind){
+        let colInd = ind - 1;
+        this.miniCanvas.deleteColAtInd(colInd)
     }
 
 
-    insertACellInRowBeforeInd(row,col,value){
-        
-        let newNode = new Node(this.verticalArr[row].value, this.horizontalArr[col].value, value);
+    insertACellInRowBeforeInd(row, col, value) {
 
-        let temp = this.verticalArr[row].next;
+        let newNode = new Node(this.verticalArr[row - 1].value, this.horizontalArr[col - 1].value, value);
+
+        let temp = this.verticalArr[row-1].next;
         console.log(temp)
 
-        while(temp.right!=null && temp.col < col){
-            temp=temp.right;
-        }
-        if(temp.right== null){
-            this.createNewNode(row,col,value)
-            console.log("here")
-            return;
+        while (temp.col.data < col) {
+            temp = temp.right;
         }
 
         let currEle = temp;
@@ -155,11 +173,14 @@ export class LinkedList {
         let bottomOfCurr = currEle.bottom;
         let leftOfCurr = currEle.left;
         let rightOfCurr = currEle.right;
-        
-        if(leftOfCurr){
 
+        if (leftOfCurr) {
             leftOfCurr.right = newNode;
-        } 
+        }
+        else{
+            this.verticalArr[row-1].next = newNode;
+        }
+        
         newNode.left = leftOfCurr;
         newNode.right = currEle;
         currEle.left = newNode;
@@ -167,29 +188,63 @@ export class LinkedList {
         newNode.top = topOfCurr;
         newNode.bottom = bottomOfCurr;
 
-        topOfCurr.bottom = newNode;
-        bottomOfCurr.top = newNode;
+        topOfCurr ?  topOfCurr.bottom = newNode:""
+        bottomOfCurr ?  bottomOfCurr.top = newNode:""
 
         temp = currEle;
         let nextEle = rightOfCurr;
 
         console.log(temp)
 
-        while(temp.right!=null ){
-            let ind = temp.col.data + 1 ;
+        while (temp != null) {
+            let ind = temp.col.data;
             console.log(ind)
-            console.log(temp.col)
-
+            console.log(temp.col.data)
+            console.log(temp)
             temp.col = this.horizontalArr[ind].value;
-            temp.top = nextEle.top;
-            temp.bottom = nextEle.bottom;
-            nextEle=nextEle.right;
-            temp=temp.right;
+            if (nextEle != null) {
+                temp.top = nextEle.top;
+                temp.bottom = nextEle.bottom;
+
+                nextEle.top ? nextEle.top.bottom = temp: this.horizontalArr[nextEle.col.data-1].next = temp;
+                nextEle.bottom ? nextEle.bottom.top = temp : ""
+
+                nextEle = nextEle.right;
+
+            }
+            else {
+                let nextColInd = temp.col.data;
+                let verticalTemp = this.horizontalArr[nextColInd].next;
+
+                if(!verticalTemp){
+                    console.log("bere")
+
+                    this.horizontalArr[nextColInd].next = temp;
+                    temp.bottom = null;
+                    temp.top = null;
+                }
+                else{
+                    while(verticalTemp!=null && verticalTemp.row.data < row){
+                        verticalTemp = verticalTemp.bottom;
+                    }
+                    temp.bottom = verticalTemp.bottom;
+                    temp.top = verticalTemp;
+
+                    verticalTemp.bottom ? verticalTemp.bottom.top = temp:""
+                    verticalTemp.bottom = temp;
+
+                }
+
+            }
+            temp = temp.right;
         }
 
-        
+
     }
 
+    insertCellShiftRight(row,col,value){
+        
+    }
 
 
 }
