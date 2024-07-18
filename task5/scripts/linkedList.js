@@ -136,32 +136,32 @@ export class LinkedList {
 
 
     insertARow(ind) {
-        let rowInd = ind-1;
+        let rowInd = ind - 1;
         this.miniCanvas.addRowAtInd(rowInd)
     }
 
-    insertACol(ind){
-        let colInd = ind-1;
+    insertACol(ind) {
+        let colInd = ind - 1;
         this.miniCanvas.addColAtInd(colInd)
     }
 
-    deleteARow(ind){
-        let rowInd = ind- 1;
+    deleteARow(ind) {
+        let rowInd = ind - 1;
         this.miniCanvas.deleteRowAtInd(rowInd)
     }
 
-    deleteACol(ind){
+    deleteACol(ind) {
         let colInd = ind - 1;
         this.miniCanvas.deleteColAtInd(colInd)
     }
 
 
-    insertACellInRowBeforeInd(row, col, value) {
+    insertAndShiftRight(row, col, value) {
 
         let newNode = new Node(this.verticalArr[row - 1].value, this.horizontalArr[col - 1].value, value);
 
-        let temp = this.verticalArr[row-1].next;
-        console.log(temp)
+        let temp = this.verticalArr[row - 1].next;
+        // console.log(temp)
 
         while (temp.col.data < col) {
             temp = temp.right;
@@ -177,10 +177,10 @@ export class LinkedList {
         if (leftOfCurr) {
             leftOfCurr.right = newNode;
         }
-        else{
-            this.verticalArr[row-1].next = newNode;
+        else {
+            this.verticalArr[row - 1].next = newNode;
         }
-        
+
         newNode.left = leftOfCurr;
         newNode.right = currEle;
         currEle.left = newNode;
@@ -188,49 +188,55 @@ export class LinkedList {
         newNode.top = topOfCurr;
         newNode.bottom = bottomOfCurr;
 
-        topOfCurr ?  topOfCurr.bottom = newNode:""
-        bottomOfCurr ?  bottomOfCurr.top = newNode:""
+        topOfCurr ? topOfCurr.bottom = newNode : ""
+        bottomOfCurr ? bottomOfCurr.top = newNode : ""
+
+        if(this.horizontalArr[row-1].next == currEle){
+            this.horizontalArr[row-1].next = newNode;
+        }
 
         temp = currEle;
         let nextEle = rightOfCurr;
 
-        console.log(temp)
+        // console.log(temp)
 
         while (temp != null) {
             let ind = temp.col.data;
-            console.log(ind)
-            console.log(temp.col.data)
-            console.log(temp)
+            // console.log(ind)
+            // console.log(temp.col.data)
+            // console.log(temp)
             temp.col = this.horizontalArr[ind].value;
             if (nextEle != null) {
+                
                 temp.top = nextEle.top;
                 temp.bottom = nextEle.bottom;
 
-                nextEle.top ? nextEle.top.bottom = temp: this.horizontalArr[nextEle.col.data-1].next = temp;
+                nextEle.top ? nextEle.top.bottom = temp : this.horizontalArr[nextEle.col.data - 1].next = temp;
                 nextEle.bottom ? nextEle.bottom.top = temp : ""
 
                 nextEle = nextEle.right;
 
             }
             else {
-                let nextColInd = temp.col.data;
+                let nextColInd = temp.col.data-1;
+                // console.log(nextColInd , temp,nextEle)
                 let verticalTemp = this.horizontalArr[nextColInd].next;
 
-                if(!verticalTemp){
-                    console.log("bere")
-
+                if (verticalTemp==null) {
                     this.horizontalArr[nextColInd].next = temp;
                     temp.bottom = null;
                     temp.top = null;
                 }
-                else{
-                    while(verticalTemp!=null && verticalTemp.row.data < row){
+                else {
+                    // console.log(verticalTemp)
+                    // console.log(row,col,value)
+                    while (verticalTemp.bottom != null && verticalTemp.row.data < row) {
                         verticalTemp = verticalTemp.bottom;
                     }
                     temp.bottom = verticalTemp.bottom;
                     temp.top = verticalTemp;
 
-                    verticalTemp.bottom ? verticalTemp.bottom.top = temp:""
+                    verticalTemp.bottom ? verticalTemp.bottom.top = temp : ""
                     verticalTemp.bottom = temp;
 
                 }
@@ -239,11 +245,108 @@ export class LinkedList {
             temp = temp.right;
         }
 
-
     }
 
-    insertCellShiftRight(row,col,value){
-        
+
+    insertAndShiftBottom(row, col, value) {
+
+        console.log("shifting botttom")
+
+        let newNode = new Node(this.verticalArr[row - 1].value, this.horizontalArr[col - 1].value, value);
+
+        let temp = this.horizontalArr[col - 1].next;
+        // console.log(temp)
+
+        while (temp.row.data < row) {
+            temp = temp.bottom;
+        }
+
+        let currEle = temp;
+
+        let topOfCurr = currEle.top;
+        let bottomOfCurr = currEle.bottom;
+        let leftOfCurr = currEle.left;
+        let rightOfCurr = currEle.right;
+
+        if (topOfCurr) {
+            topOfCurr.bottom = newNode;
+        }
+        else {
+            this.horizontalArr[col - 1].next = newNode;
+        }
+
+        newNode.top = topOfCurr;
+        newNode.bottom = currEle;
+        currEle.top = newNode;
+
+        newNode.left = leftOfCurr;
+        newNode.right = rightOfCurr;
+
+        leftOfCurr ? leftOfCurr.right = newNode : ""
+        rightOfCurr ? rightOfCurr.left = newNode : ""
+
+        if(this.verticalArr[col-1].next == currEle){
+            this.verticalArr[col-1].next = newNode;
+        }
+
+        temp = currEle;
+        let nextEle = bottomOfCurr;
+
+        // console.log(temp)
+
+        while (temp != null) {
+            let ind = temp.row.data;
+            // console.log(ind)
+            // console.log(temp.row.data)
+            // console.log(temp)
+            temp.row = this.verticalArr[ind].value;
+            if (nextEle != null) {
+
+                console.log("nextEle is not null")
+                
+                temp.left = nextEle.left;
+                temp.right = nextEle.right;
+
+                nextEle.left ? nextEle.left.right = temp : this.verticalArr[nextEle.row.data - 1].next = temp;
+                nextEle.right ? nextEle.right.left = temp : ""
+
+                nextEle = nextEle.bottom;
+
+            }
+            else {
+
+                console.log("next ele is null")
+                let nextRowInd = temp.row.data-1;
+                // console.log(nextRowInd , temp,nextEle)
+                console.log("next row indes is ",nextRowInd)
+                let horizontalTemp = this.verticalArr[nextRowInd].next;
+                console.log(horizontalTemp)
+
+                if (horizontalTemp==null) {
+                    this.verticalArr[nextRowInd].next = temp;
+                    console.log("worked")
+                    temp.right = null;
+                    temp.left = null;
+                }
+                else {
+                    // console.log(horizontalTemp)
+                    // console.log(row,col,value)
+                    while (horizontalTemp.right != null && horizontalTemp.col.data < col) {
+                        horizontalTemp = horizontalTemp.right;
+                    }
+
+                    console.log(horizontalTemp)
+                    temp.right = horizontalTemp.right;
+                    temp.left = horizontalTemp;
+
+                    horizontalTemp.right ? horizontalTemp.right.left = temp : ""
+                    horizontalTemp.right = temp;
+                }
+
+            }
+            temp = temp.bottom;
+        }
+
     }
 
 

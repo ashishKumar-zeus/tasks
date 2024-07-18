@@ -21,7 +21,6 @@ export class Scroll {
 
     }
 
-
     updateHorizontalScrollBar() {
 
         this.horizontalBar.addEventListener('mousedown', (e) => {
@@ -36,24 +35,25 @@ export class Scroll {
                 e.preventDefault();
                 if (isHorizontalScrolling) {
                     const currentMouseX = e.clientX;
-                    const diffX = currentMouseX - startMouseX;
+                    let diffX = currentMouseX - startMouseX;
                     let newLeft = startBarLeft + diffX;
                     let maxBarLeft = this.horizontalScroll.clientWidth - this.horizontalBar.offsetWidth;
 
                     newLeft < 0 ? newLeft = 0 : "";
 
+                    console.log(startMouseX,currentMouseX,diffX,newLeft,maxBarLeft)
+
                     if (newLeft > maxBarLeft) {
                         newLeft = maxBarLeft;
-                        this.horizontalBar.style.width = `${prevBarWidth * 0.9}px`;
+                        this.horizontalBar.style.width = `${prevBarWidth * 0.7}px`;
                         this.horizontalBar.style.left = `${newLeft / 2}px`;
-                        startBarLeft = this.horizontalScroll.clientWidth / 2;
+                        startBarLeft = newLeft / 2;
                         startMouseX = e.clientX;
-                        prevBarWidth = prevBarWidth * 0.9;
+                        prevBarWidth = prevBarWidth * 0.7;
                     }
                     else {
                         this.horizontalBar.style.left = `${newLeft}px`
                     }
-
 
                 }
             };
@@ -93,11 +93,11 @@ export class Scroll {
 
                     if (newTop > maxBarTop) {
                         newTop = maxBarTop;
-                        this.verticalBar.style.height = `${prevBarHeight * 0.9}px`;
+                        this.verticalBar.style.height = `${prevBarHeight * 0.7}px`;
                         this.verticalBar.style.top = `${newTop / 2}px`;
-                        startBarTop = this.verticalScroll.clientHeight / 2;
+                        startBarTop = newTop / 2;
                         startMouseY = e.clientY;
-                        prevBarHeight = prevBarHeight * 0.9;
+                        prevBarHeight = prevBarHeight * 0.7;
                     }
 
                     this.verticalBar.style.top = `${newTop}px`

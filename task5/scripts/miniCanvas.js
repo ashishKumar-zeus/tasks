@@ -1,4 +1,4 @@
-
+import { horizontalCnvCtx, verticalCnvCtx, spreadsheetCnvCtx } from "../index.js";
 
 class HeaderCell {
     constructor(x, y, width, height, value) {
@@ -22,8 +22,8 @@ export class MiniCanvas {
         this.initialHeigthHorizontal = initialHeigthHorizontal;
         this.initialWidthVertical = initialWidthVertical;
         this.initialHeigthVertical = initialHeigthVertical;
+
         this.init()
-        // this.printArrs();
     }
 
     init() {
@@ -31,7 +31,7 @@ export class MiniCanvas {
         let x = 0;
         let y = 0;
         for (let i = 0; i < this.numOfCols; i++) {
-            const cell = new HeaderCell(x, y, this.initialWidthHorizontal, this.initialHeigthHorizontal, i+1);
+            const cell = new HeaderCell(x, y, this.initialWidthHorizontal, this.initialHeigthHorizontal, i + 1);
             this.horizontalArr[i] = cell;
             x += this.initialWidthHorizontal;
         }
@@ -39,10 +39,39 @@ export class MiniCanvas {
         x = 0;
         y = 0;
         for (let i = 0; i < this.numOfRows; i++) {
-            const cell = new HeaderCell(x, y, this.initialWidthVertical, this.initialHeigthVertical, i+1);
+            const cell = new HeaderCell(x, y, this.initialWidthVertical, this.initialHeigthVertical, i + 1);
             this.verticalArr[i] = cell;
             y += this.initialHeigthVertical;
         }
+
+        this.drawHorizontalCanvas();
+        this.drawVerticalCanvas();
+    }
+
+    drawHorizontalCanvas() {
+
+        if (!horizontalCnvCtx) {
+            alert("Horizontal Canvas ctx not found")
+            return;
+        }
+
+        horizontalCnvCtx.strokeStyle = '#000000';
+        horizontalCnvCtx.lineWidth = 1;
+
+        let x = 0;
+        for (let j = 0; j <= this.numOfCols; j++) {
+            horizontalCnvCtx.beginPath();
+            horizontalCnvCtx.moveTo(x, 0);
+            horizontalCnvCtx.lineTo(x, this.initialHeigthHorizontal);
+            horizontalCnvCtx.stroke();
+            console.log(x);
+            (j < this.numOfCols) ? x += this.horizontalArr[j].width : "";
+        }
+
+    }
+
+    drawVerticalCanvas() {
+
     }
 
     printArrs() {
@@ -86,27 +115,27 @@ export class MiniCanvas {
         }
     }
 
-    
+
     deleteRowAtInd(ind) {
 
         let rowToBeDeleted = this.verticalArr[ind];
 
         this.verticalArr.splice(ind, 1)
 
-        for (let i = ind ; i < this.verticalArr.length; i++) {
+        for (let i = ind; i < this.verticalArr.length; i++) {
             this.verticalArr[i].value.data -= 1;
             this.verticalArr[i].y -= this.initialHeigthVertical;
         }
     }
 
-    
+
     deleteColAtInd(ind) {
 
         let colToBeDeleted = this.horizontalArr[ind];
 
         this.horizontalArr.splice(ind, 1)
 
-        for (let i = ind ; i < this.horizontalArr.length; i++) {
+        for (let i = ind; i < this.horizontalArr.length; i++) {
             this.horizontalArr[i].value.data -= 1;
             this.horizontalArr[i].x -= this.initialWidthHorizontal;
         }
@@ -125,6 +154,8 @@ export class MiniCanvas {
             this.horizontalArr[i].x += this.initialWidthHorizontal;
         }
     }
+
+
 
 
 }
