@@ -1,4 +1,4 @@
-import { horizontalCnvCtx, verticalCnvCtx, spreadsheetCnvCtx } from "../index.js";
+import { horizontalCnvCtx, verticalCnvCtx, spreadsheetCnvCtx, horizontalCanvas, verticalCanvas, spreadsheetCanvas } from "../index.js";
 
 class HeaderCell {
     constructor(x, y, width, height, value) {
@@ -36,6 +36,7 @@ export class MiniCanvas {
             x += this.initialWidthHorizontal;
         }
 
+
         x = 0;
         y = 0;
         for (let i = 0; i < this.numOfRows; i++) {
@@ -44,33 +45,162 @@ export class MiniCanvas {
             y += this.initialHeigthVertical;
         }
 
-        this.drawHorizontalCanvas();
-        this.drawVerticalCanvas();
+        this.drawHorizontalCanvas(0);
+        this.drawVerticalCanvas(0);
+        this.drawMainCanvas(0, 0)
     }
 
-    drawHorizontalCanvas() {
+    drawHorizontalCanvas(startInd) {
 
         if (!horizontalCnvCtx) {
             alert("Horizontal Canvas ctx not found")
             return;
         }
 
-        horizontalCnvCtx.strokeStyle = '#000000';
+
+        //using stroke
+        //     {
+        //         // horizontalCnvCtx.strokeStyle = '#D3D3D3';
+        //         // horizontalCnvCtx.lineWidth = 1;
+
+        //         // let x = 0;
+        //         // for (let j = startInd; j <= this.horizontalArr.length; j++) {
+        //         //     horizontalCnvCtx.beginPath();
+        //         //     horizontalCnvCtx.moveTo(x, 0);
+        //         //     horizontalCnvCtx.lineTo(x, this.initialHeigthHorizontal);
+        //         //     horizontalCnvCtx.stroke();
+        //         //     (j < this.horizontalArr.length) ? x += this.horizontalArr[j].width : "";
+        //         // }
+        //         // horizontalCnvCtx.fillStyle = '#D3D3D3';
+        // }
+
+        //using rect
+        horizontalCnvCtx.strokeStyle = '#D3D3D3';
         horizontalCnvCtx.lineWidth = 1;
 
-        let x = 0;
-        for (let j = 0; j <= this.numOfCols; j++) {
-            horizontalCnvCtx.beginPath();
-            horizontalCnvCtx.moveTo(x, 0);
-            horizontalCnvCtx.lineTo(x, this.initialHeigthHorizontal);
-            horizontalCnvCtx.stroke();
-            console.log(x);
-            (j < this.numOfCols) ? x += this.horizontalArr[j].width : "";
+        for (let j = startInd; j <= this.horizontalArr.length; j++) {
+            if (!this.horizontalArr[j]) {
+                return;
+            }
+
+            const currCell = this.horizontalArr[j];
+            //making rectangles
+            horizontalCnvCtx.strokeRect(currCell.x, currCell.y, currCell.width, currCell.height);
+
+            //making text
+            horizontalCnvCtx.font = ' 14px Calibri ';
+            horizontalCnvCtx.textAlign = 'center';
+            horizontalCnvCtx.textBaseline = 'middle';
+            horizontalCnvCtx.fillStyle = '#000';
+
+            horizontalCnvCtx.fillText((currCell.value.data + 9).toString(36).toUpperCase(), currCell.x + currCell.width / 2, currCell.y + currCell.height / 2);
+        }
+
+
+
+    }
+
+    drawVerticalCanvas(startInd) {
+
+        //using strokes
+        //         {
+        //         // if (!verticalCnvCtx) {
+        //         //     alert("Vertical Canvas ctx not found")
+        //         //     return;
+        //         // }
+
+        //         // verticalCnvCtx.strokeStyle = '#D3D3D3';
+        //         // verticalCnvCtx.lineWidth = 1;
+
+        //         // let y = 0;
+        //         // for (let j = startInd; j <= this.verticalArr.length; j++) {
+        //         //     verticalCnvCtx.beginPath();
+        //         //     verticalCnvCtx.moveTo(0, y);
+        //         //     verticalCnvCtx.lineTo(this.initialWidthVertical,y);
+        //         //     verticalCnvCtx.stroke();
+        //         //     (j < this.verticalArr.length) ? y += this.verticalArr[j].height : "";
+        //         // }
+        // }
+
+        //using rect
+        verticalCnvCtx.strokeStyle = '#D3D3D3';
+        verticalCnvCtx.lineWidth = 1;
+
+        for (let j = startInd; j <= this.verticalArr.length; j++) {
+            if (!this.verticalArr[j]) {
+                return;
+            }
+            const currCell = this.verticalArr[j];
+            //making rectangles
+            verticalCnvCtx.strokeRect(currCell.x, currCell.y, currCell.width, currCell.height);
+
+            //making text
+            verticalCnvCtx.font = '14px Calibri';
+            verticalCnvCtx.textAlign = 'right';
+            verticalCnvCtx.textBaseline = 'bottom';
+            verticalCnvCtx.fillStyle = '#000';
+            verticalCnvCtx.fillText(currCell.value.data, currCell.x + 50, currCell.y + currCell.height - 5);
         }
 
     }
 
-    drawVerticalCanvas() {
+    drawMainCanvas(startRowInd, startColInd) {
+
+        if (!spreadsheetCnvCtx) {
+            alert("main Canvas ctx not found")
+            return;
+        }
+        // {
+        //         spreadsheetCnvCtx.strokeStyle = '#D3D3D3';
+        //         spreadsheetCnvCtx.lineWidth = 1;
+
+        //         let x = 0;
+        //         for (let j = startColInd; j <= this.horizontalArr.length; j++) {
+        //             spreadsheetCnvCtx.beginPath();
+        //             spreadsheetCnvCtx.moveTo(x, 0);
+        //             spreadsheetCnvCtx.lineTo(x, spreadsheetCanvas.height);
+        //             spreadsheetCnvCtx.stroke();
+        //             (j < this.horizontalArr.length) ? x += this.horizontalArr[j].width : "";
+        //         }
+
+        //         let y = 0;
+        //         for (let j = startRowInd; j <= this.verticalArr.length; j++) {
+        //             spreadsheetCnvCtx.beginPath();
+        //             spreadsheetCnvCtx.moveTo(0, y);
+        //             spreadsheetCnvCtx.lineTo(spreadsheetCanvas.width, y);
+        //             spreadsheetCnvCtx.stroke();
+        //             (j < this.verticalArr.length) ? y += this.verticalArr[j].height : "";
+        //         }
+
+
+        spreadsheetCnvCtx.strokeStyle = '#D3D3D3';
+        spreadsheetCnvCtx.lineWidth = 1;
+
+
+        for (let j = 0; j < this.verticalArr.length; j++) {
+
+
+            for (let j = startInd; j <= this.horizontalArr.length; j++) {
+                if (!this.horizontalArr[j]) {
+                    return;
+                }
+
+                const currCell = this.horizontalArr[j];
+                //making rectangles
+                horizontalCnvCtx.strokeRect(currCell.x, currCell.y, currCell.width, currCell.height);
+
+                //making text
+                horizontalCnvCtx.font = ' 14px Calibri ';
+                horizontalCnvCtx.textAlign = 'center';
+                horizontalCnvCtx.textBaseline = 'middle';
+                horizontalCnvCtx.fillStyle = '#000';
+
+                horizontalCnvCtx.fillText((currCell.value.data + 9).toString(36).toUpperCase(), currCell.x + currCell.width / 2, currCell.y + currCell.height / 2);
+            }
+        }
+
+
+
 
     }
 

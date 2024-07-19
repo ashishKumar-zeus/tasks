@@ -7,31 +7,28 @@ body {
 }
 body > header {
   height: 20%;
-  border: 1px solid red;
   box-sizing: border-box;
 }
 body > .mainContainer {
   height: 80%;
   display: flex;
-  border: 1px solid black;
   flex-direction: column;
   box-sizing: border-box;
+  background-color: aliceblue;
 }
 body > .mainContainer > .topSection {
-  border: 1px solid blue;
   height: 5%;
   width: 100%;
   box-sizing: border-box;
   display: flex;
 }
 body > .mainContainer > .topSection > .nothing {
-  width: 5%;
+  width: 3%;
   height: 100%;
 }
 body > .mainContainer > .topSection > #horizontalCanvas {
-  width: 94%;
+  width: 96%;
   height: 100%;
-  border: 1px solid blueviolet;
 }
 body > .mainContainer > .middleSection {
   height: 95%;
@@ -40,21 +37,22 @@ body > .mainContainer > .middleSection {
   box-sizing: border-box;
 }
 body > .mainContainer > .middleSection > #verticalCanvas {
-  width: 5%;
+  width: 3%;
   box-sizing: border-box;
   height: 98%;
+  background-color: aliceblue;
 }
 body > .mainContainer > .middleSection > #fullCanvas {
-  width: 95%;
+  width: 98%;
   display: flex;
   box-sizing: border-box;
   position: relative;
 }
 body > .mainContainer > .middleSection > #fullCanvas > #spreadsheetCanvas {
-  background-color: aliceblue;
   width: 99%;
   height: 98%;
   box-sizing: border-box;
+  background-color: white;
 }
 body > .mainContainer > .middleSection > #fullCanvas > .horizontalScroll {
   box-sizing: border-box;

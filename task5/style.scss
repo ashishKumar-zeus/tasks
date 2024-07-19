@@ -28,7 +28,7 @@ body {
 
     >header {
         height: 20%;
-        border: 1px solid red;
+        // border: 1px solid red;
         box-sizing: border-box;
 
     }
@@ -37,28 +37,30 @@ body {
 
         height: 80%;
         display: flex;
-        border: 1px solid black;
+        // border: 1px solid black;
         flex-direction: column;
         box-sizing: border-box;
+        background-color: aliceblue;
+
 
 
 
         >.topSection {
-            border: 1px solid blue;
+            // border: 1px solid blue;
             height: 5%;
             width: 100%;
             box-sizing: border-box;
             display: flex;
 
             >.nothing{
-                width: 5%;
+                width: 3%;
                 height: 100%;
 
             }
             >#horizontalCanvas{
-                width: 94%;
+                width: 96%;
                 height: 100%;
-                border: 1px solid blueviolet;
+                // border: 1px solid blueviolet;
             }
         }
 
@@ -72,23 +74,24 @@ body {
 
             >#verticalCanvas {
                 // border: 1px solid grey;
-                width: 5%;
+                width: 3%;
                 box-sizing: border-box;
                 height: 98%;
+                background-color: aliceblue;
 
             }
 
             >#fullCanvas {
-                width: 95%;
+                width: 98%;
                 display: flex;
                 box-sizing: border-box;
                 position: relative;
 
                 >#spreadsheetCanvas {
-                    background-color: aliceblue;
                     width: 99%;
                     height: 98%;
                     box-sizing: border-box;
+                    background-color: white;
 
                 }
 

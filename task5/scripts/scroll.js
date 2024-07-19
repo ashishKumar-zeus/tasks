@@ -6,6 +6,9 @@ export class Scroll {
         this.verticalBar = verticalBar;
         this.verticalScroll = verticalScroll;
         this.init();
+        // this.prevScrolled = 0
+        // this.horizontallScrolled = 0;
+        // this.verticallyScrolled = 0;
     }
 
     init() {
@@ -18,7 +21,7 @@ export class Scroll {
     }
 
     updateGrid() {
-
+        // console.log("horizontally Scroll updated as " , this.horizontallScrolled)
     }
 
     updateHorizontalScrollBar() {
@@ -38,10 +41,11 @@ export class Scroll {
                     let diffX = currentMouseX - startMouseX;
                     let newLeft = startBarLeft + diffX;
                     let maxBarLeft = this.horizontalScroll.clientWidth - this.horizontalBar.offsetWidth;
+                    // this.horizontallScrolled = this.prevScrolled +  newLeft;
 
                     newLeft < 0 ? newLeft = 0 : "";
 
-                    console.log(startMouseX,currentMouseX,diffX,newLeft,maxBarLeft)
+                    // console.log(startMouseX,currentMouseX,diffX,newLeft,maxBarLeft)
 
                     if (newLeft > maxBarLeft) {
                         newLeft = maxBarLeft;
@@ -50,12 +54,14 @@ export class Scroll {
                         startBarLeft = newLeft / 2;
                         startMouseX = e.clientX;
                         prevBarWidth = prevBarWidth * 0.7;
+                        // this.prevScrolled = this.horizontallScrolled;
                     }
                     else {
                         this.horizontalBar.style.left = `${newLeft}px`
                     }
 
                 }
+                this.updateGrid()
             };
 
             const onMouseUp = (e) => {
