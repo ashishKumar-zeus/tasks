@@ -26,8 +26,12 @@ body > .mainContainer > .topSection > .nothing {
   width: 3%;
   height: 100%;
 }
-body > .mainContainer > .topSection > #horizontalCanvas {
-  width: 96%;
+body > .mainContainer > .topSection > .upperCanvas {
+  width: 97%;
+  height: 100%;
+}
+body > .mainContainer > .topSection > .upperCanvas > #horizontalCanvas {
+  width: 99%;
   height: 100%;
 }
 body > .mainContainer > .middleSection {
@@ -43,7 +47,7 @@ body > .mainContainer > .middleSection > #verticalCanvas {
   background-color: aliceblue;
 }
 body > .mainContainer > .middleSection > #fullCanvas {
-  width: 98%;
+  width: 97%;
   display: flex;
   box-sizing: border-box;
   position: relative;

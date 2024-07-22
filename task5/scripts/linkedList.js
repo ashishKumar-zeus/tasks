@@ -1,4 +1,5 @@
 
+
 class Node {
     constructor(row, col, data) {
         this.row = row;
@@ -20,6 +21,18 @@ export class LinkedList {
         this.miniCanvas = miniCanvas;
         this.head = null;
         this.size = 0;
+
+
+        this.createNewNode(1, 1, "a1");
+        this.createNewNode(1, 2, "a2");
+        this.createNewNode(1, 3, "a3");
+        this.createNewNode(2, 1, "b1");
+        this.createNewNode(2, 2, "b2");
+        this.createNewNode(2, 3, "b3");
+        this.createNewNode(3, 1, "c");
+        this.createNewNode(3, 2, "c");
+        this.createNewNode(3, 3, "c");
+
     }
 
     len() {
@@ -89,7 +102,9 @@ export class LinkedList {
             temp.bottom = newNode;
             newNode.top = temp;
         }
-        this.size += 1
+        this.size += 1;
+
+        this.miniCanvas.renderCanvas();
     }
 
     deleteNode(row, col) {
@@ -131,28 +146,57 @@ export class LinkedList {
         temp.top = null;
         temp.bottom = null;
 
+        this.miniCanvas.renderCanvas();
 
     }
 
-
     insertARow(ind) {
         let rowInd = ind - 1;
-        this.miniCanvas.addRowAtInd(rowInd)
+        this.miniCanvas.addRowAtInd(rowInd);
+        this.miniCanvas.renderCanvas();
+
     }
 
     insertACol(ind) {
         let colInd = ind - 1;
-        this.miniCanvas.addColAtInd(colInd)
+        this.miniCanvas.addColAtInd(colInd);
+        this.miniCanvas.renderCanvas();
+
     }
 
     deleteARow(ind) {
         let rowInd = ind - 1;
-        this.miniCanvas.deleteRowAtInd(rowInd)
+        let tempCurr = this.verticalArr[rowInd].next;
+
+        while (tempCurr != null) {
+
+            let colInd = tempCurr.col.data - 1;
+
+            tempCurr.top ? tempCurr.top.bottom = tempCurr.bottom : this.horizontalArr[colInd].next = tempCurr.bottom;
+            tempCurr.bottom ? tempCurr.bottom.top = tempCurr.top : ""
+
+            tempCurr = tempCurr.right;
+        }
+        this.miniCanvas.deleteRowAtInd(rowInd);
+        this.miniCanvas.renderCanvas();
     }
 
     deleteACol(ind) {
         let colInd = ind - 1;
-        this.miniCanvas.deleteColAtInd(colInd)
+        let tempCurr = this.horizontalArr[colInd].next;
+
+        while (tempCurr != null) {
+
+            let rowInd = tempCurr.row.data - 1;
+
+            tempCurr.left ? tempCurr.left.right = tempCurr.right : this.verticalArr[rowInd].next = tempCurr.right;
+            tempCurr.right ? tempCurr.right.left = tempCurr.left : ""
+
+            tempCurr = tempCurr.bottom;
+        }
+
+        this.miniCanvas.deleteColAtInd(colInd);
+        this.miniCanvas.renderCanvas();
     }
 
 
@@ -191,8 +235,8 @@ export class LinkedList {
         topOfCurr ? topOfCurr.bottom = newNode : ""
         bottomOfCurr ? bottomOfCurr.top = newNode : ""
 
-        if(this.horizontalArr[row-1].next == currEle){
-            this.horizontalArr[row-1].next = newNode;
+        if (this.horizontalArr[row - 1].next == currEle) {
+            this.horizontalArr[row - 1].next = newNode;
         }
 
         temp = currEle;
@@ -207,7 +251,7 @@ export class LinkedList {
             // console.log(temp)
             temp.col = this.horizontalArr[ind].value;
             if (nextEle != null) {
-                
+
                 temp.top = nextEle.top;
                 temp.bottom = nextEle.bottom;
 
@@ -218,11 +262,11 @@ export class LinkedList {
 
             }
             else {
-                let nextColInd = temp.col.data-1;
+                let nextColInd = temp.col.data - 1;
                 // console.log(nextColInd , temp,nextEle)
                 let verticalTemp = this.horizontalArr[nextColInd].next;
 
-                if (verticalTemp==null) {
+                if (verticalTemp == null) {
                     this.horizontalArr[nextColInd].next = temp;
                     temp.bottom = null;
                     temp.top = null;
@@ -244,6 +288,8 @@ export class LinkedList {
             }
             temp = temp.right;
         }
+        this.miniCanvas.renderCanvas();
+
 
     }
 
@@ -285,8 +331,8 @@ export class LinkedList {
         leftOfCurr ? leftOfCurr.right = newNode : ""
         rightOfCurr ? rightOfCurr.left = newNode : ""
 
-        if(this.verticalArr[col-1].next == currEle){
-            this.verticalArr[col-1].next = newNode;
+        if (this.verticalArr[col - 1].next == currEle) {
+            this.verticalArr[col - 1].next = newNode;
         }
 
         temp = currEle;
@@ -303,7 +349,7 @@ export class LinkedList {
             if (nextEle != null) {
 
                 console.log("nextEle is not null")
-                
+
                 temp.left = nextEle.left;
                 temp.right = nextEle.right;
 
@@ -316,13 +362,13 @@ export class LinkedList {
             else {
 
                 console.log("next ele is null")
-                let nextRowInd = temp.row.data-1;
+                let nextRowInd = temp.row.data - 1;
                 // console.log(nextRowInd , temp,nextEle)
-                console.log("next row indes is ",nextRowInd)
+                console.log("next row indes is ", nextRowInd)
                 let horizontalTemp = this.verticalArr[nextRowInd].next;
                 console.log(horizontalTemp)
 
-                if (horizontalTemp==null) {
+                if (horizontalTemp == null) {
                     this.verticalArr[nextRowInd].next = temp;
                     console.log("worked")
                     temp.right = null;
@@ -346,9 +392,9 @@ export class LinkedList {
             }
             temp = temp.bottom;
         }
+        this.miniCanvas.renderCanvas();
+
 
     }
 
-
 }
-

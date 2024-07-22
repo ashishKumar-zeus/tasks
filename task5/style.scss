@@ -15,7 +15,7 @@ $color_gray: gray;
     box-sizing: border-box;
 }
 
-@mixin centerFlex{
+@mixin centerFlex {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,16 +52,23 @@ body {
             box-sizing: border-box;
             display: flex;
 
-            >.nothing{
+            >.nothing {
                 width: 3%;
                 height: 100%;
 
             }
-            >#horizontalCanvas{
-                width: 96%;
+
+            >.upperCanvas {
+                width: 97%;
                 height: 100%;
-                // border: 1px solid blueviolet;
+
+                >#horizontalCanvas {
+                    width: 99%;
+                    height: 100%;
+                    // border: 1px solid blueviolet;
+                }
             }
+
         }
 
         >.middleSection {
@@ -70,7 +77,6 @@ body {
             display: flex;
             width: 100%;
             box-sizing: border-box;
-
 
             >#verticalCanvas {
                 // border: 1px solid grey;
@@ -82,7 +88,7 @@ body {
             }
 
             >#fullCanvas {
-                width: 98%;
+                width: 97%;
                 display: flex;
                 box-sizing: border-box;
                 position: relative;
@@ -104,7 +110,7 @@ body {
                     width: 99%;
                     @include centerFlex();
 
-                    >#horizontalBar{
+                    >#horizontalBar {
                         height: 80%;
                         width: 80%;
                         background-color: $color_gray;
@@ -127,9 +133,9 @@ body {
                     width: 1%;
                     @include centerFlex();
 
-                    >#verticalBar{
+                    >#verticalBar {
                         height: 80%;
-                        width:80%;
+                        width: 80%;
                         background-color: $color_gray;
                         position: absolute;
                         top: 0;

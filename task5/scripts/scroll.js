@@ -1,14 +1,18 @@
+
+export let horizontallyScrolled = 0;
 export class Scroll {
-    constructor(fullCanvas, horizontalBar, horizontalScroll, verticalBar, verticalScroll) {
+
+    constructor(fullCanvas, horizontalBar, horizontalScroll, verticalBar, verticalScroll, miniCanvas) {
         this.fullCanvas = fullCanvas;
         this.horizontalBar = horizontalBar;
         this.horizontalScroll = horizontalScroll;
         this.verticalBar = verticalBar;
         this.verticalScroll = verticalScroll;
+        this.miniCanvas = miniCanvas;
         this.init();
-        // this.prevScrolled = 0
-        // this.horizontallScrolled = 0;
-        // this.verticallyScrolled = 0;
+
+        this.prevScrolledHorizontal = 0;
+
     }
 
     init() {
@@ -16,13 +20,12 @@ export class Scroll {
         this.updateVerticalScrollBar();
     }
 
-    updateScrollBar() {
-
-    }
-
     updateGrid() {
-        // console.log("horizontally Scroll updated as " , this.horizontallScrolled)
+
+        this.miniCanvas.renderCanvas();
+
     }
+
 
     updateHorizontalScrollBar() {
 
@@ -32,7 +35,6 @@ export class Scroll {
             let isHorizontalScrolling = true;
             let startMouseX = e.clientX;
             let startBarLeft = this.horizontalBar.offsetLeft;
-            let prevBarWidth = this.horizontalBar.offsetWidth;
 
             const onMouseMove = (e) => {
                 e.preventDefault();
@@ -41,31 +43,51 @@ export class Scroll {
                     let diffX = currentMouseX - startMouseX;
                     let newLeft = startBarLeft + diffX;
                     let maxBarLeft = this.horizontalScroll.clientWidth - this.horizontalBar.offsetWidth;
-                    // this.horizontallScrolled = this.prevScrolled +  newLeft;
+                    console.log("updaed")
+                    horizontallyScrolled = this.prevScrolledHorizontal + diffX;
 
-                    newLeft < 0 ? newLeft = 0 : "";
+                    console.log(horizontallyScrolled)
 
-                    // console.log(startMouseX,currentMouseX,diffX,newLeft,maxBarLeft)
+                    if (newLeft < 0) {
+                        newLeft = 0;
+                        this.horizontalBar.style.width = 0.80 * this.horizontalScroll.clientWidth + 'px';
+                        horizontallyScrolled = 0;
+                        //making the scrollbar of original size on reaching the start again
+                    }
+
+
 
                     if (newLeft > maxBarLeft) {
                         newLeft = maxBarLeft;
-                        this.horizontalBar.style.width = `${prevBarWidth * 0.7}px`;
+
+                        //setting width as per scrolled
+                        this.horizontalBar.style.width = `${this.horizontalScroll.clientWidth / horizontallyScrolled * 100}px`;
                         this.horizontalBar.style.left = `${newLeft / 2}px`;
                         startBarLeft = newLeft / 2;
                         startMouseX = e.clientX;
-                        prevBarWidth = prevBarWidth * 0.7;
-                        // this.prevScrolled = this.horizontallScrolled;
+                        this.prevScrolledHorizontal = horizontallyScrolled;
                     }
                     else {
                         this.horizontalBar.style.left = `${newLeft}px`
                     }
 
+                    
+                    if(diffX < 0 && newLeft>0){
+                        //backward
+
+                        let ratio = (horizontallyScrolled/newLeft);
+                        horizontallyScrolled = horizontallyScrolled -  ratio;
+                        this.prevScrolledHorizontal -= ratio;
+                        console.log(horizontallyScrolled,newLeft,ratio)
+                    }
                 }
-                this.updateGrid()
+                
+                this.updateGrid();
             };
 
             const onMouseUp = (e) => {
                 isHorizontalScrolling = false;
+                this.prevScrolledHorizontal = horizontallyScrolled;
                 this.fullCanvas.removeEventListener('mousemove', onMouseMove);
                 this.fullCanvas.removeEventListener('mouseup', onMouseUp);
                 this.fullCanvas.removeEventListener('mouseleave', onMouseUp)
@@ -127,5 +149,4 @@ export class Scroll {
     }
 
 }
-
 
