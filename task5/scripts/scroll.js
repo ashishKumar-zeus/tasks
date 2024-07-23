@@ -1,5 +1,7 @@
 
+
 export let horizontallyScrolled = 0;
+
 export class Scroll {
 
     constructor(fullCanvas, horizontalBar, horizontalScroll, verticalBar, verticalScroll, miniCanvas) {
@@ -10,7 +12,6 @@ export class Scroll {
         this.verticalScroll = verticalScroll;
         this.miniCanvas = miniCanvas;
         this.init();
-
         this.prevScrolledHorizontal = 0;
 
     }
@@ -21,11 +22,8 @@ export class Scroll {
     }
 
     updateGrid() {
-
-        this.miniCanvas.renderCanvas();
-
+        this.miniCanvas.renderCanvasOnScroll();
     }
-
 
     updateHorizontalScrollBar() {
 
@@ -43,10 +41,9 @@ export class Scroll {
                     let diffX = currentMouseX - startMouseX;
                     let newLeft = startBarLeft + diffX;
                     let maxBarLeft = this.horizontalScroll.clientWidth - this.horizontalBar.offsetWidth;
-                    console.log("updaed")
                     horizontallyScrolled = this.prevScrolledHorizontal + diffX;
 
-                    console.log(horizontallyScrolled)
+                    // console.log(horizontallyScrolled)
 
                     if (newLeft < 0) {
                         newLeft = 0;
@@ -54,7 +51,6 @@ export class Scroll {
                         horizontallyScrolled = 0;
                         //making the scrollbar of original size on reaching the start again
                     }
-
 
 
                     if (newLeft > maxBarLeft) {
@@ -71,18 +67,18 @@ export class Scroll {
                         this.horizontalBar.style.left = `${newLeft}px`
                     }
 
-                    
-                    if(diffX < 0 && newLeft>0){
-                        //backward
 
-                        let ratio = (horizontallyScrolled/newLeft);
-                        horizontallyScrolled = horizontallyScrolled -  ratio;
+                    if (diffX < 0 && newLeft > 0) {
+                        //backward
+                        let ratio = (horizontallyScrolled / newLeft);
+                        horizontallyScrolled = horizontallyScrolled - ratio;
                         this.prevScrolledHorizontal -= ratio;
-                        console.log(horizontallyScrolled,newLeft,ratio)
+                        // console.log(horizontallyScrolled, newLeft, ratio)
                     }
+
+                    this.updateGrid();
                 }
-                
-                this.updateGrid();
+
             };
 
             const onMouseUp = (e) => {
@@ -149,4 +145,3 @@ export class Scroll {
     }
 
 }
-

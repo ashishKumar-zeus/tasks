@@ -39,9 +39,7 @@ function scallingCanvas() {
 
     verticalCnvCtx.scale(scaleVer, scaleVer)
 
-
-
-    //scalling vertical canvas
+    //scalling main canvas
 
     const mainCnvWidth = spreadsheetCanvas.clientWidth;
     const mainCnvHeight = spreadsheetCanvas.clientHeight;
@@ -85,7 +83,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     //initiating Canvas Formation
     const inititalNumOfCols = 1000;
-    const initialNumOfRows = 50;
+    const initialNumOfRows = 5;
     const initialWidthHorizontal = 100;
     const initialHeightHorizontal = horizontalCanvas.clientHeight;
     const initialWidthVertical = verticalCanvas.clientWidth;
