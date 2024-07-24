@@ -68,9 +68,9 @@ export class Scroll {
                     }
 
 
-                    if (diffX < 0 && newLeft > 0) {
+                    if (diffX < 0 && newLeft > 0 && this.prevScrolledHorizontal >= 0) {
                         //backward
-                        let ratio = (horizontallyScrolled / newLeft);
+                        let ratio = (horizontallyScrolled / newLeft) * (-diffX);
                         horizontallyScrolled = horizontallyScrolled - ratio;
                         this.prevScrolledHorizontal -= ratio;
                         // console.log(horizontallyScrolled, newLeft, ratio)
@@ -95,6 +95,10 @@ export class Scroll {
         });
 
     }
+
+    // updateHorizontalScrollBar(){
+
+    // }
 
     updateVerticalScrollBar() {
 

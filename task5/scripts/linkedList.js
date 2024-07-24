@@ -27,11 +27,15 @@ export class LinkedList {
         this.createNewNode(1, 2, "a2");
         this.createNewNode(1, 3, "a3");
         this.createNewNode(2, 1, "b1");
-        this.createNewNode(2, 2, "b2");
         this.createNewNode(2, 3, "b3");
         this.createNewNode(3, 1, "c");
         this.createNewNode(3, 2, "c");
         this.createNewNode(3, 3, "c");
+        
+        this.createNewNode(1, 4, "a4");
+        this.createNewNode(2, 4, "b4");
+        this.createNewNode(3, 4, "c4");
+        
 
     }
 

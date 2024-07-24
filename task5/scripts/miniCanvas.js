@@ -20,7 +20,7 @@ class HeaderCell {
 }
 
 export class MiniCanvas {
-    constructor(numOfRows, numOfCols, initialWidthHorizontal, initialHeigthHorizontal, initialWidthVertical, initialHeigthVertical) {
+    constructor(numOfRows, numOfCols, initialWidthHorizontal, initialHeigthHorizontal, initialWidthVertical, initialHeigthVertical,resizeWidth) {
         this.horizontalArr = [];
         this.verticalArr = [];
         this.numOfCols = numOfCols;
@@ -29,6 +29,7 @@ export class MiniCanvas {
         this.initialHeigthHorizontal = initialHeigthHorizontal;
         this.initialWidthVertical = initialWidthVertical;
         this.initialHeigthVertical = initialHeigthVertical;
+        this.resizeWidth = resizeWidth
 
 
         this.init()
@@ -54,14 +55,10 @@ export class MiniCanvas {
             this.verticalArr[i] = cell;
             y += this.initialHeigthVertical;
         }
-        // console.log(this.horizontalArr[0].width)
 
         accWidthHor = this.horizontalArr[0].width;
 
-        // this.drawHorizontalCanvas(currColInd);
-        this.drawHorizontalCanvas(currColInd);
-        this.drawVerticalCanvas(0);
-        this.drawMainCanvas(0, currColInd);
+        this.renderCanvas()
 
         this.handleResizeHorizontal();
     }
@@ -77,6 +74,8 @@ export class MiniCanvas {
 
     renderCanvasOnScroll() {
 
+        console.log(currColInd)
+
         let i = 0;
         accWidthHor = this.horizontalArr[0].width;
         while (accWidthHor < horizontallyScrolled) {
@@ -87,7 +86,6 @@ export class MiniCanvas {
         currColInd = i;
 
         horStartPos = -horizontallyScrolled + accWidthHor - this.horizontalArr[i].width;
-
 
         this.drawHorizontalCanvas(i);
         this.drawVerticalCanvas(0);
@@ -131,13 +129,14 @@ export class MiniCanvas {
             if (!this.horizontalArr[j] || x >= horizontalCanvas.clientWidth) {
                 break;
             }
-            // console.log("a")
             //making text
             let currCell = this.horizontalArr[j];
             horizontalCnvCtx.font = ' 14px Calibri ';
             horizontalCnvCtx.textAlign = 'center';
             horizontalCnvCtx.textBaseline = 'middle';
             horizontalCnvCtx.fillStyle = '#000';
+            // console.log("col x position"  ,x)
+
             horizontalCnvCtx.fillText(this.getColName(currCell.value.data), x + currCell.width / 2, currCell.y + currCell.height / 2);
 
             (j < this.horizontalArr.length) ? x += this.horizontalArr[j].width : "";
@@ -204,7 +203,6 @@ export class MiniCanvas {
             spreadsheetCnvCtx.textAlign = 'right';
             spreadsheetCnvCtx.textBaseline = 'bottom';
             spreadsheetCnvCtx.fillStyle = '#000';
-            console.log(horStartPos+ currCol.x)
             spreadsheetCnvCtx.fillText(currRowEle.data, currCol.x - horizontallyScrolled + currCol.width - 10, currRow.y + currRow.height - 5)
 
             currRowEle = currRowEle.right;
@@ -219,6 +217,7 @@ export class MiniCanvas {
             alert("main Canvas ctx not found")
             return;
         }
+
         spreadsheetCnvCtx.clearRect(0, 0, spreadsheetCanvas.clientWidth, spreadsheetCanvas.clientHeight);
 
         spreadsheetCnvCtx.strokeStyle = '#D3D3D3';
@@ -236,7 +235,6 @@ export class MiniCanvas {
             }
 
             (j < this.horizontalArr.length) ? x += this.horizontalArr[j].width : "";
-
         }
 
         let y = 0;
@@ -269,13 +267,10 @@ export class MiniCanvas {
 
     resizeColumn(index, diff) {
         this.horizontalArr[index].width = Math.max(50, this.horizontalArr[index].width + diff);
-        if(this.horizontalArr[index].width > 50){
-            for (let i = index + 1; i < this.horizontalArr.length; i++) {
-                this.horizontalArr[i].x += diff;
-            }
+        for (let i = index + 1; i < this.horizontalArr.length; i++) {
+            this.horizontalArr[i].x = this.horizontalArr[i - 1].x + this.horizontalArr[i - 1].width;
         }
         this.renderCanvas();
-        // this.printArrs()
     }
 
 
@@ -344,53 +339,66 @@ export class MiniCanvas {
     handleResizeHorizontal() {
 
         let resizingColumn = 0;
-        let resizingColStartPosition = 0;
         let startXPos = 0;
-        let resizeWidth = 15;
+        let resizeWidth = this.resizeWidth;
 
-        horizontalCanvas.addEventListener('mousedown', (e) => {
-            startXPos = e.offsetX;
-
+        const checkForResizeRange = (pos) => {
             let colStartPosition = horStartPos;
-
             let colInd = currColInd;
-            while (colStartPosition + resizeWidth < startXPos) {
+            while (colStartPosition + resizeWidth < pos) {
                 // The resize Width is added for getting correct Col start index , adding resizeWidth let us get correct Index by giving us extra space needed
                 colStartPosition += this.horizontalArr[colInd].width;
                 colInd += 1
             }
-            if (colInd > 0 && Math.abs(startXPos - colStartPosition) < resizeWidth / 2) {
-                isResizing = true;
-                resizingColumn = colInd - 1;
-                resizingColStartPosition = colStartPosition;
-                // console.log(isResizing, resizingColumn, resizingColStartPosition)
+            if (colInd > 0 && Math.abs(pos - colStartPosition) < resizeWidth / 2) {
+                return [true, colInd - 1]
             }
-        })
+            return [false, ""]
+        }
+
+        const onMouseDown = (e) => {
+            e.preventDefault()
+            startXPos = e.offsetX;
+
+            let [isResizable, colInd] = checkForResizeRange(startXPos);
+            isResizable ? horizontalCanvas.style.cursor = 'col-resize' : ""
+
+            if(isResizable){
+                isResizing = true;
+                resizingColumn = colInd
+            }
+        }
 
         const onMouseMove = (e) => {
+            e.preventDefault();
 
             let endXPos = e.offsetX;
 
+            let [isResizable, colInd] = checkForResizeRange(endXPos);
+            isResizable ? horizontalCanvas.style.cursor = 'col-resize' : horizontalCanvas.style.cursor = "default";
+
             if (isResizing) {
                 const diff = endXPos - startXPos;
-                // console.log(diff)
+                horizontalCanvas.style.cursor = 'col-resize';
                 this.resizeColumn(resizingColumn, diff)
                 startXPos = endXPos;
             }
         }
 
         const onMouseUp = (e) => {
+            e.preventDefault()
             if (isResizing) {
                 isResizing = false;
             }
         }
 
-
+        horizontalCanvas.addEventListener('mousedown', onMouseDown)
         horizontalCanvas.addEventListener('mousemove', onMouseMove);
         spreadsheetCanvas.addEventListener('mousemove', onMouseMove);
 
         horizontalCanvas.addEventListener('mouseup', onMouseUp);
         spreadsheetCanvas.addEventListener('mouseup', onMouseUp);
+
 
     }
 

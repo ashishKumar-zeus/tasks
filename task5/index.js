@@ -16,39 +16,28 @@ export let spreadsheetCanvas = null;
 
 function scallingCanvas() {
 
+    const dpr = window.devicePixelRatio || 1;
+
     //scalling horizontal canvas
 
-    const horizontalCnvWidth = horizontalCanvas.clientWidth;
-    const horizontalCnvHeight = horizontalCanvas.clientHeight;
+    horizontalCanvas.width = Math.floor(horizontalCanvas.clientWidth * dpr)
+    horizontalCanvas.height = Math.floor(horizontalCanvas.clientHeight * dpr)
 
-    const scaleHor = window.devicePixelRatio;
-    horizontalCanvas.width = Math.floor(horizontalCnvWidth * scaleHor)
-    horizontalCanvas.height = Math.floor(horizontalCnvHeight * scaleHor)
-
-    horizontalCnvCtx.scale(scaleHor, scaleHor)
-
+    horizontalCnvCtx.scale(dpr, dpr)
 
     //scalling vertical canvas
 
-    const verticalCnvWidth = verticalCanvas.clientWidth;
-    const verticalCnvHeight = verticalCanvas.clientHeight;
+    verticalCanvas.width = Math.floor(verticalCanvas.clientWidth * dpr)
+    verticalCanvas.height = Math.floor(verticalCanvas.clientHeight * dpr)
 
-    const scaleVer = window.devicePixelRatio;
-    verticalCanvas.width = Math.floor(verticalCnvWidth * scaleVer)
-    verticalCanvas.height = Math.floor(verticalCnvHeight * scaleVer)
-
-    verticalCnvCtx.scale(scaleVer, scaleVer)
+    verticalCnvCtx.scale(dpr, dpr)
 
     //scalling main canvas
+    spreadsheetCanvas.width = Math.floor(spreadsheetCanvas.clientWidth * dpr)
+    spreadsheetCanvas.height = Math.floor(spreadsheetCanvas.clientHeight * dpr)
 
-    const mainCnvWidth = spreadsheetCanvas.clientWidth;
-    const mainCnvHeight = spreadsheetCanvas.clientHeight;
 
-    const scaleMain = window.devicePixelRatio;
-    spreadsheetCanvas.width = Math.floor(mainCnvWidth * scaleMain)
-    spreadsheetCanvas.height = Math.floor(mainCnvHeight * scaleMain)
-
-    spreadsheetCnvCtx.scale(scaleMain, scaleMain)
+    spreadsheetCnvCtx.scale(dpr, dpr)
 
 
 }
@@ -69,34 +58,30 @@ document.addEventListener('DOMContentLoaded', (e) => {
     horizontalCanvas = document.getElementById('horizontalCanvas')
     verticalCanvas = document.getElementById('verticalCanvas')
     spreadsheetCanvas = document.getElementById('spreadsheetCanvas')
-    const ctxHor = horizontalCanvas.getContext('2d')
-    const ctxVer = verticalCanvas.getContext('2d')
-    const ctxMain = spreadsheetCanvas.getContext('2d')
 
-    horizontalCnvCtx = ctxHor;
-    verticalCnvCtx = ctxVer;
-    spreadsheetCnvCtx = ctxMain;
+    horizontalCnvCtx =  horizontalCanvas.getContext('2d');
+    verticalCnvCtx =  verticalCanvas.getContext('2d');
+    spreadsheetCnvCtx =  spreadsheetCanvas.getContext('2d');
 
 
     //scalling canvas
     scallingCanvas()
-
+    
     //initiating Canvas Formation
     const inititalNumOfCols = 1000;
-    const initialNumOfRows = 5;
+    const initialNumOfRows = 50;
     const initialWidthHorizontal = 100;
     const initialHeightHorizontal = horizontalCanvas.clientHeight;
     const initialWidthVertical = verticalCanvas.clientWidth;
     const initialHeightVertical = 30;
+    const resizeWidth = 12;
 
-    let miniCanvas = new MiniCanvas(initialNumOfRows, inititalNumOfCols, initialWidthHorizontal, initialHeightHorizontal, initialWidthVertical, initialHeightVertical)
+    let miniCanvas = new MiniCanvas(initialNumOfRows, inititalNumOfCols, initialWidthHorizontal, initialHeightHorizontal, initialWidthVertical, initialHeightVertical,resizeWidth)
 
     const horizontalArr = miniCanvas.horizontalArr;
     const verticalArr = miniCanvas.verticalArr;
 
-
     const ll = new LinkedList(horizontalArr, verticalArr, miniCanvas);
-
 
     //intiating ScrollFunctionalities
     new Scroll(fullCanvas, horizontalBar, horizontalScroll, verticalBar, verticalScroll, miniCanvas);
