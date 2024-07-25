@@ -16,7 +16,7 @@ export let spreadsheetCanvas = null;
 
 function scallingCanvas() {
 
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = window.devicePixelRatio;
 
     //scalling horizontal canvas
 
@@ -59,24 +59,26 @@ document.addEventListener('DOMContentLoaded', (e) => {
     verticalCanvas = document.getElementById('verticalCanvas')
     spreadsheetCanvas = document.getElementById('spreadsheetCanvas')
 
-    horizontalCnvCtx =  horizontalCanvas.getContext('2d');
-    verticalCnvCtx =  verticalCanvas.getContext('2d');
-    spreadsheetCnvCtx =  spreadsheetCanvas.getContext('2d');
-
+    horizontalCnvCtx = horizontalCanvas.getContext('2d');
+    verticalCnvCtx = verticalCanvas.getContext('2d');
+    spreadsheetCnvCtx = spreadsheetCanvas.getContext('2d');
 
     //scalling canvas
     scallingCanvas()
-    
+
     //initiating Canvas Formation
     const inititalNumOfCols = 1000;
-    const initialNumOfRows = 50;
+    const initialNumOfRows = 500;
     const initialWidthHorizontal = 100;
     const initialHeightHorizontal = horizontalCanvas.clientHeight;
     const initialWidthVertical = verticalCanvas.clientWidth;
     const initialHeightVertical = 30;
     const resizeWidth = 12;
+    const resizeHeight = 8;
 
-    let miniCanvas = new MiniCanvas(initialNumOfRows, inititalNumOfCols, initialWidthHorizontal, initialHeightHorizontal, initialWidthVertical, initialHeightVertical,resizeWidth)
+    const offsetSharpness = 0.5;
+
+    let miniCanvas = new MiniCanvas(initialNumOfRows, inititalNumOfCols, initialWidthHorizontal, initialHeightHorizontal, initialWidthVertical, initialHeightVertical, resizeWidth, resizeHeight, offsetSharpness)
 
     const horizontalArr = miniCanvas.horizontalArr;
     const verticalArr = miniCanvas.verticalArr;
@@ -87,3 +89,4 @@ document.addEventListener('DOMContentLoaded', (e) => {
     new Scroll(fullCanvas, horizontalBar, horizontalScroll, verticalBar, verticalScroll, miniCanvas);
 
 })
+
