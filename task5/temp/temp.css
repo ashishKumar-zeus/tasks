@@ -1,0 +1,18 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100vw;
+}
+body > header {
+  height: 20%;
+  box-sizing: border-box;
+}
+body > .mainContainer {
+  height: 80%;
+  box-sizing: border-box;
+}
+body > .mainContainer > .excel {
+  border: 1px solid black;
+}/*# sourceMappingURL=temp.css.map */

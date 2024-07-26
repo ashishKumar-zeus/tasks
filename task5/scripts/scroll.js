@@ -76,8 +76,8 @@ export class Scroll {
                 // It is used for increasing more conentent , when we reach 80% of total content width , total content width get increases by horziontal Scroll clienWidth
                 if (this.horizontallyScrolled >= .8 * (this.totalContentWidth - this.horizontalScroll.clientWidth)) {
                     this.totalContentWidth += this.horizontalScroll.clientWidth;
-
                 }
+                
                 // This is used when horizontally scroll become less or equal to 0 , the total content Width become equal to minContent Width 
                 else if (this.horizontallyScrolled <= 0) {
                     this.totalContentWidth = minContentWidth;

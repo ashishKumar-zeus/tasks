@@ -67,7 +67,6 @@ export class MiniCanvas {
             y += this.initialHeigthVertical;
         }
 
-        this.accWidthHor = this.horizontalArr[0].width;
 
         this.renderCanvas()
     }
