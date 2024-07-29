@@ -1,0 +1,65 @@
+@mixin resetCss {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+@mixin centerFlex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body {
+    @include resetCss();
+    height: 100vh;
+    width: 100vw;
+
+    >header {
+        @include resetCss();
+        height: 18%;
+        box-sizing: border-box;
+    }
+
+    >.mainContainer {
+
+        @include resetCss();
+        height: 80%;
+        box-sizing: border-box;
+
+        >.row {
+            @include resetCss();
+
+            >.excel {
+                @include resetCss();
+                border: 1px solid black;
+                resize: both;
+            }
+
+            // .resizable {
+            //     border: 1px solid #000;
+            //     padding: 10px;
+            //     resize: both;
+            //     overflow: auto;
+            //     transition: width 0.2s, height 0.2s;
+            //     margin: 5px;
+            //   }
+        }
+
+
+
+        >.footer {
+            display: flex;
+            @include resetCss();
+
+            >.controlBtns {
+                @include resetCss();
+
+            }
+        }
+
+
+
+    }
+
+}

@@ -8,5 +8,4 @@ document.addEventListener('DOMContentLoaded',()=>{
     const excel2 = new Excel(500,500,mainContainer);
     const excel3 = new Excel(500,500,mainContainer);
 
-
 })

@@ -1,0 +1,44 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100vw;
+}
+body > header {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 18%;
+  box-sizing: border-box;
+}
+body > .mainContainer {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 80%;
+  box-sizing: border-box;
+}
+body > .mainContainer > .row {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+body > .mainContainer > .row > .excel {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  resize: both;
+}
+body > .mainContainer > .footer {
+  display: flex;
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+body > .mainContainer > .footer > .controlBtns {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}/*# sourceMappingURL=style.css.map */
