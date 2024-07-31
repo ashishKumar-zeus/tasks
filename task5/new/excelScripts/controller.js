@@ -39,6 +39,7 @@ export class Controller {
 
         this.rowArr[this.currRow - 1] = [excel];
 
+
         this.mainContainer.appendChild(row);
 
         //applying changes to main grid % values
@@ -47,12 +48,13 @@ export class Controller {
             newGTR += `${100 / this.currRow}% `;
         }
 
+
         this.mainContainer.style.gridTemplateRows = newGTR;
         this.mainContainer.style.gridTemplateColumns = '';
 
     }
 
-    addNewCol(rowNum ) {
+    addNewCol(rowNum) {
 
         //getting the row element
 
@@ -138,7 +140,7 @@ export class Controller {
             let xPos = e.clientX;
             let yPos = e.clientY;
 
-            // [] = checkForResizeRange(xPos, yPos);
+            [] = checkForResizeRange(xPos, yPos);
         });
     }
 
@@ -147,12 +149,23 @@ export class Controller {
 
         // setInitialCss
         this.mainContainer.style.display = "grid";
-        this.mainContainer.style.gridTemplateRows = '100%';
 
         //adding First Row
-        this.addNewRow("blue");
+        this.addNewRow();
 
-        this.handleResize();
+
+
+        // this.addNewRow()
+        // this.addNewCol(1)
+        // this.addNewCol(2)
+
+        // this.addNewCol(1)
+        // this.addNewCol(2)
+
+
+
+
+        // this.handleResize();
 
     }
 }

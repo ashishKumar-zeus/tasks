@@ -12,17 +12,15 @@ export class Excel {
 
     init() {
         this.constructExcel();
-
     }
- 
+
     constructExcel() {
 
         const excel = document.createElement('div');
-        excel.className = 'excel resizable';
-        excel.setAttribute('id',`rowCol${this.row}_${this.col}`)
+        excel.className = 'excel';
+        excel.setAttribute('id', `rowCol${this.row}_${this.col}`)
         this.rowContainer.appendChild(excel)
-        new Sheet(excel);
-
+        new Sheet(excel,this.row,this.col,this.rowContainer);
 
     }
 
