@@ -17,11 +17,13 @@ body > .mainContainer {
   padding: 0px;
   box-sizing: border-box;
   height: 80%;
+  background-color: black;
 }
 body > .mainContainer > .row {
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
+  display: grid;
 }
 body > .mainContainer > .row > .excel {
   margin: 0px;
@@ -54,8 +56,8 @@ body > .mainContainer > .row > .excel > .topSection > .upperCanvas > .horizontal
   width: 99%;
   height: 100%;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0%;
+  left: 0%;
 }
 body > .mainContainer > .row > .excel > .middleSection {
   height: 95%;
@@ -70,7 +72,6 @@ body > .mainContainer > .row > .excel > .middleSection > .verticalCanvas {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: aliceblue;
 }
 body > .mainContainer > .row > .excel > .middleSection > .fullCanvas {
   width: 97%;

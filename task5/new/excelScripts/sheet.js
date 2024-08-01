@@ -10,6 +10,11 @@ export class Sheet {
         this.row = row ;
         this.col = col;
 
+
+        this.scale = 1;
+        this.maxScale = 15;
+        this.minScale = 0.5;
+        
         this.excel = excel;
         this.horizontalCnvCtx = null;
         this.verticalCnvCtx = null;
@@ -132,7 +137,7 @@ export class Sheet {
         this.spreadsheetCanvas = spreadsheetCanvas;
         this.fullCanvas = fullCanvas;
 
-        console.log(horizontalCanvas,verticalCanvas)
+        // console.log(horizontalCanvas,verticalCanvas)
 
     }
 
@@ -182,8 +187,6 @@ export class Sheet {
 
         const dpr = window.devicePixelRatio;
 
-        
-
         //scalling horizontal canvas
 
         this.horizontalCanvas.width = Math.floor(this.horizontalCanvas.clientWidth * dpr)
@@ -205,7 +208,80 @@ export class Sheet {
 
         this.spreadsheetCnvCtx.scale(dpr, dpr)
 
+
     }
+
+
+    // draw() {
+
+
+    //     this.horizontalCnvCtx.scale(this.scale,this.scale)
+    //     this.verticalCnvCtx.scale(this.scale,this.scale)
+    //     this.spreadsheetCnvCtx.scale(this.scale,this.scale)
+
+        
+    //    //initiating Canvas Formation
+    //    const inititalNumOfCols = 1000;
+    //    const initialNumOfRows = 500;
+    //    const initialWidthHorizontal = 100;
+    //    const initialHeightHorizontal = this.horizontalCanvas.clientHeight;
+    //    const initialWidthVertical = this.verticalCanvas.clientWidth;
+    //    const initialHeightVertical = 30;
+    //    const resizeWidth = 12;
+    //    const resizeHeight = 8;
+    //    const offsetSharpness = 0.5;
+
+    //    let miniCanvas = new MiniCanvas(initialNumOfRows, inititalNumOfCols, initialWidthHorizontal, initialHeightHorizontal, initialWidthVertical, initialHeightVertical, resizeWidth, resizeHeight, offsetSharpness, this.getCnv, this.getCtx)
+
+    //    const horizontalArr = miniCanvas.horizontalArr;
+    //    const verticalArr = miniCanvas.verticalArr;
+
+    //    const ll = new LinkedList(horizontalArr, verticalArr, miniCanvas);
+
+    //    //intiating ScrollFunctionalities
+    //    new Scroll(this.fullCanvas, this.horizontalBar, this.horizontalScroll, this.verticalBar, this.verticalScroll, miniCanvas);
+
+    // }
+
+    // resizeCanvas() {
+    //     let rect = this.spreadsheetCanvas.getBoundingClientRect();
+    //     console.log(rect)
+    //     this.spreadsheetCanvas.width = rect.width * window.devicePixelRatio;
+    //     this.spreadsheetCanvas.height = rect.height * window.devicePixelRatio;
+    //     this.spreadsheetCnvCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+        
+
+    //      rect = this.horizontalCanvas.getBoundingClientRect();
+    //     console.log(rect)
+    //     this.horizontalCanvas.width = rect.width * window.devicePixelRatio;
+    //     this.horizontalCanvas.height = rect.height * window.devicePixelRatio;
+    //     this.horizontalCnvCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+        
+    //      rect = this.verticalCanvas.getBoundingClientRect();
+    //     console.log(rect)
+    //     this.verticalCanvas.width = rect.width * window.devicePixelRatio;
+    //     this.verticalCanvas.height = rect.height * window.devicePixelRatio;
+    //     this.verticalCnvCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    //     this.draw(); // Redraw the canvas content
+    // }
+
+    // scallingCnv(){
+    //     this.fullCanvas.addEventListener('wheel', (event) => {
+    //         event.preventDefault();
+    //         console.log(event)
+    //         if (event.deltaY < 0) {
+    //             this.scale = Math.min(this.scale * 1.1, this.maxScale); // Zoom in
+    //         } else {
+    //             this.scale = Math.max(this.scale / 1.1, this.minScale); // Zoom out
+    //         }
+    //         this.resizeCanvas();
+    //     });
+    // }
+    
+
 
 
 }

@@ -150,10 +150,10 @@ export class MiniCanvas {
             return;
         }
 
-       this.horizontalCnvCtx.clearRect(0, 0, this.horizontalCanvas.clientWidth, this.horizontalCanvas.clientHeight);
+       this.horizontalCnvCtx.clearRect(0, 0, this.horizontalCanvas.width, this.horizontalCanvas.height);
 
         //using stroke
-       this.horizontalCnvCtx.strokeStyle = '#D3D3D3';
+       this.horizontalCnvCtx.strokeStyle = 'black';
        this.horizontalCnvCtx.lineWidth = 1 - this.offsetSharpness;
 
         let x = this.horStartPos;
@@ -169,7 +169,7 @@ export class MiniCanvas {
            this.horizontalCnvCtx.lineTo(x, this.initialHeigthHorizontal);
            this.horizontalCnvCtx.stroke();
 
-            if (!this.horizontalArr[j] || x >= this.horizontalCanvas.clientWidth) {
+            if (!this.horizontalArr[j] || x >= this.horizontalCanvas.width) {
                 break;
             }
 
@@ -198,9 +198,9 @@ export class MiniCanvas {
             return;
         }
 
-       this.verticalCnvCtx.clearRect(0, 0, this.verticalCanvas.clientWidth, this.verticalCanvas.clientHeight);
+       this.verticalCnvCtx.clearRect(0, 0, this.verticalCanvas.width, this.verticalCanvas.height);
 
-       this.verticalCnvCtx.strokeStyle = '#D3D3D3';
+       this.verticalCnvCtx.strokeStyle = 'black';
        this.verticalCnvCtx.lineWidth = 1 - this.offsetSharpness;
 
         let y = this.verStartPos;
@@ -213,10 +213,11 @@ export class MiniCanvas {
            this.verticalCnvCtx.lineTo(this.initialWidthVertical, y);
            this.verticalCnvCtx.stroke();
 
-            if (!this.verticalArr[j] || y >= this.verticalCanvas.clientHeight) {
+            if (!this.verticalArr[j] || y >= this.verticalCanvas.height) {
                 break;
             }
             //making text
+            
             let currCell = this.verticalArr[j];
            this.verticalCnvCtx.font = '14px Calibri';
            this.verticalCnvCtx.textAlign = 'right';
@@ -245,7 +246,7 @@ export class MiniCanvas {
 
             let currCol = this.horizontalArr[currRowEle.col.data - 1];
 
-            if (currCol.x - this.horizontallyScrolled > this.spreadsheetCanvas.clientWidth) {
+            if (currCol.x - this.horizontallyScrolled > this.spreadsheetCanvas.width) {
                 break;
             }
 
@@ -269,19 +270,19 @@ export class MiniCanvas {
             return;
         }
 
-       this.spreadsheetCnvCtx.clearRect(0, 0, this.spreadsheetCanvas.clientWidth, this.spreadsheetCanvas.clientHeight);
+       this.spreadsheetCnvCtx.clearRect(0, 0, this.spreadsheetCanvas.width, this.spreadsheetCanvas.height);
 
-       this.spreadsheetCnvCtx.strokeStyle = '#D3D3D3';
+       this.spreadsheetCnvCtx.strokeStyle = 'black';
        this.spreadsheetCnvCtx.lineWidth = 1 - this.offsetSharpness;
 
         let x = this.horStartPos;
         for (let j = startColInd; j <= this.horizontalArr.length; j++) {
            this.spreadsheetCnvCtx.beginPath();
            this.spreadsheetCnvCtx.moveTo(x, 0);
-           this.spreadsheetCnvCtx.lineTo(x, this.spreadsheetCanvas.clientHeight);
+           this.spreadsheetCnvCtx.lineTo(x, this.spreadsheetCanvas.height);
            this.spreadsheetCnvCtx.stroke();
 
-            if (!this.horizontalArr[j] || x >= this.horizontalCanvas.clientWidth) {
+            if (!this.horizontalArr[j] || x >= this.horizontalCanvas.width) {
                 break;
             }
 
@@ -293,10 +294,10 @@ export class MiniCanvas {
         for (let j = startRowInd; j <= this.verticalArr.length; j++) {
            this.spreadsheetCnvCtx.beginPath();
            this.spreadsheetCnvCtx.moveTo(0, y);
-           this.spreadsheetCnvCtx.lineTo(this.spreadsheetCanvas.clientWidth, y);
+           this.spreadsheetCnvCtx.lineTo(this.spreadsheetCanvas.width, y);
            this.spreadsheetCnvCtx.stroke();
 
-            if (!this.verticalArr[j] || y >= this.verticalCanvas.clientHeight) {
+            if (!this.verticalArr[j] || y >= this.verticalCanvas.height) {
                 break;
             }
             this.drawCellContentAtRow(this.verticalArr[j], startColInd);

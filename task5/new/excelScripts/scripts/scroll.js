@@ -10,7 +10,6 @@ export class Scroll {
         this.verticalScroll = verticalScroll;
         this.miniCanvas = miniCanvas;
 
-        this.init();
         
         this.horizontallyScrolled = 0;
         this.verticallyScrolled = 0;
@@ -18,12 +17,18 @@ export class Scroll {
         this.totalContentWidth = 0;
         this.totalContentHeight = 0;
 
+        this.wheelScrollRate = 10;
+        this.init();
+
+
     }
 
     init() {
         this.updateHorizontalScrollBar();
         this.updateVerticalScrollBar();
         this.totalContentWidth = this.horizontalScroll.clientWidth * 2;
+        this.totalContentHeight = this.verticalScroll.clientHeight * 2;
+
     }
 
     updateGrid() {
@@ -31,17 +36,22 @@ export class Scroll {
     }
 
     updateHorizontalScrollBar() {
+
+        let isHorizontalScrolling = false;
+        let startMouseX = 0;
+        let startBarLeft = 0;
+
         this.horizontalBar.addEventListener('pointerdown', (e) => {
             e.preventDefault();
 
             //To check if horizontal Scrolling
-            let isHorizontalScrolling = true;
+            isHorizontalScrolling = true;
 
             // To get Starting position of mouse with respect to page
-            let startMouseX = e.pageX;
+            startMouseX = e.pageX;
 
             // To get position of horzontal bar from left
-            let startBarLeft = this.horizontalBar.offsetLeft;
+            startBarLeft = this.horizontalBar.offsetLeft;
 
 
 
@@ -104,59 +114,66 @@ export class Scroll {
 
             window.addEventListener('pointermove', onMouseMove);
             window.addEventListener('pointerup', onMouseUp);
+
+            
         });
     }
 
 
     updateVerticalScrollBar() {
+
+        let isVerticalScrolling = false;
+        let startMouseY = 0;
+        let startBarTop = this.verticalBar.offsetTop;
+        let currentMouseY = 0;
+
+        //fucntion to update the scroll bar and content using the diff
+        const updateScrollByDiff=(diffY)=>{
+
+            let newBarTop = startBarTop + diffY;
+
+            let maxBarTop = this.verticalScroll.clientHeight - this.verticalBar.offsetHeight;
+            newBarTop = Math.max(0, Math.min(newBarTop, maxBarTop));
+
+            let minContentHeight = this.verticalScroll.clientHeight * 2;
+
+            this.verticallyScrolled = newBarTop * this.totalContentHeight / this.verticalScroll.clientHeight;
+
+            if (this.verticallyScrolled >= .8 * (this.totalContentHeight - this.verticalScroll.clientHeight)) {
+                this.totalContentHeight += this.verticalScroll.clientHeight;
+
+            }
+            else if (this.verticallyScrolled <= 0) {
+                this.totalContentHeight = minContentHeight;
+            }
+
+            newBarTop = this.verticallyScrolled * this.verticalScroll.clientHeight / this.totalContentHeight;
+
+            this.verticalBar.style.height = (this.verticalScroll.clientHeight * this.verticalScroll.clientHeight / this.totalContentHeight) + "px"
+
+            this.verticalBar.style.top = `${newBarTop}px`;
+
+            startMouseY = currentMouseY;
+            startBarTop = newBarTop;
+
+            currentMouseY = 0;
+
+            this.updateGrid();
+        }
+    
         this.verticalBar.addEventListener('pointerdown', (e) => {
             e.preventDefault();
 
-            let isVerticalScrolling = true;
-
-            let startMouseY = e.pageY;
-
-            let startBarTop = this.verticalBar.offsetTop;
-
+            isVerticalScrolling = true;
+            startMouseY = e.pageY;
+            startBarTop = this.verticalBar.offsetTop;
 
             const onMouseMove = (e) => {
                 if (!isVerticalScrolling) return;
                 e.preventDefault();
-
-                let currentMouseY = e.pageY;
-
+                currentMouseY = e.pageY;
                 let diffY = currentMouseY - startMouseY;
-
-
-                let newBarTop = startBarTop + diffY;
-
-                let maxBarTop = this.verticalScroll.clientHeight - this.verticalBar.offsetHeight;
-                newBarTop = Math.max(0, Math.min(newBarTop, maxBarTop));
-
-                let minContentHeight = this.verticalScroll.clientHeight * 2;
-
-                console.log(newBarTop)
-
-                this.verticallyScrolled = newBarTop * this.totalContentHeight / this.verticalScroll.clientHeight;
-
-                if (this.verticallyScrolled >= .8 * (this.totalContentHeight - this.verticalScroll.clientHeight)) {
-                    this.totalContentHeight += this.verticalScroll.clientHeight;
-
-                }
-                else if (this.verticallyScrolled <= 0) {
-                    this.totalContentHeight = minContentHeight;
-                }
-
-                newBarTop = this.verticallyScrolled * this.verticalScroll.clientHeight / this.totalContentHeight;
-
-                this.verticalBar.style.height = (this.verticalScroll.clientHeight * this.verticalScroll.clientHeight / this.totalContentHeight) + "px"
-
-                this.verticalBar.style.top = `${newBarTop}px`;
-
-                startMouseY = currentMouseY;
-                startBarTop = newBarTop;
-
-                this.updateGrid();
+                updateScrollByDiff(diffY);
             };
 
             const onMouseUp = () => {
@@ -167,7 +184,13 @@ export class Scroll {
 
             window.addEventListener('pointermove', onMouseMove);
             window.addEventListener('pointerup', onMouseUp);
+            
         });
+        
+        this.fullCanvas.addEventListener('wheel',(e)=>{
+            e.preventDefault();
+            updateScrollByDiff(e.deltaY * this.wheelScrollRate / 100)
+        })
     }
 
 }

@@ -25,9 +25,11 @@ body {
 
         @include resetCss();
         height: 80%;
+        background-color: black;
 
         >.row {
             @include resetCss();
+            display: grid;
 
             >.excel {
                 @include resetCss();
@@ -48,6 +50,7 @@ body {
                     >.nothing {
                         width: 3%;
                         height: 100%;
+                        // background-color: red;
 
                     }
 
@@ -61,8 +64,9 @@ body {
                             height: 100%;
                             //positioning is used inorder to tackle the default behaviour of canvas
                             position: absolute;
-                            top: 0;
-                            left: 0;
+                            top: 0%;
+                            left: 0%;
+                            // background-color: blue;
                             // border: 1px solid blueviolet;
                         }
                     }
@@ -83,8 +87,8 @@ body {
                         height: 98%;
                         position: absolute;
                         top: 0;
+                        // background-color: green;
                         left: 0;
-                        background-color: aliceblue;
 
                     }
 
@@ -100,6 +104,7 @@ body {
                             width: 99%;
                             height: 98%;
                             background-color: white;
+
                             position: absolute;
                             top: 0;
                             left: 0;
@@ -157,18 +162,6 @@ body {
             }
 
         }
-
-
-
-        // >.footer {
-        //     display: flex;
-        //     @include resetCss();
-
-        //     >.controlBtns {
-        //         @include resetCss();
-
-        //     }
-        // }
 
 
 
