@@ -130,6 +130,12 @@ body > .mainContainer > .row > .excel > .middleSection > .fullCanvas > .vertical
   transition: all 0.1s;
   border-radius: 25px;
 }
-body > .mainContainer > .row > .excel > input {
+body > .mainContainer > .row > .excel > .middleSection > .fullCanvas > input {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
   display: none;
+  position: absolute;
+  border: 3px solid green;
+  outline: none;
 }/*# sourceMappingURL=style.css.map */

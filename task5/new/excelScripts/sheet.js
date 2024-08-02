@@ -32,6 +32,8 @@ export class Sheet {
         this.horizontalScroll = null;
         this.verticalScroll = null;
 
+        this.inputEle = null;
+
         this.createCanvas()
     }
 
@@ -112,20 +114,20 @@ export class Sheet {
 
         horizontalScroll.appendChild(horizontalBar);
 
-        fullCanvas.appendChild(spreadsheetCanvas);
-        fullCanvas.appendChild(verticalScroll);
-        fullCanvas.appendChild(horizontalScroll);
-
-        middleSection.appendChild(verticalCanvas);
-        middleSection.appendChild(fullCanvas);
-
         let inputEle = document.createElement('input');
         inputEle.setAttribute('type', 'text');
         inputEle.setAttribute('id', 'cellInput')
 
+        fullCanvas.appendChild(spreadsheetCanvas);
+        fullCanvas.appendChild(verticalScroll);
+        fullCanvas.appendChild(horizontalScroll);
+        fullCanvas.appendChild(inputEle)
+
+        middleSection.appendChild(verticalCanvas);
+        middleSection.appendChild(fullCanvas);
+
         this.excel.appendChild(topSection);
         this.excel.appendChild(middleSection);
-        this.excel.appendChild(inputEle)
 
         //make all canvas and required variables
         this.horizontalCanvas = horizontalCanvas;
@@ -136,6 +138,7 @@ export class Sheet {
         this.verticalBar = verticalBar;
         this.spreadsheetCanvas = spreadsheetCanvas;
         this.fullCanvas = fullCanvas;
+        this.inputEle = inputEle;
 
         // console.log(horizontalCanvas,verticalCanvas)
 
@@ -163,12 +166,13 @@ export class Sheet {
         const resizeHeight = 8;
         const offsetSharpness = 0.5;
 
-        let miniCanvas = new MiniCanvas(initialNumOfRows, inititalNumOfCols, initialWidthHorizontal, initialHeightHorizontal, initialWidthVertical, initialHeightVertical, resizeWidth, resizeHeight, offsetSharpness, this.getCnv, this.getCtx)
+
+        let miniCanvas = new MiniCanvas(initialNumOfRows, inititalNumOfCols, initialWidthHorizontal, initialHeightHorizontal, initialWidthVertical, initialHeightVertical, resizeWidth, resizeHeight, offsetSharpness, this.getCnv, this.getCtx, this.inputEle)
 
         const horizontalArr = miniCanvas.horizontalArr;
         const verticalArr = miniCanvas.verticalArr;
-
-        const ll = new LinkedList(horizontalArr, verticalArr, miniCanvas);
+    
+        const ll = new LinkedList(horizontalArr, verticalArr,miniCanvas);
 
         //intiating ScrollFunctionalities
         new Scroll(this.fullCanvas, this.horizontalBar, this.horizontalScroll, this.verticalBar, this.verticalScroll, miniCanvas);
@@ -280,8 +284,4 @@ export class Sheet {
     //         this.resizeCanvas();
     //     });
     // }
-    
-
-
-
 }

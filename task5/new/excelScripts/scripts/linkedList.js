@@ -15,7 +15,8 @@ class Node {
 export class LinkedList {
 
     // Initialize Class Variables
-    constructor(horizontalArr, verticalArr, miniCanvas) {
+    constructor(horizontalArr, verticalArr,miniCanvas) {
+        
         this.horizontalArr = horizontalArr;
         this.verticalArr = verticalArr;
         this.miniCanvas = miniCanvas;

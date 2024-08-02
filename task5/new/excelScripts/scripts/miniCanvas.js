@@ -12,7 +12,7 @@ class HeaderCell {
 }
 
 export class MiniCanvas {
-    constructor(numOfRows, numOfCols, initialWidthHorizontal, initialHeigthHorizontal, initialWidthVertical, initialHeigthVertical, resizeWidth, resizeHeight, offsetSharpness, getCnv, getCtx) {
+    constructor(numOfRows, numOfCols, initialWidthHorizontal, initialHeightHorizontal, initialWidthVertical, initialHeigthVertical, resizeWidth, resizeHeight, offsetSharpness, getCnv, getCtx, inputEle) {
 
         this.horizontalArr = [];
         this.verticalArr = [];
@@ -20,11 +20,11 @@ export class MiniCanvas {
         this.numOfRows = numOfRows;
 
         this.initialWidthHorizontal = initialWidthHorizontal;
-        this.initialHeigthHorizontal = initialHeigthHorizontal;
+        this.initialHeightHorizontal = initialHeightHorizontal;
         this.initialWidthVertical = initialWidthVertical;
         this.initialHeigthVertical = initialHeigthVertical;
 
-        // console.log(initialHeigthHorizontal)
+        // console.log(initialHeightHorizontal)
 
         this.resizeWidth = resizeWidth;
         this.resizeHeight = resizeHeight;
@@ -57,14 +57,18 @@ export class MiniCanvas {
         this.verticalCnvCtx = null;
         this.spreadsheetCnvCtx = null;
 
+        this.inputEle = inputEle;
+
         // console.log(this.horizontalCanvas)
 
         [this.horizontalCnvCtx, this.verticalCnvCtx, this.spreadsheetCnvCtx] = this.getCtx;
 
 
+
         this.init();
         this.handleResizeHorizontal();
         this.handleResizeVertical();
+        this.handleSelect();
     }
 
     init() {
@@ -72,7 +76,7 @@ export class MiniCanvas {
         let x = 0;
         let y = 0;
         for (let i = 0; i < this.numOfCols; i++) {
-            const cell = new HeaderCell(x, y, this.initialWidthHorizontal, this.initialHeigthHorizontal, i + 1);
+            const cell = new HeaderCell(x, y, this.initialWidthHorizontal, this.initialHeightHorizontal, i + 1);
             this.horizontalArr[i] = cell;
             x += this.initialWidthHorizontal;
         }
@@ -85,10 +89,8 @@ export class MiniCanvas {
             y += this.initialHeigthVertical;
         }
 
-        // this.printArrs()
         this.renderCanvas()
 
-        console.log(this.horizontalCanvas,this.verticalCanvas)
     }
 
     renderCanvas() {
@@ -129,8 +131,11 @@ export class MiniCanvas {
         this.drawHorizontalCanvas(this.currStartColInd);
         this.drawVerticalCanvas(this.currStartRowInd);
         this.drawMainCanvas(this.currStartRowInd, this.currStartColInd);
-    }
 
+
+        this.handleSelect();
+
+    }
 
     getColName(n) {
         let columnName = '';
@@ -150,11 +155,11 @@ export class MiniCanvas {
             return;
         }
 
-       this.horizontalCnvCtx.clearRect(0, 0, this.horizontalCanvas.width, this.horizontalCanvas.height);
+        this.horizontalCnvCtx.clearRect(0, 0, this.horizontalCanvas.width, this.horizontalCanvas.height);
 
         //using stroke
-       this.horizontalCnvCtx.strokeStyle = 'black';
-       this.horizontalCnvCtx.lineWidth = 1 - this.offsetSharpness;
+        this.horizontalCnvCtx.strokeStyle = 'black';
+        this.horizontalCnvCtx.lineWidth = 1 - this.offsetSharpness;
 
         let x = this.horStartPos;
 
@@ -164,10 +169,10 @@ export class MiniCanvas {
 
 
             //making vertical line
-           this.horizontalCnvCtx.beginPath();
-           this.horizontalCnvCtx.moveTo(x, 0);
-           this.horizontalCnvCtx.lineTo(x, this.initialHeigthHorizontal);
-           this.horizontalCnvCtx.stroke();
+            this.horizontalCnvCtx.beginPath();
+            this.horizontalCnvCtx.moveTo(x, 0);
+            this.horizontalCnvCtx.lineTo(x, this.initialHeightHorizontal);
+            this.horizontalCnvCtx.stroke();
 
             if (!this.horizontalArr[j] || x >= this.horizontalCanvas.width) {
                 break;
@@ -175,12 +180,12 @@ export class MiniCanvas {
 
             //making text
             let currCell = this.horizontalArr[j];
-           this.horizontalCnvCtx.font = ' 14px Calibri ';
-           this.horizontalCnvCtx.textAlign = 'center';
-           this.horizontalCnvCtx.textBaseline = 'middle';
-           this.horizontalCnvCtx.fillStyle = '#000';
+            this.horizontalCnvCtx.font = ' 14px Calibri ';
+            this.horizontalCnvCtx.textAlign = 'center';
+            this.horizontalCnvCtx.textBaseline = 'middle';
+            this.horizontalCnvCtx.fillStyle = '#000';
 
-           this.horizontalCnvCtx.fillText(this.getColName(currCell.value.data), x + currCell.width / 2, currCell.y + currCell.height / 2);
+            this.horizontalCnvCtx.fillText(this.getColName(currCell.value.data), x + currCell.width / 2, currCell.y + currCell.height / 2);
 
 
 
@@ -198,32 +203,31 @@ export class MiniCanvas {
             return;
         }
 
-       this.verticalCnvCtx.clearRect(0, 0, this.verticalCanvas.width, this.verticalCanvas.height);
+        this.verticalCnvCtx.clearRect(0, 0, this.verticalCanvas.width, this.verticalCanvas.height);
 
-       this.verticalCnvCtx.strokeStyle = 'black';
-       this.verticalCnvCtx.lineWidth = 1 - this.offsetSharpness;
+        this.verticalCnvCtx.strokeStyle = 'black';
+        this.verticalCnvCtx.lineWidth = 1 - this.offsetSharpness;
 
         let y = this.verStartPos;
         for (let j = startInd; j <= this.verticalArr.length; j++) {
-            // console.log(j)
 
             //making horizontal lines
-           this.verticalCnvCtx.beginPath();
-           this.verticalCnvCtx.moveTo(0, y);
-           this.verticalCnvCtx.lineTo(this.initialWidthVertical, y);
-           this.verticalCnvCtx.stroke();
+            this.verticalCnvCtx.beginPath();
+            this.verticalCnvCtx.moveTo(0, y);
+            this.verticalCnvCtx.lineTo(this.initialWidthVertical, y);
+            this.verticalCnvCtx.stroke();
 
             if (!this.verticalArr[j] || y >= this.verticalCanvas.height) {
                 break;
             }
             //making text
-            
+
             let currCell = this.verticalArr[j];
-           this.verticalCnvCtx.font = '14px Calibri';
-           this.verticalCnvCtx.textAlign = 'right';
-           this.verticalCnvCtx.textBaseline = 'bottom';
-           this.verticalCnvCtx.fillStyle = '#000';
-           this.verticalCnvCtx.fillText(currCell.value.data, currCell.x + currCell.width - 10, y + currCell.height - 5);
+            this.verticalCnvCtx.font = '14px Calibri';
+            this.verticalCnvCtx.textAlign = 'right';
+            this.verticalCnvCtx.textBaseline = 'bottom';
+            this.verticalCnvCtx.fillStyle = '#000';
+            this.verticalCnvCtx.fillText(currCell.value.data, currCell.x + currCell.width - 10, y + currCell.height - 5);
 
             (j < this.verticalArr.length) ? y += this.verticalArr[j].height : "";
 
@@ -251,11 +255,11 @@ export class MiniCanvas {
             }
 
             //making text
-           this.spreadsheetCnvCtx.font = '14px Calibri light';
-           this.spreadsheetCnvCtx.textAlign = 'right';
-           this.spreadsheetCnvCtx.textBaseline = 'bottom';
-           this.spreadsheetCnvCtx.fillStyle = '#000';
-           this.spreadsheetCnvCtx.fillText(currRowEle.data, currCol.x - this.horizontallyScrolled + currCol.width - 10, currRow.y - this.verticallyScrolled + currRow.height - 5)
+            this.spreadsheetCnvCtx.font = '14px Calibri light';
+            this.spreadsheetCnvCtx.textAlign = 'right';
+            this.spreadsheetCnvCtx.textBaseline = 'bottom';
+            this.spreadsheetCnvCtx.fillStyle = '#000';
+            this.spreadsheetCnvCtx.fillText(currRowEle.data, currCol.x - this.horizontallyScrolled + currCol.width - 10, currRow.y - this.verticallyScrolled + currRow.height - 5)
 
             currRowEle = currRowEle.right;
 
@@ -270,32 +274,32 @@ export class MiniCanvas {
             return;
         }
 
-       this.spreadsheetCnvCtx.clearRect(0, 0, this.spreadsheetCanvas.width, this.spreadsheetCanvas.height);
+        this.spreadsheetCnvCtx.clearRect(0, 0, this.spreadsheetCanvas.width, this.spreadsheetCanvas.height);
 
-       this.spreadsheetCnvCtx.strokeStyle = 'black';
-       this.spreadsheetCnvCtx.lineWidth = 1 - this.offsetSharpness;
+        this.spreadsheetCnvCtx.strokeStyle = 'black';
+        this.spreadsheetCnvCtx.lineWidth = 1 - this.offsetSharpness;
 
         let x = this.horStartPos;
         for (let j = startColInd; j <= this.horizontalArr.length; j++) {
-           this.spreadsheetCnvCtx.beginPath();
-           this.spreadsheetCnvCtx.moveTo(x, 0);
-           this.spreadsheetCnvCtx.lineTo(x, this.spreadsheetCanvas.height);
-           this.spreadsheetCnvCtx.stroke();
+            this.spreadsheetCnvCtx.beginPath();
+            this.spreadsheetCnvCtx.moveTo(x, 0);
+            this.spreadsheetCnvCtx.lineTo(x, this.spreadsheetCanvas.height);
+            this.spreadsheetCnvCtx.stroke();
 
             if (!this.horizontalArr[j] || x >= this.horizontalCanvas.width) {
                 break;
             }
 
-            
+
             (j < this.horizontalArr.length) ? x += this.horizontalArr[j].width : "";
         }
 
         let y = this.verStartPos;
         for (let j = startRowInd; j <= this.verticalArr.length; j++) {
-           this.spreadsheetCnvCtx.beginPath();
-           this.spreadsheetCnvCtx.moveTo(0, y);
-           this.spreadsheetCnvCtx.lineTo(this.spreadsheetCanvas.width, y);
-           this.spreadsheetCnvCtx.stroke();
+            this.spreadsheetCnvCtx.beginPath();
+            this.spreadsheetCnvCtx.moveTo(0, y);
+            this.spreadsheetCnvCtx.lineTo(this.spreadsheetCanvas.width, y);
+            this.spreadsheetCnvCtx.stroke();
 
             if (!this.verticalArr[j] || y >= this.verticalCanvas.height) {
                 break;
@@ -388,7 +392,7 @@ export class MiniCanvas {
 
         let oldCol = this.horizontalArr[ind];
 
-        let newCol = new HeaderCell(oldCol.x, oldCol.y, this.initialWidthHorizontal, this.initialHeigthHorizontal, ind + 1);
+        let newCol = new HeaderCell(oldCol.x, oldCol.y, this.initialWidthHorizontal, this.initialHeightHorizontal, ind + 1);
 
         this.horizontalArr.splice(ind, 0, newCol)
 
@@ -533,5 +537,54 @@ export class MiniCanvas {
 
     }
 
+    getRowCol(xPos, yPos) {
+        //this function returns row and col index of positions and also the colStartPosition and rowStart POsition with respect to 
+
+        let colStartPosition = this.horStartPos;
+        let colInd = this.currStartColInd;
+
+        while (colStartPosition + this.horizontalArr[colInd].width < xPos) {
+            //while column start position is less than xpos loop through
+            colStartPosition += this.horizontalArr[colInd].width;
+            colInd += 1;
+        }
+
+        let rowStartPosition = this.verStartPos;
+        let rowInd = this.currStartRowInd;
+
+
+        while (rowStartPosition + this.verticalArr[rowInd].height < yPos) {
+            //while row start position is less than ypos loop through
+            rowStartPosition += this.verticalArr[rowInd].height;
+            rowInd += 1;
+        }
+        return { "rowInd": rowInd, "colInd": colInd, "rowStartPos": rowStartPosition, "colStartPos": colStartPosition }
+
+    }
+
+    handleSelect() {
+        this.spreadsheetCanvas.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            let currData = this.getRowCol(e.offsetX, e.offsetY);
+            let rowInd = currData.rowInd
+            let colInd = currData.colInd
+            let colStartPos = currData.colStartPos
+            let rowStartPos = currData.rowStartPos
+
+            //getting width height at that point
+
+            let cellWidth = this.horizontalArr[colInd].width;
+            let cellHeight = this.verticalArr[rowInd].height;
+
+            //getting data
+
+            this.inputEle.style.display = 'inline';
+            this.inputEle.style.top = `${rowStartPos}px`;
+            this.inputEle.style.left = `${colStartPos}px`;
+            this.inputEle.style.width = `${cellWidth}px`;
+            this.inputEle.style.height = `${cellHeight}px`;
+
+        })
+    }
 
 }

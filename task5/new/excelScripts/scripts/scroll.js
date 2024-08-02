@@ -10,7 +10,6 @@ export class Scroll {
         this.verticalScroll = verticalScroll;
         this.miniCanvas = miniCanvas;
 
-        
         this.horizontallyScrolled = 0;
         this.verticallyScrolled = 0;
 
@@ -26,6 +25,8 @@ export class Scroll {
     init() {
         this.updateHorizontalScrollBar();
         this.updateVerticalScrollBar();
+
+        //creating the totalContentWidth
         this.totalContentWidth = this.horizontalScroll.clientWidth * 2;
         this.totalContentHeight = this.verticalScroll.clientHeight * 2;
 
@@ -33,39 +34,17 @@ export class Scroll {
 
     updateGrid() {
         this.miniCanvas.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled);
+
     }
 
     updateHorizontalScrollBar() {
 
         let isHorizontalScrolling = false;
         let startMouseX = 0;
-        let startBarLeft = 0;
+        let startBarLeft = this.horizontalBar.offsetLeft;
+        let currentMouseX = 0;
 
-        this.horizontalBar.addEventListener('pointerdown', (e) => {
-            e.preventDefault();
-
-            //To check if horizontal Scrolling
-            isHorizontalScrolling = true;
-
-            // To get Starting position of mouse with respect to page
-            startMouseX = e.pageX;
-
-            // To get position of horzontal bar from left
-            startBarLeft = this.horizontalBar.offsetLeft;
-
-
-
-            const onMouseMove = (e) => {
-                if (!isHorizontalScrolling) return;
-                e.preventDefault();
-
-                // To know the current value of Current mouse with respect to page
-                let currentMouseX = e.pageX;
-
-                // To know how much mouse have moved
-                let diffX = currentMouseX - startMouseX;
-
-
+        const updateScrollByDiff = (diffX)=>{
                 // To get new position of Bar from left
                 let newBarLeft = startBarLeft + diffX;
 
@@ -78,8 +57,6 @@ export class Scroll {
                 // Deciding how much content should be loaded 
                 let minContentWidth = this.horizontalScroll.clientWidth * 2;
 
-                console.log(newBarLeft)
-
                 // how much u have scrolled till now with respect to content
                 this.horizontallyScrolled = newBarLeft * this.totalContentWidth / this.horizontalScroll.clientWidth;
 
@@ -87,7 +64,7 @@ export class Scroll {
                 if (this.horizontallyScrolled >= .8 * (this.totalContentWidth - this.horizontalScroll.clientWidth)) {
                     this.totalContentWidth += this.horizontalScroll.clientWidth;
                 }
-                
+
                 // This is used when horizontally scroll become less or equal to 0 , the total content Width become equal to minContent Width 
                 else if (this.horizontallyScrolled <= 0) {
                     this.totalContentWidth = minContentWidth;
@@ -103,7 +80,32 @@ export class Scroll {
                 startMouseX = currentMouseX;
                 startBarLeft = newBarLeft;
 
+                currentMouseX = 0;
+
                 this.updateGrid();
+        }
+
+        this.horizontalBar.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+
+            //To check if horizontal Scrolling
+            isHorizontalScrolling = true;
+            // To get Starting position of mouse with respect to page
+            startMouseX = e.pageX;
+            // To get position of horzontal bar from left
+            startBarLeft = this.horizontalBar.offsetLeft;
+
+
+
+            const onMouseMove = (e) => {
+                if (!isHorizontalScrolling) return;
+                e.preventDefault();
+                // To know the current value of Current mouse with respect to page
+                currentMouseX = e.pageX;
+                // To know how much mouse have moved
+                let diffX = currentMouseX - startMouseX;
+                updateScrollByDiff(diffX)
+
             };
 
             const onMouseUp = () => {
@@ -115,8 +117,13 @@ export class Scroll {
             window.addEventListener('pointermove', onMouseMove);
             window.addEventListener('pointerup', onMouseUp);
 
-            
+
         });
+
+        this.fullCanvas.addEventListener('wheel', (e)=>{
+            e.preventDefault();
+            updateScrollByDiff(e.deltaX * this.wheelScrollRate / 100);
+        })
     }
 
 
@@ -128,7 +135,7 @@ export class Scroll {
         let currentMouseY = 0;
 
         //fucntion to update the scroll bar and content using the diff
-        const updateScrollByDiff=(diffY)=>{
+        const updateScrollByDiff = (diffY) => {
 
             let newBarTop = startBarTop + diffY;
 
@@ -160,7 +167,7 @@ export class Scroll {
 
             this.updateGrid();
         }
-    
+
         this.verticalBar.addEventListener('pointerdown', (e) => {
             e.preventDefault();
 
@@ -184,10 +191,10 @@ export class Scroll {
 
             window.addEventListener('pointermove', onMouseMove);
             window.addEventListener('pointerup', onMouseUp);
-            
+
         });
-        
-        this.fullCanvas.addEventListener('wheel',(e)=>{
+
+        this.fullCanvas.addEventListener('wheel', (e) => {
             e.preventDefault();
             updateScrollByDiff(e.deltaY * this.wheelScrollRate / 100)
         })

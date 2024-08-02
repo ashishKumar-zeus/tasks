@@ -47,7 +47,6 @@ export class Controller {
             newGTR += `${100 / this.currRow}% `;
         }
 
-
         this.mainContainer.style.gridTemplateRows = newGTR;
         this.mainContainer.style.gridTemplateColumns = '';
 
@@ -256,6 +255,8 @@ export class Controller {
         let isResizing = false;
         let currentElement = null;
         let startX, startY, startWidth, startHeight;
+        let rowPer = []
+        let colPer = []
 
         const checkForResizeRange = (xPos, yPos) => {
             const threshold = 5; // threshold for detecting borders
@@ -286,13 +287,16 @@ export class Controller {
         //added to check if resize code is working or not
         this.mainContainer.addEventListener('mousedown', (e) => {
             const resizeInfo = checkForResizeRange(e.clientX, e.clientY);
+
             if (resizeInfo) {
                 isResizing = true;
                 currentElement = resizeInfo.element;
                 startX = e.clientX;
                 startY = e.clientY;
-                startWidth = currentElement.offsetWidth;
-                startHeight = currentElement.offsetHeight;
+                rowPer = currentElement.parentElement.style.gridTemplateColumns.split(" ").map(item => parseFloat(item.slice(0, -1)));
+                colPer = this.mainContainer.style.gridTemplateRows.split(" ").map(item => parseFloat(item.slice(0, -1)));
+
+
             }
         });
 
@@ -302,18 +306,41 @@ export class Controller {
                 return;
             }
 
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
+            let currX = e.clientX;
+            let currY = e.clientY;
+
+            const dx = currX - startX;
+            const dy = currY - startY;
 
             if (this.mainContainer.style.cursor === 'col-resize') {
-                const newWidth = startWidth + dx;
-                currentElement.style.width = `${newWidth}px`;
+
+                let perMoved = (dx / currentElement.parentElement.clientWidth * 100);
+
+                let colIndex = Array.from(currentElement.parentElement.children).indexOf(currentElement);
+
+                let newRowPerArr = rowPer.map(ele=>ele)
+                newRowPerArr[colIndex]+=perMoved;
+                newRowPerArr[colIndex+1]-=perMoved;
+
+                console.log(newRowPerArr)
+
+                currentElement.parentElement.style.gridTemplateColumns = newRowPerArr.map(ele => ele + '%').join(" ");
+
+
             } else if (this.mainContainer.style.cursor === 'row-resize') {
-                const newHeight = startHeight + dy;
-                currentElement.style.height = `${newHeight}px`;
+                let perMoved = (dy / this.mainContainer.clientHeight * 100);
+                let rowIndex = Array.from(this.mainContainer.children).indexOf(currentElement.parentElement);
+
+                let newColPerArr = colPer.map(ele=>ele);
+                newColPerArr[rowIndex] += perMoved;
+                newColPerArr[rowIndex+1] -= perMoved;
+
+                console.log('Row resize:', newColPerArr);
+
+                this.mainContainer.style.gridTemplateRows = newColPerArr.map(ele => ele + '%').join(" ");
             }
 
-            this.updateGridTemplateLayout();
+            // this.updateGridTemplateLayout();
         });
 
         document.addEventListener('mouseup', () => {
@@ -322,35 +349,35 @@ export class Controller {
         });
     }
 
-    updateGridTemplateLayout() {
-        // Update main container layout
-        const rowWidths = [];
-        const colHeights = [];
+    // updateGridTemplateLayout() {
+    //     // Update main container layout
+    //     const rowWidths = [];
+    //     const colHeights = [];
 
-        for (let i = 0; i < this.currRow; i++) {
-            const row = document.getElementById(`row${i}`);
-            const rowHeight = row.offsetHeight;
-            colHeights.push(rowHeight);
+    //     for (let i = 0; i < this.currRow; i++) {
+    //         const row = document.getElementById(`row${i}`);
+    //         const rowHeight = row.clientWidth;
+    //         colHeights.push(rowHeight);
 
-            const cols = row.querySelectorAll('.excel');
-            cols.forEach((col, index) => {
-                if (i === 0) {
-                    rowWidths[index] = col.offsetWidth;
-                } else {
-                    rowWidths[index] = Math.max(rowWidths[index], col.offsetWidth);
-                }
-            });
-        }
+    //         const cols = row.querySelectorAll('.excel');
+    //         cols.forEach((col, index) => {
+    //             if (i === 0) {
+    //                 rowWidths[index] = col.offsetWidth;
+    //             } else {
+    //                 rowWidths[index] = Math.max(rowWidths[index], col.offsetWidth);
+    //             }
+    //         });
+    //     }
 
-        this.mainContainer.style.gridTemplateRows = colHeights.map(h => `${h}px`).join(' ');
-        this.mainContainer.style.gridTemplateColumns = rowWidths.map(w => `${w}px`).join(' ');
+    //     this.mainContainer.style.gridTemplateRows = colHeights.map(h => `${h}px`).join(' ');
+    //     this.mainContainer.style.gridTemplateColumns = rowWidths.map(w => `${w}px`).join(' ');
 
-        // Update row layouts
-        for (let i = 0; i < this.currRow; i++) {
-            const row = document.getElementById(`row${i + 1}`);
-            row.style.gridTemplateColumns = rowWidths.map(w => `${w}px`).join(' ');
-        }
-    }
+    //     // Update row layouts
+    //     for (let i = 0; i < this.currRow; i++) {
+    //         const row = document.getElementById(`row${i + 1}`);
+    //         row.style.gridTemplateColumns = rowWidths.map(w => `${w}px`).join(' ');
+    //     }
+    // }
 
 
     init() {
@@ -361,16 +388,17 @@ export class Controller {
         //adding First Row
         this.addNewRow();
         // this.addNewRow()
+        // this.addNewRow()
 
         // this.addNewCol(1)
+
+        
 
         this.handleResize()
         // this.updateGridLayout()
 
     }
 }
-
-
 
 
 
