@@ -2,13 +2,15 @@
 
 export class Scroll {
 
-    constructor(fullCanvas, horizontalBar, horizontalScroll, verticalBar, verticalScroll, miniCanvas) {
-        this.fullCanvas = fullCanvas;
-        this.horizontalBar = horizontalBar;
-        this.horizontalScroll = horizontalScroll;
-        this.verticalBar = verticalBar;
-        this.verticalScroll = verticalScroll;
-        this.miniCanvas = miniCanvas;
+    constructor(sheet) {
+        this.fullCanvas = sheet.fullCanvas;
+        this.horizontalBar = sheet.horizontalBar;
+        this.horizontalScroll = sheet.horizontalScroll;
+        this.verticalBar = sheet.verticalBar;
+        this.verticalScroll = sheet.verticalScroll;
+        this.renderor = sheet.renderor;
+
+        this.headerCellsMaker = sheet.headerCellsMaker;
 
         this.horizontallyScrolled = 0;
         this.verticallyScrolled = 0;
@@ -17,9 +19,8 @@ export class Scroll {
         this.totalContentHeight = 0;
 
         this.wheelScrollRate = 10;
+
         this.init();
-
-
     }
 
     init() {
@@ -33,9 +34,18 @@ export class Scroll {
     }
 
     updateGrid() {
-        this.miniCanvas.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled);
-
+        this.renderor.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled);
     }
+
+    // increaseNumOfCols(){
+    //     this.headerCellsMaker.increaseNumOfCols();
+    //     this.renderor.renderCanvasOnScroll(this.horizontallyScrolled,this.verticallyScrolled)
+    // }
+
+    // increaseNumOfRows(){
+    //     this.headerCellsMaker.increaseNumOfRows();
+    //     this.renderor.renderCanvasOnScroll(this.horizontallyScrolled,this.verticallyScrolled)
+    // }
 
     updateHorizontalScrollBar() {
 
@@ -63,6 +73,7 @@ export class Scroll {
                 // It is used for increasing more conentent , when we reach 80% of total content width , total content width get increases by horziontal Scroll clienWidth
                 if (this.horizontallyScrolled >= .8 * (this.totalContentWidth - this.horizontalScroll.clientWidth)) {
                     this.totalContentWidth += this.horizontalScroll.clientWidth;
+                    // this.increaseNumOfCols();
                 }
 
                 // This is used when horizontally scroll become less or equal to 0 , the total content Width become equal to minContent Width 
@@ -137,6 +148,8 @@ export class Scroll {
         //fucntion to update the scroll bar and content using the diff
         const updateScrollByDiff = (diffY) => {
 
+            // console.log(diffY)
+
             let newBarTop = startBarTop + diffY;
 
             let maxBarTop = this.verticalScroll.clientHeight - this.verticalBar.offsetHeight;
@@ -148,6 +161,8 @@ export class Scroll {
 
             if (this.verticallyScrolled >= .8 * (this.totalContentHeight - this.verticalScroll.clientHeight)) {
                 this.totalContentHeight += this.verticalScroll.clientHeight;
+                // this.increaseNumOfRows();
+
 
             }
             else if (this.verticallyScrolled <= 0) {

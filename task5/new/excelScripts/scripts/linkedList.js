@@ -15,11 +15,11 @@ class Node {
 export class LinkedList {
 
     // Initialize Class Variables
-    constructor(horizontalArr, verticalArr,miniCanvas) {
+    constructor(headerCellsMaker) {
         
-        this.horizontalArr = horizontalArr;
-        this.verticalArr = verticalArr;
-        this.miniCanvas = miniCanvas;
+        this.horizontalArr = headerCellsMaker.getHorizontalArray();
+        this.verticalArr = headerCellsMaker.getVerticalArray();
+
         this.head = null;
         this.size = 0;
 
@@ -32,13 +32,13 @@ export class LinkedList {
         this.createNewNode(3, 2, "c");
         this.createNewNode(3, 3, "c");
 
-        this.createNewNode(1, 4, "a4");
-        this.createNewNode(2, 4, "b4");
-        this.createNewNode(3, 4, "c4");
+        // this.createNewNode(1, 4, "a4");
+        // this.createNewNode(2, 4, "b4");
+        // this.createNewNode(3, 4, "c4");
 
-        this.createNewNode(2, 15, "15th pe")
-        this.createNewNode(3, 10, "10th pe")
-        this.createNewNode(1, 35, "35th pe")
+        // this.createNewNode(2, 15, "15th pe")
+        // this.createNewNode(3, 10, "10th pe")
+        // this.createNewNode(1, 35, "35th pe")
 
 
     }
@@ -112,7 +112,7 @@ export class LinkedList {
         }
         this.size += 1;
 
-        this.miniCanvas.renderCanvas();
+        // this.miniCanvas.renderCanvas();
     }
 
     deleteNode(row, col) {
@@ -154,21 +154,21 @@ export class LinkedList {
         temp.top = null;
         temp.bottom = null;
 
-        this.miniCanvas.renderCanvas();
+        // this.miniCanvas.renderCanvas();
 
     }
 
     insertARow(ind) {
         let rowInd = ind - 1;
-        this.miniCanvas.addRowAtInd(rowInd);
-        this.miniCanvas.renderCanvas();
+        // this.miniCanvas.addRowAtInd(rowInd);
+        // this.miniCanvas.renderCanvas();
 
     }
 
     insertACol(ind) {
         let colInd = ind - 1;
-        this.miniCanvas.addColAtInd(colInd);
-        this.miniCanvas.renderCanvas();
+        // this.miniCanvas.addColAtInd(colInd);
+        // this.miniCanvas.renderCanvas();
 
     }
 
@@ -185,8 +185,8 @@ export class LinkedList {
 
             tempCurr = tempCurr.right;
         }
-        this.miniCanvas.deleteRowAtInd(rowInd);
-        this.miniCanvas.renderCanvas();
+        // this.miniCanvas.deleteRowAtInd(rowInd);
+        // this.miniCanvas.renderCanvas();
     }
 
     deleteACol(ind) {
@@ -203,8 +203,8 @@ export class LinkedList {
             tempCurr = tempCurr.bottom;
         }
 
-        this.miniCanvas.deleteColAtInd(colInd);
-        this.miniCanvas.renderCanvas();
+        // this.miniCanvas.deleteColAtInd(colInd);
+        // this.miniCanvas.renderCanvas();
     }
 
 
@@ -296,7 +296,7 @@ export class LinkedList {
             }
             temp = temp.right;
         }
-        this.miniCanvas.renderCanvas();
+        // this.miniCanvas.renderCanvas();
 
 
     }
@@ -400,7 +400,7 @@ export class LinkedList {
             }
             temp = temp.bottom;
         }
-        this.miniCanvas.renderCanvas();
+        // this.miniCanvas.renderCanvas();
 
 
     }

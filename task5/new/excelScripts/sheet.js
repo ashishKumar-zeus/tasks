@@ -1,8 +1,10 @@
 
 //imports
 import { Scroll } from './scripts/scroll.js'
-import { MiniCanvas } from './scripts/miniCanvas.js';
-import { LinkedList } from './scripts/linkedList.js'
+import { Renderor } from './scripts/renderor.js';
+import { LinkedList } from './scripts/linkedList.js';
+import { HeaderCellsMaker } from './scripts/headerCellsMaker.js';
+import {Functionalities} from './scripts/functionalities.js'
 
 export class Sheet {
 
@@ -10,49 +12,21 @@ export class Sheet {
         this.row = row ;
         this.col = col;
 
-
         this.scale = 1;
         this.maxScale = 15;
         this.minScale = 0.5;
         
         this.excel = excel;
-        this.horizontalCnvCtx = null;
-        this.verticalCnvCtx = null;
-        this.spreadsheetCnvCtx = null;
-        
-
-        this.horizontalCanvas = null;
-        this.verticalCanvas = null;
-        this.spreadsheetCanvas = null;
-
-
-        this.verticalBar = null;
-        this.horizontalBar = null;
-        this.fullCanvas = null;
-        this.horizontalScroll = null;
-        this.verticalScroll = null;
-
-        this.inputEle = null;
 
         this.createCanvas()
+
+        setTimeout(() => {
+            this.init()
+        }, 1);
     }
 
     createCanvas() {
         
-        //mutation observer observes whether the excel is modified and as modified then the init is called
-        const observer = new MutationObserver((mutationsList,observer)=>{
-
-            for(let mutation of mutationsList){
-                if(mutation.type === 'childList'){
-                    this.init();
-                    observer.disconnect();
-                }
-            }
-        });
-
-        observer.observe(this.excel,{childList: true});
-
-
         let topSection = document.createElement('div');
         topSection.className = 'topSection';
 
@@ -140,54 +114,45 @@ export class Sheet {
         this.fullCanvas = fullCanvas;
         this.inputEle = inputEle;
 
+        
+        //create CTX
+        this.horizontalCnvCtx = this.horizontalCanvas.getContext('2d');
+        this.verticalCnvCtx = this.verticalCanvas.getContext('2d');
+        this.spreadsheetCnvCtx = this.spreadsheetCanvas.getContext('2d');
+
+
+
         // console.log(horizontalCanvas,verticalCanvas)
 
     }
 
     init() {
 
-        //create CTX
-        this.horizontalCnvCtx = this.horizontalCanvas.getContext('2d');
-        this.verticalCnvCtx = this.verticalCanvas.getContext('2d');
-        this.spreadsheetCnvCtx = this.spreadsheetCanvas.getContext('2d');
-
         //scalling canvas
         this.scallingCanvas();
 
+        this.headerCellsMaker = new HeaderCellsMaker(this.horizontalCanvas,this.verticalCanvas);
+        
+        this.ll = new LinkedList(this.headerCellsMaker);
 
-        //initiating Canvas Formation
-        const inititalNumOfCols = 1000;
-        const initialNumOfRows = 500;
-        const initialWidthHorizontal = 100;
-        const initialHeightHorizontal = this.horizontalCanvas.clientHeight;
-        const initialWidthVertical = this.verticalCanvas.clientWidth;
-        const initialHeightVertical = 30;
-        const resizeWidth = 12;
-        const resizeHeight = 8;
-        const offsetSharpness = 0.5;
-
-
-        let miniCanvas = new MiniCanvas(initialNumOfRows, inititalNumOfCols, initialWidthHorizontal, initialHeightHorizontal, initialWidthVertical, initialHeightVertical, resizeWidth, resizeHeight, offsetSharpness, this.getCnv, this.getCtx, this.inputEle)
-
-        const horizontalArr = miniCanvas.horizontalArr;
-        const verticalArr = miniCanvas.verticalArr;
-    
-        const ll = new LinkedList(horizontalArr, verticalArr,miniCanvas);
+        this.renderor = new Renderor(this)
 
         //intiating ScrollFunctionalities
-        new Scroll(this.fullCanvas, this.horizontalBar, this.horizontalScroll, this.verticalBar, this.verticalScroll, miniCanvas);
+        this.scroll = new Scroll(this);
+
+        this.functionality = new Functionalities(this) 
 
     }
 
-    get getCtx() {
-        return [this.horizontalCnvCtx, this.verticalCnvCtx, this.spreadsheetCnvCtx];
-    }
 
-    get getCnv() {
+    getCnv() {
         return [this.horizontalCanvas, this.verticalCanvas, this.spreadsheetCanvas]
     }
 
     scallingCanvas() {
+
+        console.log('this is called');
+        
 
         const dpr = window.devicePixelRatio;
 
@@ -211,6 +176,7 @@ export class Sheet {
 
 
         this.spreadsheetCnvCtx.scale(dpr, dpr)
+
 
 
     }
@@ -284,4 +250,6 @@ export class Sheet {
     //         this.resizeCanvas();
     //     });
     // }
+
+
 }

@@ -1,20 +1,26 @@
 import { Excel } from '../excelScripts/excel.js';
 
-export class Controller {
+export class ExcelController {
 
-    //this is a controller class responsible for controlling number of excels and various excels to be opened.
+    /**
+     * 
+     * @param {HTMLElement} mainContainer 
+     * @param {number} maxRow 
+     * @param {number} maxCol 
+     * this is a controller class responsible for controlling number of excels and various excels to be opened.
+     */
 
     constructor(mainContainer, maxRow, maxCol) {
 
         this.mainContainer = mainContainer;//refrence to mainContainer
-        this.maxRow = maxRow;
-        this.maxCol = maxCol; //max number of rows and columns able to be made
+        this.maxRow = maxRow;//max number of rows
+        this.maxCol = maxCol; //max number of columns
 
         this.currRow = 0; //how many rows are there currently
-
         this.rowArr = []; //array of rows that contains excel refrence
 
         this.init();
+        this.handleResize()
 
     }
 
@@ -34,10 +40,9 @@ export class Controller {
         row.setAttribute('id', `row${this.currRow}`)
         row.style.gridTemplateColumns = '100%';
 
-        const excel = new Excel(row, this.currRow, 1);
+        let excel = new Excel(row, this.currRow, 1);
 
         this.rowArr[this.currRow - 1] = [excel];
-
 
         this.mainContainer.appendChild(row);
 
@@ -196,6 +201,7 @@ export class Controller {
                 this.mainContainer.style.gridTemplateRows = newColPerArr.map(ele => ele + '%').join(" ");
             }
 
+            // this.updateGridTemplateLayout();
         });
 
         document.addEventListener('mouseup', () => {
@@ -211,12 +217,9 @@ export class Controller {
 
         //adding First Row
         this.addNewRow();
-        // this.addNewRow()
-        // this.addNewCol(1)
-
-        this.handleResize()
 
     }
+
 }
 
 

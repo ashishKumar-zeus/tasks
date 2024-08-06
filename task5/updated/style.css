@@ -1,0 +1,196 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100vw;
+}
+body > header {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 20%;
+  box-sizing: border-box;
+}
+body > .mainContainer {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 80%;
+  background-color: black;
+}
+body > .mainContainer > .row {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  display: grid;
+}
+body > .mainContainer > .row > .excel {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background-color: aliceblue;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 95%;
+  width: 100%;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet {
+  width: 100%;
+  height: 100%;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .topSection {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 5%;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .topSection > .nothing {
+  width: 3%;
+  height: 100%;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .topSection > .upperCanvas {
+  width: 97%;
+  height: 100%;
+  position: relative;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .topSection > .upperCanvas > .horizontalCanvas {
+  width: 99%;
+  height: 100%;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .middleSection {
+  height: 95%;
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .middleSection > .verticalCanvas {
+  width: 3%;
+  height: 98%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .middleSection > .fullCanvas {
+  width: 97%;
+  height: 100%;
+  display: flex;
+  position: absolute;
+  left: 3%;
+  top: 0%;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .middleSection > .fullCanvas > .spreadsheetCanvas {
+  width: 99%;
+  height: 98%;
+  background-color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .middleSection > .fullCanvas > .horizontalScroll {
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2%;
+  width: 99%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .middleSection > .fullCanvas > .horizontalScroll > .horizontalBar {
+  height: 80%;
+  width: 80%;
+  background-color: grey;
+  position: absolute;
+  left: 0px;
+  transition: all 0.1s;
+  border-radius: 25px;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .middleSection > .fullCanvas > .verticalScroll {
+  transition: all 0.1s;
+  box-sizing: border-box;
+  position: absolute;
+  height: 98%;
+  top: 0;
+  right: 0;
+  width: 1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .middleSection > .fullCanvas > .verticalScroll > .verticalBar {
+  height: 80%;
+  width: 80%;
+  background-color: grey;
+  position: absolute;
+  top: 0;
+  transition: all 0.1s;
+  border-radius: 25px;
+}
+body > .mainContainer > .row > .excel > .sheetsDiv > .sheet > .middleSection > .fullCanvas > input {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  display: none;
+  position: absolute;
+  border: 3px solid green;
+  outline: none;
+}
+body > .mainContainer > .row > .excel > .footer {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: start;
+  height: 5%;
+  width: 100%;
+}
+body > .mainContainer > .row > .excel > .footer > .addBtn {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  width: 5%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  background-color: gray;
+}
+body > .mainContainer > .row > .excel > .footer > .sheetBtns {
+  width: 95%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: start;
+}
+body > .mainContainer > .row > .excel > .footer > .sheetBtns > .sheetBtn {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  width: 5%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(187, 187, 187);
+  margin: 0px 5px;
+  font-size: 12px;
+}/*# sourceMappingURL=style.css.map */

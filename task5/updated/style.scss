@@ -1,0 +1,224 @@
+@mixin resetCss {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+@mixin centerFlex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body {
+    @include resetCss();
+    height: 100vh;
+    width: 100vw;
+
+    >header {
+        @include resetCss();
+        height: 20%;
+        box-sizing: border-box;
+    }
+
+    >.mainContainer {
+
+        @include resetCss();
+        height: 80%;
+        background-color: black;
+
+        >.row {
+            @include resetCss();
+            display: grid;
+
+            >.excel {
+                @include resetCss();
+                display: flex;
+                flex-direction: column;
+                box-sizing: border-box;
+                background-color: aliceblue;
+
+                >.sheetsDiv {
+                    @include resetCss();
+                    height: 95%;
+                    width: 100%;
+
+                    >.sheet {
+                        width: 100%;
+                        ;
+                        height: 100%;
+
+
+                        >.topSection {
+                            // border: 1px solid blue;
+                            @include resetCss();
+
+                            height: 5%;
+                            width: 100%;
+                            box-sizing: border-box;
+                            display: flex;
+
+                            >.nothing {
+                                width: 3%;
+                                height: 100%;
+                                // background-color: red;
+
+                            }
+
+                            >.upperCanvas {
+                                width: 97%;
+                                height: 100%;
+                                position: relative;
+
+                                >.horizontalCanvas {
+                                    width: 99%;
+                                    height: 100%;
+                                    //positioning is used inorder to tackle the default behaviour of canvas
+                                    position: absolute;
+                                    top: 0%;
+                                    left: 0%;
+                                    // background-color: blue;
+                                    // border: 1px solid blueviolet;
+                                }
+                            }
+
+                        }
+
+                        >.middleSection {
+                            // border: 1px solid green;
+                            height: 95%;
+                            display: flex;
+                            width: 100%;
+                            box-sizing: border-box;
+                            position: relative;
+
+                            >.verticalCanvas {
+                                // border: 1px solid grey;
+                                width: 3%;
+                                height: 98%;
+                                position: absolute;
+                                top: 0;
+                                // background-color: green;
+                                left: 0;
+
+                            }
+
+                            >.fullCanvas {
+                                width: 97%;
+                                height: 100%;
+                                display: flex;
+                                position: absolute;
+                                left: 3%;
+                                top: 0%;
+
+                                >.spreadsheetCanvas {
+                                    width: 99%;
+                                    height: 98%;
+                                    background-color: white;
+
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                }
+
+                                >.horizontalScroll {
+                                    box-sizing: border-box;
+                                    position: absolute;
+                                    bottom: 0;
+                                    left: 0;
+                                    height: 2%;
+                                    width: 99%;
+                                    @include centerFlex();
+
+                                    >.horizontalBar {
+                                        height: 80%;
+                                        width: 80%;
+                                        background-color: grey;
+                                        position: absolute;
+                                        left: 0px;
+                                        transition: all 0.1s;
+                                        border-radius: 25px;
+                                    }
+
+                                }
+
+                                >.verticalScroll {
+                                    // border: 1px solid yellow;
+                                    transition: all 0.1s;
+                                    box-sizing: border-box;
+                                    position: absolute;
+                                    height: 98%;
+                                    top: 0;
+                                    right: 0;
+                                    width: 1%;
+                                    @include centerFlex();
+
+                                    >.verticalBar {
+                                        height: 80%;
+                                        width: 80%;
+                                        background-color: grey;
+                                        position: absolute;
+                                        top: 0;
+                                        transition: all 0.1s;
+                                        border-radius: 25px;
+                                    }
+
+                                }
+
+                                >input {
+                                    @include resetCss();
+                                    display: none;
+                                    position: absolute;
+                                    border: 3px solid green;
+                                    outline: none;
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                >.footer {
+                    @include resetCss();
+                    @include centerFlex();
+                    justify-content: start;
+                    height: 5%;
+                    width: 100%;
+
+                    >.addBtn {
+                        @include resetCss();
+                        width: 5%;
+                        height: 95%;
+                        @include centerFlex();
+                        font-weight: bold;
+                        background-color: gray;
+                    }
+
+                    >.sheetBtns {
+                        width: 95%;
+                        height: 100%;
+                        @include centerFlex();
+                        justify-content: start;
+
+                        >.sheetBtn {
+                            @include resetCss();
+                            width: 5%;
+                            height: 95%;
+                            @include centerFlex();
+                            background-color: rgb(187, 187, 187);
+                            margin: 0px 5px;
+                            font-size: 12px;
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+
+
+    }
+
+}
+
