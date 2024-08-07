@@ -16,12 +16,13 @@ export class LinkedList {
 
     // Initialize Class Variables
     constructor(headerCellsMaker) {
-        
-        this.horizontalArr = headerCellsMaker.getHorizontalArray();
-        this.verticalArr = headerCellsMaker.getVerticalArray();
+
+        this.headerCellsMaker = headerCellsMaker;
 
         this.head = null;
         this.size = 0;
+
+        this.getUpdatedArray()
 
         this.createNewNode(1, 1, "a1");
         this.createNewNode(1, 2, "a2");
@@ -32,14 +33,13 @@ export class LinkedList {
         this.createNewNode(3, 2, "c");
         this.createNewNode(3, 3, "c");
 
-        // this.createNewNode(1, 4, "a4");
-        // this.createNewNode(2, 4, "b4");
-        // this.createNewNode(3, 4, "c4");
 
-        // this.createNewNode(2, 15, "15th pe")
-        // this.createNewNode(3, 10, "10th pe")
-        // this.createNewNode(1, 35, "35th pe")
+    }
 
+    getUpdatedArray() {
+
+        this.horizontalArr = this.headerCellsMaker.getHorizontalArray();
+        this.verticalArr = this.headerCellsMaker.getVerticalArray();
 
     }
 
@@ -51,13 +51,54 @@ export class LinkedList {
         return this.size == 0
     }
 
+    findAtIndex(rowInd,colInd){
+        this.getUpdatedArray();
+    
+        let currEle = this.verticalArr[rowInd].next;
+    
+        while (currEle && currEle.col.data - 1 < colInd) {
+            currEle = currEle.right;
+        }
+    
+        if (currEle && currEle.col.data - 1 === colInd) {
+            // Found data at that position
+            return currEle;
+        }
+        return null;
+    }
+
+    getValueAtInd(rowInd, colInd) {
+
+        let currEle = this.findAtIndex(rowInd,colInd);
+        if(currEle){
+            return currEle.data;
+        }
+        return ""
+    }
+
+    setValueAtInd(rowInd, colInd,newValue) {
+
+        let currEle = this.findAtIndex(rowInd,colInd);
+        if(currEle){
+            console.log("data updated")
+            currEle.data = newValue;
+        }
+        else{
+            console.log(rowInd,colInd,newValue)
+            console.log("new data added")
+            this.createNewNode(rowInd+1,colInd+1,newValue)
+        }
+    }
+
+    
+
     createNewNode(row, col, data) {
 
         let rowInd = row - 1;
         let colInd = col - 1;
 
         let newNode = new Node(this.verticalArr[rowInd].value, this.horizontalArr[colInd].value, data)
-
+        console.log("new node created at",this.verticalArr[rowInd].value, this.horizontalArr[colInd].value ,data)
         //keep the head at first element
         if (this.isempty())
             this.head = newNode;
@@ -122,6 +163,7 @@ export class LinkedList {
 
         if (!this.verticalArr[rowInd].next || this.verticalArr[rowInd].next.row.data > row) {
             // not found
+            return;
         }
         let temp = this.verticalArr[rowInd].next;
 

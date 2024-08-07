@@ -37,6 +37,8 @@ body {
                 flex-direction: column;
                 box-sizing: border-box;
                 background-color: aliceblue;
+                overflow: hidden;
+
 
                 >.topSection {
                     // border: 1px solid blue;
@@ -104,7 +106,6 @@ body {
                             width: 99%;
                             height: 98%;
                             background-color: white;
-
                             position: absolute;
                             top: 0;
                             left: 0;
@@ -159,7 +160,10 @@ body {
                             display: none;
                             position: absolute;
                             border: 3px solid green;
+                            // border: none;
                             outline: none;
+                            padding: 5px 10px;
+                            // direction: rtl;
                         }
                     }
                 }

@@ -43,6 +43,10 @@ export class Renderor {
     }
 
     renderCanvas() {
+        // this.horizontalCnvCtx.reset()
+        // this.verticalCnvCtx.reset();
+        // this.spreadsheetCnvCtx.reset();
+
         this.drawHorizontalCanvas(this.currStartColInd);
         this.drawVerticalCanvas(this.currStartRowInd);
         this.drawMainCanvas(this.currStartRowInd, this.currStartColInd);
@@ -101,9 +105,6 @@ export class Renderor {
         this.drawHorizontalCanvas(this.currStartColInd);
         this.drawVerticalCanvas(this.currStartRowInd);
         this.drawMainCanvas(this.currStartRowInd, this.currStartColInd);
-
-
-
     }
 
     getColName(n) {
@@ -222,10 +223,10 @@ export class Renderor {
             }
 
             //making text
-            this.spreadsheetCnvCtx.font = '14px Calibri light';
+            this.spreadsheetCnvCtx.font = '14px Calibri';
             this.spreadsheetCnvCtx.textAlign = 'right';
             this.spreadsheetCnvCtx.textBaseline = 'bottom';
-            this.spreadsheetCnvCtx.fillStyle = '#000';
+            this.spreadsheetCnvCtx.fillStyle = 'black';
             this.spreadsheetCnvCtx.fillText(currRowEle.data, currCol.x - this.horizontallyScrolled + currCol.width - 10, currRow.y - this.verticallyScrolled + currRow.height - 5)
 
             currRowEle = currRowEle.right;

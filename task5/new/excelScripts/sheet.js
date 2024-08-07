@@ -121,9 +121,6 @@ export class Sheet {
         this.spreadsheetCnvCtx = this.spreadsheetCanvas.getContext('2d');
 
 
-
-        // console.log(horizontalCanvas,verticalCanvas)
-
     }
 
     init() {
@@ -137,11 +134,11 @@ export class Sheet {
 
         this.renderor = new Renderor(this)
 
-        //intiating ScrollFunctionalities
-        this.scroll = new Scroll(this);
 
         this.functionality = new Functionalities(this) 
 
+        //intiating ScrollFunctionalities
+        this.scroll = new Scroll(this);
     }
 
 

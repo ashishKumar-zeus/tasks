@@ -1,10 +1,14 @@
 
-export class Functionalities{
-    constructor(sheet){
+export class Functionalities {
+    constructor(sheet) {
 
         this.renderor = sheet.renderor;
         this.headerCellsMaker = sheet.headerCellsMaker;
-        
+
+        console.log(sheet.ll);
+
+        this.ll = sheet.ll;
+
         //canvas
         this.horizontalCanvas = sheet.horizontalCanvas;
         this.verticalCanvas = sheet.verticalCanvas;
@@ -28,17 +32,25 @@ export class Functionalities{
         this.resizeWidth = this.renderor.resizeWidth;
         this.resizeHeight = this.renderor.resizeHeight;
 
+        this.isInputOn = false;
+        this.isDragging = false;
+
+        this.currSelectedCell = null;
+
         this.init();
 
+
+
+
     }
 
-    init(){
+    init() {
         this.handleResizeHorizontal();
         this.handleResizeVertical();
-        this.handleSelect()
+        this.handleMouseEventsOnSheet()
     }
 
-    updateScrollChanges(){
+    updateScrollChanges() {
         this.horStartPos = this.renderor.getHorStartPos()
         this.verStartPos = this.renderor.getVerStartPos()
         this.currStartColInd = this.renderor.getCurrColInd()
@@ -184,59 +196,117 @@ export class Functionalities{
 
     }
 
-    
+
     getRowCol(xPos, yPos) {
         //this function returns row and col index of positions and also the colStartPosition and rowStart POsition with respect to 
         this.updateScrollChanges()
 
-        let colStartPosition = this.horStartPos;
+        let newXPos = xPos + this.renderor.horizontallyScrolled;
+        let newYPos = yPos + this.renderor.verticallyScrolled;
+
         let colInd = this.currStartColInd;
 
-        while (colStartPosition + this.horizontalArr[colInd].width < xPos) {
+        while (this.horizontalArr[colInd].x + this.horizontalArr[colInd].width < newXPos) {
             //while column start position is less than xpos loop through
-            colStartPosition += this.horizontalArr[colInd].width;
             colInd += 1;
         }
 
-        let rowStartPosition = this.verStartPos;
         let rowInd = this.currStartRowInd;
 
 
-        while (rowStartPosition + this.verticalArr[rowInd].height < yPos) {
+        while (this.verticalArr[rowInd].y + this.verticalArr[rowInd].height < newYPos) {
             //while row start position is less than ypos loop through
-            rowStartPosition += this.verticalArr[rowInd].height;
             rowInd += 1;
         }
-        return { "rowInd": rowInd, "colInd": colInd, "rowStartPos": rowStartPosition, "colStartPos": colStartPosition }
+
+        return { "rowInd": rowInd, "colInd": colInd, "rowStartPos": this.verticalArr[rowInd].y, "colStartPos": this.horizontalArr[colInd].x }
+    }
+
+    updateInput() {
+
+        if (this.currSelectedCell == null) {
+            return;
+        }
+
+        let currData = this.currSelectedCell;
+
+        let cellWidth = this.horizontalArr[currData.colInd].width;
+        let cellHeight = this.verticalArr[currData.rowInd].height;
+        let rowStartPos = currData.rowStartPos - this.renderor.verticallyScrolled;
+        let colStartPos = currData.colStartPos - this.renderor.horizontallyScrolled;
+
+        //getting data
+        this.inputEle.value = this.ll.getValueAtInd(currData.rowInd, currData.colInd);
+        this.inputEle.style.display = 'inline-block';
+        this.inputEle.style.top = `${rowStartPos}px`;
+        this.inputEle.style.left = `${colStartPos}px`;
+        this.inputEle.style.width = `${cellWidth}px`;
+        this.inputEle.style.height = `${cellHeight}px`;
 
     }
 
-    handleSelect() {
-        this.spreadsheetCanvas.addEventListener('mousedown', (e) => {
+    saveInputData(rowInd, colInd , data) {
 
-            e.preventDefault();
-            let currData = this.getRowCol(e.offsetX, e.offsetY);
-            let rowInd = currData.rowInd
-            let colInd = currData.colInd
-            let colStartPos = currData.colStartPos
-            let rowStartPos = currData.rowStartPos
+        console.log(this.currSelectedCell)
 
-            console.log(rowInd,colInd)
+        if(data == ''){
+            console.log('deleting')
+            this.ll.deleteNode(rowInd+1,colInd+1);
+        }
+        else{
+            this.ll.setValueAtInd(rowInd, colInd, data);
+        }
 
-            //getting width height at that point
+        this.renderor.renderCanvas()
+    }
 
-            let cellWidth = this.horizontalArr[colInd].width;
-            let cellHeight = this.verticalArr[rowInd].height;
+    resetInputBox(){
+        this.inputEle.value = '';
+    }
 
-            //getting data
+    handleMouseDown(e) {
 
-            this.inputEle.style.display = 'inline';
-            this.inputEle.style.top = `${rowStartPos}px`;
-            this.inputEle.style.left = `${colStartPos}px`;
-            this.inputEle.style.width = `${cellWidth}px`;
-            this.inputEle.style.height = `${cellHeight}px`;
+        if(this.isInputOn){
+            //some other input is clicked then save their values and reset input
+            this.saveInputData(this.currSelectedCell.rowInd,this.currSelectedCell.colInd, this.inputEle.value);
+            this.resetInputBox();
+        }
 
-        })
+        //setting input for this click
+        this.isInputOn = true;
+
+        e.preventDefault();
+
+        //dealing with new input cell on mousedown
+        this.currSelectedCell = this.getRowCol(e.offsetX, e.offsetY);
+        this.updateInput();
+    }
+
+    handleMouseMove(e) {
+        
+        if (this.isInputOn) {
+            this.isDragging = true;
+        }
+    }
+
+    handleMultipleSelecting(){
+        if(this.isDragging){
+            
+        }
+    }
+
+    handleMouseUp(e) {
+        this.isDragging = false;
+    }
+
+
+    handleMouseEventsOnSheet() {
+
+        this.spreadsheetCanvas.addEventListener('mousedown', (e) => { this.handleMouseDown(e) })
+        this.spreadsheetCanvas.addEventListener('mousemove', (e) => { this.handleMouseMove(e) })
+        this.spreadsheetCanvas.addEventListener('mouseup', (e) => { this.handleMouseUp(e) })
+
+
     }
 
 

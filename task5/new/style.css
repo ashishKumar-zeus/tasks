@@ -33,6 +33,7 @@ body > .mainContainer > .row > .excel {
   flex-direction: column;
   box-sizing: border-box;
   background-color: aliceblue;
+  overflow: hidden;
 }
 body > .mainContainer > .row > .excel > .topSection {
   margin: 0px;
@@ -138,4 +139,5 @@ body > .mainContainer > .row > .excel > .middleSection > .fullCanvas > input {
   position: absolute;
   border: 3px solid green;
   outline: none;
+  padding: 5px 10px;
 }/*# sourceMappingURL=style.css.map */

@@ -68,44 +68,42 @@ export class HeaderCellsMaker {
         return this.verticalArr;
     }
 
-    // increaseNumOfCols() {
-    //     const lastCell = this.horizontalArr[this.horizontalArr.length - 1];
-    //     let x = lastCell.x + lastCell.width;
-    //     let y = 0;
-    //     let currIndex = parseInt(this.numOfCols+1);
+    increaseNumOfCols() {
 
-    //     const numNewCols = Math.floor(2*this.horizontalCanvas.width / this.initialWidthHorizontal);
+        const lastCell = this.horizontalArr[this.horizontalArr.length - 1];
+        let x = lastCell.x + lastCell.width;
+        let y = 0;
+        let currIndex = Math.floor(this.numOfCols + 1);
 
-    //     for (let i = 0; i < numNewCols; i++) {
-    //         console.log(x, y, this.initialWidthHorizontal, this.initialHeightHorizontal, currIndex)
-    //         const cell = new HeaderCell(x, y, this.initialWidthHorizontal, this.initialHeightHorizontal, currIndex+1);
-    //         this.horizontalArr[currIndex] = cell;
-    //         x += this.initialWidthHorizontal;
-    //         currIndex++;
-    //     }
+        const numNewCols = Math.floor(2 * this.horizontalCanvas.width / this.initialWidthHorizontal);
 
-    //     this.numOfCols = this.horizontalArr.length;
-    // }
+        for (let i = 0; i < numNewCols; i++) {
+            const cell = new HeaderCell(x, y, this.initialWidthHorizontal, this.initialHeightHorizontal, currIndex + 1);
+            this.horizontalArr.push(cell);
+            x += this.initialWidthHorizontal;
+            currIndex++;
+        }
 
-    
-    // increaseNumOfRows() {
-    //     const lastCell = this.verticalArr[this.verticalArr.length - 1];
-    //     let y = lastCell.y + lastCell.height;
-    //     let x = 0;
-    //     let currIndex = this.numOfRows;
+        this.numOfCols = this.horizontalArr.length;
+    }
 
-    //     const numNewRows = Math.floor(2*this.verticalCanvas.height / this.initialHeightVertical);
+    increaseNumOfRows() {
+        const lastCell = this.verticalArr[this.verticalArr.length - 1];
+        let y = lastCell.y + lastCell.height;
+        let x = 0;
+        let currIndex = Math.floor(this.numOfRows + 1);
 
-    //     for (let i = 0; i < numNewRows; i++) {
-    //         const cell = new HeaderCell(x, y, this.initialHeightVertical, this.initialWidthVertical, currIndex);
-    //         this.horizontalArr[currIndex] = cell;
-    //         y += this.initialHeightVertical;
-    //         currIndex++;
-    //     }
-    //     console.log(this.numOfRows)
-    //     this.numOfRows = this.verticalArr.length;
-    // }
+        const numNewRows = Math.floor(2 * this.verticalCanvas.height / this.initialHeightVertical);
 
+        for (let i = 0; i < numNewRows; i++) {
+            const cell = new HeaderCell(x, y, this.initialWidthVertical, this.initialHeightVertical, currIndex +1);
+            this.verticalArr.push(cell);
+            y += this.initialHeightVertical;
+            currIndex++;
+        }
+        console.log(this.numOfRows)
+        this.numOfRows = this.verticalArr.length;
+    }
 
     resizeColumn(index, diff) {
         let MIN_WIDTH = 50;
