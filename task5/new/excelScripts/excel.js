@@ -7,7 +7,7 @@ export class Excel {
         this.rowContainer = rowContainer;
         this.col = col;
         this.row = row;
-        
+
         //code for div scalling temporary to be removed
 
         this.scale = 1;
@@ -28,11 +28,11 @@ export class Excel {
         excel.setAttribute('id', `rowCol${this.row}_${this.col}`)
         this.rowContainer.appendChild(excel)
         this.element = excel;
-        let sheet = new Sheet(excel,this.row,this.col,this.rowContainer);
+        let sheet = new Sheet(excel, this.row, this.col, this.rowContainer);
 
     }
 
-    
+
 
 }
 

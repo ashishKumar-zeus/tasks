@@ -35,7 +35,10 @@ export class Functionalities {
         this.isInputOn = false;
         this.isDragging = false;
 
-        this.currSelectedCell = null;
+        this.startInputCell = null;
+        this.endInputCell = null;
+
+        this.selectedCellsArray = [];
 
         this.init();
 
@@ -47,7 +50,11 @@ export class Functionalities {
     init() {
         this.handleResizeHorizontal();
         this.handleResizeVertical();
-        this.handleMouseEventsOnSheet()
+
+
+        this.handleMouseEventsOnSheet();
+
+
     }
 
     updateScrollChanges() {
@@ -56,6 +63,11 @@ export class Functionalities {
         this.currStartColInd = this.renderor.getCurrColInd()
         this.currStartRowInd = this.renderor.getCurrRowInd()
 
+    }
+
+    getUpdatedArrayValue() {
+        this.horizontalArr = sheet.headerCellsMaker.getHorizontalArray();
+        this.verticalArr = sheet.headerCellsMaker.getVerticalArray();
     }
 
     handleResizeHorizontal() {
@@ -104,8 +116,12 @@ export class Functionalities {
                 const diff = endXPos - startXPos;
                 this.horizontalCanvas.style.cursor = 'col-resize';
                 this.headerCellsMaker.resizeColumn(resizingColumn, diff)
-                this.renderor.renderCanvas();
+
                 startXPos = endXPos;
+                
+                this.renderor.renderCanvas();
+                this.updateInput()
+                this.handleRectangleToMake()
             }
         }
 
@@ -118,10 +134,10 @@ export class Functionalities {
 
         this.horizontalCanvas.addEventListener('mousedown', onMouseDown)
         this.horizontalCanvas.addEventListener('mousemove', onMouseMove);
-        this.spreadsheetCanvas.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mousemove', onMouseMove);
 
         this.horizontalCanvas.addEventListener('mouseup', onMouseUp);
-        this.spreadsheetCanvas.addEventListener('mouseup', onMouseUp);
+        window.addEventListener('mouseup', onMouseUp);
 
 
     }
@@ -174,8 +190,12 @@ export class Functionalities {
                 const diff = endYPos - startYPos;
                 this.verticalCanvas.style.cursor = 'row-resize';
                 this.headerCellsMaker.resizeRow(resizingRow, diff)
-                this.renderor.renderCanvas();
+                
                 startYPos = endYPos;
+
+                this.renderor.renderCanvas();
+                this.updateInput()
+                this.handleRectangleToMake()
             }
         }
 
@@ -188,11 +208,10 @@ export class Functionalities {
 
         this.verticalCanvas.addEventListener('mousedown', onMouseDown)
         this.verticalCanvas.addEventListener('mousemove', onMouseMove);
-        this.spreadsheetCanvas.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mousemove', onMouseMove);
 
         this.verticalCanvas.addEventListener('mouseup', onMouseUp);
-        this.spreadsheetCanvas.addEventListener('mouseup', onMouseUp);
-
+        window.addEventListener('mouseup', onMouseUp);
 
     }
 
@@ -213,101 +232,216 @@ export class Functionalities {
 
         let rowInd = this.currStartRowInd;
 
-
         while (this.verticalArr[rowInd].y + this.verticalArr[rowInd].height < newYPos) {
             //while row start position is less than ypos loop through
             rowInd += 1;
         }
 
-        return { "rowInd": rowInd, "colInd": colInd, "rowStartPos": this.verticalArr[rowInd].y, "colStartPos": this.horizontalArr[colInd].x }
+        return { "rowInd": rowInd, "colInd": colInd }
     }
 
     updateInput() {
 
-        if (this.currSelectedCell == null) {
+        if (this.startInputCell == null) {
             return;
         }
 
-        let currData = this.currSelectedCell;
+        let currData = this.startInputCell;
 
         let cellWidth = this.horizontalArr[currData.colInd].width;
         let cellHeight = this.verticalArr[currData.rowInd].height;
-        let rowStartPos = currData.rowStartPos - this.renderor.verticallyScrolled;
-        let colStartPos = currData.colStartPos - this.renderor.horizontallyScrolled;
+        let rowStartPos = this.verticalArr[currData.rowInd].y - this.renderor.verticallyScrolled;
+        let colStartPos = this.horizontalArr[currData.colInd].x - this.renderor.horizontallyScrolled;
 
         //getting data
         this.inputEle.value = this.ll.getValueAtInd(currData.rowInd, currData.colInd);
+
+        //setting input
         this.inputEle.style.display = 'inline-block';
         this.inputEle.style.top = `${rowStartPos}px`;
         this.inputEle.style.left = `${colStartPos}px`;
-        this.inputEle.style.width = `${cellWidth}px`;
-        this.inputEle.style.height = `${cellHeight}px`;
+        this.inputEle.style.width = `${cellWidth - 4}px`;// 4 is subtracted inorder to make the rectangle drawn visible
+        this.inputEle.style.height = `${cellHeight - 4}px`;
+
+        this.inputEle.addEventListener('blur', (e) => {
+            this.isDragging = false;
+        })
 
     }
 
-    saveInputData(rowInd, colInd , data) {
+    saveInputData() {
 
-        console.log(this.currSelectedCell)
+        let rowInd = this.startInputCell.rowInd;
+        let colInd =  this.startInputCell.colInd;
+        let data = this.inputEle.value;
+        console.log(this.startInputCell)
 
-        if(data == ''){
-            console.log('deleting')
-            this.ll.deleteNode(rowInd+1,colInd+1);
+        if (data == '') {
+            this.ll.deleteNode(rowInd + 1, colInd + 1);
         }
-        else{
+        else {
             this.ll.setValueAtInd(rowInd, colInd, data);
         }
 
         this.renderor.renderCanvas()
     }
 
-    resetInputBox(){
+    resetInputBox() {
         this.inputEle.value = '';
     }
 
-    handleMouseDown(e) {
 
-        if(this.isInputOn){
-            //some other input is clicked then save their values and reset input
-            this.saveInputData(this.currSelectedCell.rowInd,this.currSelectedCell.colInd, this.inputEle.value);
+
+    // mouse events
+
+
+    handleMouseDown(e) {
+        e.preventDefault();
+
+        if (this.isInputOn) {
+            // Some other input is clicked then save their values and reset input
+            this.saveInputData();
             this.resetInputBox();
         }
 
-        //setting input for this click
+        // Setting input for this click
         this.isInputOn = true;
 
-        e.preventDefault();
-
-        //dealing with new input cell on mousedown
-        this.currSelectedCell = this.getRowCol(e.offsetX, e.offsetY);
+        // Dealing with new input cell on mousedown
+        this.startInputCell = this.getRowCol(e.offsetX, e.offsetY);
+        this.endInputCell = this.startInputCell;
         this.updateInput();
+
+        this.isDragging = true;
+        this.selectedCells = []; // Clear previously selected cells
+
+        if (this.startInputCell) {
+            this.updateSelectionData(this.startInputCell, this.startInputCell);
+        }
+        this.handleRectangleToMake(e);
+
+        // Add event listeners for mousemove and mouseup
+        this.spreadsheetCanvas.addEventListener('mousemove', this.handleMouseMoveBound);
+        document.addEventListener('mouseup', this.handleMouseUpBound);
     }
+    handleScrolling(event) {
+        const { x, y } = this.getCanvasCoordinates(event);
+        const { x: scrollX, y: scrollY } =
+          this.sheetRenderer.scrollManager.getScroll();
+    
+        // Check if the pointer is near the edges to trigger scrolling
+        const edgeDistance = 30; // Distance from edge to start scrolling
+        const canvas = this.sheetRenderer.canvases.spreadsheet;
+    
+        if (x - scrollX < 0 && event.movementX < 0) {
+          this.sheetRenderer.scrollManager.scroll(-10, 0);
+        } else if (
+          x - scrollX > canvas.clientWidth - edgeDistance &&
+          event.movementX > 0
+        ) {
+          this.sheetRenderer.scrollManager.scroll(10, 0);
+        }
+    
+        if (y - scrollY < 0 && event.movementY < 0) {
+          console.log(y - scrollY);
+          this.sheetRenderer.scrollManager.scroll(0, -10); // Scroll up
+        } else if (
+          y - scrollY > canvas.clientHeight - edgeDistance &&
+          event.movementY > 0
+        ) {
+          this.sheetRenderer.scrollManager.scroll(0, 10); // Scroll down
+        }
+      }
 
     handleMouseMove(e) {
-        
-        if (this.isInputOn) {
-            this.isDragging = true;
-        }
-    }
+        if (this.isInputOn && this.isDragging) {
 
-    handleMultipleSelecting(){
-        if(this.isDragging){
-            
+            //check if you are trying to scroll along with selecting
+            let currCell = this.getRowCol(e.offsetX, e.offsetY);
+            this.endInputCell = currCell;
+            this.renderor.renderCanvas();
+            this.handleRectangleToMake();
         }
     }
 
     handleMouseUp(e) {
         this.isDragging = false;
+
+
+        // Remove event listeners for mousemove and mouseup
+        this.spreadsheetCanvas.removeEventListener('mousemove', this.handleMouseMoveBound);
+        document.removeEventListener('mouseup', this.handleMouseUpBound);
     }
 
+    handleRectangleToMake() {
+        // if (this.isDragging) {
+            let startCellXTop = this.horizontalArr[this.startInputCell.colInd].x - this.renderor.horizontallyScrolled;
+            let startCellYTop = this.verticalArr[this.startInputCell.rowInd].y - this.renderor.verticallyScrolled;
+            let startCellXBottom = this.horizontalArr[this.startInputCell.colInd].x + this.horizontalArr[this.startInputCell.colInd].width - this.renderor.horizontallyScrolled;
+            let startCellYBottom = this.verticalArr[this.startInputCell.rowInd].y + this.verticalArr[this.startInputCell.rowInd].height - this.renderor.verticallyScrolled;
+
+            let currCell = this.endInputCell;
+
+            if (this.startInputCell) {
+                this.updateSelectionData(this.startInputCell, currCell);
+            }
+
+            let currCellXTop = this.horizontalArr[currCell.colInd].x - this.renderor.horizontallyScrolled;
+            let currCellYTop = this.verticalArr[currCell.rowInd].y - this.renderor.verticallyScrolled;
+            let currCellXBottom = this.horizontalArr[currCell.colInd].x + this.horizontalArr[currCell.colInd].width - this.renderor.horizontallyScrolled;
+            let currCellYBottom = this.verticalArr[currCell.rowInd].y + this.verticalArr[currCell.rowInd].height - this.renderor.verticallyScrolled;
+
+            // Get the rectangle's start and end points
+            const minX = Math.min(startCellXTop, startCellXBottom, currCellXTop, currCellXBottom);
+            const minY = Math.min(startCellYTop, startCellYBottom, currCellYTop, currCellYBottom);
+            const maxX = Math.max(startCellXTop, startCellXBottom, currCellXTop, currCellXBottom);
+            const maxY = Math.max(startCellYTop, startCellYBottom, currCellYTop, currCellYBottom);
+            this.renderor.drawSelectionRectangles(minX, minY, maxX - minX, maxY - minY)
+        // }
+    }
+
+
+    updateSelectionData(startCell, endCell) {
+
+        const minRow = Math.min(startCell.rowInd, endCell.rowInd);
+        const maxRow = Math.max(startCell.rowInd, endCell.rowInd);
+        const minCol = Math.min(startCell.colInd, endCell.colInd);
+        const maxCol = Math.max(startCell.colInd, endCell.colInd);
+
+        // Reset selectedCells array to cover the new selection
+        this.selectedCells = Array.from({ length: maxRow - minRow + 1 }, () => Array(maxCol - minCol + 1).fill(''));
+
+        let x = 0;
+        for (let row = minRow; row <= maxRow; row++) {
+            let y = 0;
+            for (let col = minCol; col <= maxCol; col++) {
+                let ele = this.ll.getValueAtInd(row, col);
+                if (ele != "") {
+                    this.selectedCells[x][y] = ele;
+                }
+                y++;
+            }
+            x++;
+        }
+
+        console.log(this.selectedCells)
+
+    }
+
+
+    removeEventListeners() {
+        this.spreadsheetCanvas.removeEventListener('mousedown', this.handleMouseDownBound);
+        this.spreadsheetCanvas.removeEventListener('mousemove', this.handleMouseMoveBound);
+        document.removeEventListener('mouseup', this.handleMouseUpBound);
+    }
 
     handleMouseEventsOnSheet() {
 
-        this.spreadsheetCanvas.addEventListener('mousedown', (e) => { this.handleMouseDown(e) })
-        this.spreadsheetCanvas.addEventListener('mousemove', (e) => { this.handleMouseMove(e) })
-        this.spreadsheetCanvas.addEventListener('mouseup', (e) => { this.handleMouseUp(e) })
-
+        // Bind event handlers
+        this.handleMouseDownBound = this.handleMouseDown.bind(this);
+        this.handleMouseMoveBound = this.handleMouseMove.bind(this);
+        this.handleMouseUpBound = this.handleMouseUp.bind(this);
+        this.spreadsheetCanvas.addEventListener('mousedown', this.handleMouseDownBound);
 
     }
-
-
 }

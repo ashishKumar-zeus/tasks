@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     console.log("DOM Content Loaded")
     const mainContainer = document.getElementById("mainContainer");
-    
+
 
     init(mainContainer);
 

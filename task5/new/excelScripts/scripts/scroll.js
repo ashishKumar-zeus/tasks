@@ -36,8 +36,9 @@ export class Scroll {
 
     updateGrid() {
         this.renderor.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled);
+        this.functionality.saveInputData()
         this.functionality.updateInput();
-
+        this.functionality.handleRectangleToMake();
     }
 
     increaseNumOfCols(){
@@ -87,7 +88,7 @@ export class Scroll {
 
                 newBarLeft = this.horizontallyScrolled * this.horizontalScroll.clientWidth / this.totalContentWidth;
 
-                this.horizontalBar.style.width = (this.horizontalScroll.clientWidth * this.horizontalScroll.clientWidth / this.totalContentWidth) + "px"
+                this.horizontalBar.style.width = Math.max(20,(this.horizontalScroll.clientWidth * this.horizontalScroll.clientWidth / this.totalContentWidth)) + "px"
 
                 // Update bar style
                 this.horizontalBar.style.left = `${newBarLeft}px`;
@@ -173,7 +174,7 @@ export class Scroll {
 
             newBarTop = this.verticallyScrolled * this.verticalScroll.clientHeight / this.totalContentHeight;
 
-            this.verticalBar.style.height = (this.verticalScroll.clientHeight * this.verticalScroll.clientHeight / this.totalContentHeight) + "px"
+            this.verticalBar.style.height = Math.max(30,(this.verticalScroll.clientHeight * this.verticalScroll.clientHeight / this.totalContentHeight)) + "px"
 
             this.verticalBar.style.top = `${newBarTop}px`;
 

@@ -51,15 +51,15 @@ export class LinkedList {
         return this.size == 0
     }
 
-    findAtIndex(rowInd,colInd){
+    findAtIndex(rowInd, colInd) {
         this.getUpdatedArray();
-    
+
         let currEle = this.verticalArr[rowInd].next;
-    
+
         while (currEle && currEle.col.data - 1 < colInd) {
             currEle = currEle.right;
         }
-    
+
         if (currEle && currEle.col.data - 1 === colInd) {
             // Found data at that position
             return currEle;
@@ -69,28 +69,28 @@ export class LinkedList {
 
     getValueAtInd(rowInd, colInd) {
 
-        let currEle = this.findAtIndex(rowInd,colInd);
-        if(currEle){
+        let currEle = this.findAtIndex(rowInd, colInd);
+        if (currEle) {
             return currEle.data;
         }
         return ""
     }
 
-    setValueAtInd(rowInd, colInd,newValue) {
+    setValueAtInd(rowInd, colInd, newValue) {
 
-        let currEle = this.findAtIndex(rowInd,colInd);
-        if(currEle){
+        let currEle = this.findAtIndex(rowInd, colInd);
+        if (currEle) {
             console.log("data updated")
             currEle.data = newValue;
         }
-        else{
-            console.log(rowInd,colInd,newValue)
+        else {
+            console.log(rowInd, colInd, newValue)
             console.log("new data added")
-            this.createNewNode(rowInd+1,colInd+1,newValue)
+            this.createNewNode(rowInd + 1, colInd + 1, newValue)
         }
     }
 
-    
+
 
     createNewNode(row, col, data) {
 
@@ -98,7 +98,7 @@ export class LinkedList {
         let colInd = col - 1;
 
         let newNode = new Node(this.verticalArr[rowInd].value, this.horizontalArr[colInd].value, data)
-        console.log("new node created at",this.verticalArr[rowInd].value, this.horizontalArr[colInd].value ,data)
+        console.log("new node created at", this.verticalArr[rowInd].value, this.horizontalArr[colInd].value, data)
         //keep the head at first element
         if (this.isempty())
             this.head = newNode;
