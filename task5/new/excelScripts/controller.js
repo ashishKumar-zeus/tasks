@@ -212,7 +212,7 @@ export class Controller {
         //adding First Row
         this.addNewRow();
         // this.addNewRow()
-        // this.addNewCol(1)
+        this.addNewCol(1)
 
         this.handleResize()
 

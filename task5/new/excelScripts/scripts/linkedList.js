@@ -80,12 +80,12 @@ export class LinkedList {
 
         let currEle = this.findAtIndex(rowInd, colInd);
         if (currEle) {
-            console.log("data updated")
+            // console.log("data updated")
             currEle.data = newValue;
         }
         else {
             console.log(rowInd, colInd, newValue)
-            console.log("new data added")
+            // console.log("new data added")
             this.createNewNode(rowInd + 1, colInd + 1, newValue)
         }
     }
@@ -98,7 +98,7 @@ export class LinkedList {
         let colInd = col - 1;
 
         let newNode = new Node(this.verticalArr[rowInd].value, this.horizontalArr[colInd].value, data)
-        console.log("new node created at", this.verticalArr[rowInd].value, this.horizontalArr[colInd].value, data)
+        // console.log("new node created at", this.verticalArr[rowInd].value, this.horizontalArr[colInd].value, data)
         //keep the head at first element
         if (this.isempty())
             this.head = newNode;

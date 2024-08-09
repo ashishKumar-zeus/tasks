@@ -5,7 +5,7 @@ export class Functionalities {
         this.renderor = sheet.renderor;
         this.headerCellsMaker = sheet.headerCellsMaker;
 
-        console.log(sheet.ll);
+        // console.log(sheet.ll);
 
         this.ll = sheet.ll;
 
@@ -43,6 +43,9 @@ export class Functionalities {
         this.init();
 
 
+        this.scroll = null;
+
+
 
 
     }
@@ -69,6 +72,13 @@ export class Functionalities {
         this.horizontalArr = sheet.headerCellsMaker.getHorizontalArray();
         this.verticalArr = sheet.headerCellsMaker.getVerticalArray();
     }
+
+
+    getScrollInstance(scrollInstance) {
+        this.scroll = scrollInstance;
+    }
+
+
 
     handleResizeHorizontal() {
 
@@ -118,7 +128,7 @@ export class Functionalities {
                 this.headerCellsMaker.resizeColumn(resizingColumn, diff)
 
                 startXPos = endXPos;
-                
+
                 this.renderor.renderCanvas();
                 this.updateInput()
                 this.handleRectangleToMake()
@@ -190,7 +200,7 @@ export class Functionalities {
                 const diff = endYPos - startYPos;
                 this.verticalCanvas.style.cursor = 'row-resize';
                 this.headerCellsMaker.resizeRow(resizingRow, diff)
-                
+
                 startYPos = endYPos;
 
                 this.renderor.renderCanvas();
@@ -216,7 +226,7 @@ export class Functionalities {
     }
 
 
-    getRowCol(xPos, yPos) {
+    getRowColFromCanvasPosition(xPos, yPos) {
         //this function returns row and col index of positions and also the colStartPosition and rowStart POsition with respect to 
         this.updateScrollChanges()
 
@@ -271,10 +281,14 @@ export class Functionalities {
 
     saveInputData() {
 
+        if (!this.startInputCell) {
+            return;
+        }
+
         let rowInd = this.startInputCell.rowInd;
-        let colInd =  this.startInputCell.colInd;
+        let colInd = this.startInputCell.colInd;
         let data = this.inputEle.value;
-        console.log(this.startInputCell)
+        // console.log(this.startInputCell)
 
         if (data == '') {
             this.ll.deleteNode(rowInd + 1, colInd + 1);
@@ -304,15 +318,18 @@ export class Functionalities {
             this.resetInputBox();
         }
 
+        // console.log("down ", e.target)
+
         // Setting input for this click
         this.isInputOn = true;
 
         // Dealing with new input cell on mousedown
-        this.startInputCell = this.getRowCol(e.offsetX, e.offsetY);
+        this.startInputCell = this.getRowColFromCanvasPosition(e.offsetX, e.offsetY);
         this.endInputCell = this.startInputCell;
         this.updateInput();
 
         this.isDragging = true;
+
         this.selectedCells = []; // Clear previously selected cells
 
         if (this.startInputCell) {
@@ -321,43 +338,62 @@ export class Functionalities {
         this.handleRectangleToMake(e);
 
         // Add event listeners for mousemove and mouseup
-        this.spreadsheetCanvas.addEventListener('mousemove', this.handleMouseMoveBound);
+        document.addEventListener('mousemove', this.handleMouseMoveBound);
         document.addEventListener('mouseup', this.handleMouseUpBound);
     }
+
+
     handleScrolling(event) {
-        const { x, y } = this.getCanvasCoordinates(event);
-        const { x: scrollX, y: scrollY } =
-          this.sheetRenderer.scrollManager.getScroll();
-    
+
+        const { relativeX, relativeY } = this.getAdjestedPositions(event.clientX, event.clientY)
+
+
         // Check if the pointer is near the edges to trigger scrolling
-        const edgeDistance = 30; // Distance from edge to start scrolling
-        const canvas = this.sheetRenderer.canvases.spreadsheet;
-    
-        if (x - scrollX < 0 && event.movementX < 0) {
-          this.sheetRenderer.scrollManager.scroll(-10, 0);
+        const edgeDistance = 50; // Distance from edge to start scrolling
+
+        const canvas = this.spreadsheetCanvas;
+
+        if (relativeX < edgeDistance && event.movementX < 0) {
+            this.scroll.updateScrollByDiffHor(-10)//scroll left
         } else if (
-          x - scrollX > canvas.clientWidth - edgeDistance &&
-          event.movementX > 0
+            relativeX > canvas.clientWidth - edgeDistance &&
+            event.movementX > 0
         ) {
-          this.sheetRenderer.scrollManager.scroll(10, 0);
+            this.scroll.updateScrollByDiffHor(+10)//scroll right
         }
-    
-        if (y - scrollY < 0 && event.movementY < 0) {
-          console.log(y - scrollY);
-          this.sheetRenderer.scrollManager.scroll(0, -10); // Scroll up
+
+        if (relativeY < edgeDistance && event.movementY < 0) {
+            this.scroll.updateScrollByDiffVer(-5)//scroll up
         } else if (
-          y - scrollY > canvas.clientHeight - edgeDistance &&
-          event.movementY > 0
+            relativeY > canvas.clientHeight - edgeDistance &&
+            event.movementY > 0
         ) {
-          this.sheetRenderer.scrollManager.scroll(0, 10); // Scroll down
+            this.scroll.updateScrollByDiffVer(+5)//scroll up
         }
-      }
+    }
+
+    getAdjestedPositions(xPos, yPos) {
+        const rect = this.spreadsheetCanvas.getBoundingClientRect();
+        // Calculate the relative coordinates
+        const relativeX = xPos - rect.left;
+        const relativeY = yPos - rect.top;
+        return { relativeX, relativeY }
+    }
 
     handleMouseMove(e) {
+        e.preventDefault();
+
         if (this.isInputOn && this.isDragging) {
 
+
+            this.handleScrolling(e)
+
+            //as the event is triggerred with respect to document hence we have adjusted the positions with respect to canvas
+            const { relativeX, relativeY } = this.getAdjestedPositions(e.clientX, e.clientY)
+
             //check if you are trying to scroll along with selecting
-            let currCell = this.getRowCol(e.offsetX, e.offsetY);
+            let currCell = this.getRowColFromCanvasPosition(relativeX, relativeY);
+
             this.endInputCell = currCell;
             this.renderor.renderCanvas();
             this.handleRectangleToMake();
@@ -367,37 +403,42 @@ export class Functionalities {
     handleMouseUp(e) {
         this.isDragging = false;
 
+        // console.log("up ", e.target)
+
 
         // Remove event listeners for mousemove and mouseup
-        this.spreadsheetCanvas.removeEventListener('mousemove', this.handleMouseMoveBound);
+        document.removeEventListener('mousemove', this.handleMouseMoveBound);
         document.removeEventListener('mouseup', this.handleMouseUpBound);
     }
 
     handleRectangleToMake() {
-        // if (this.isDragging) {
-            let startCellXTop = this.horizontalArr[this.startInputCell.colInd].x - this.renderor.horizontallyScrolled;
-            let startCellYTop = this.verticalArr[this.startInputCell.rowInd].y - this.renderor.verticallyScrolled;
-            let startCellXBottom = this.horizontalArr[this.startInputCell.colInd].x + this.horizontalArr[this.startInputCell.colInd].width - this.renderor.horizontallyScrolled;
-            let startCellYBottom = this.verticalArr[this.startInputCell.rowInd].y + this.verticalArr[this.startInputCell.rowInd].height - this.renderor.verticallyScrolled;
 
-            let currCell = this.endInputCell;
+        if (!this.startInputCell || !this.endInputCell) {
+            return;
+        }
 
-            if (this.startInputCell) {
-                this.updateSelectionData(this.startInputCell, currCell);
-            }
+        let startCellXTop = this.horizontalArr[this.startInputCell.colInd].x - this.renderor.horizontallyScrolled;
+        let startCellYTop = this.verticalArr[this.startInputCell.rowInd].y - this.renderor.verticallyScrolled;
+        let startCellXBottom = this.horizontalArr[this.startInputCell.colInd].x + this.horizontalArr[this.startInputCell.colInd].width - this.renderor.horizontallyScrolled;
+        let startCellYBottom = this.verticalArr[this.startInputCell.rowInd].y + this.verticalArr[this.startInputCell.rowInd].height - this.renderor.verticallyScrolled;
 
-            let currCellXTop = this.horizontalArr[currCell.colInd].x - this.renderor.horizontallyScrolled;
-            let currCellYTop = this.verticalArr[currCell.rowInd].y - this.renderor.verticallyScrolled;
-            let currCellXBottom = this.horizontalArr[currCell.colInd].x + this.horizontalArr[currCell.colInd].width - this.renderor.horizontallyScrolled;
-            let currCellYBottom = this.verticalArr[currCell.rowInd].y + this.verticalArr[currCell.rowInd].height - this.renderor.verticallyScrolled;
+        let currCell = this.endInputCell;
 
-            // Get the rectangle's start and end points
-            const minX = Math.min(startCellXTop, startCellXBottom, currCellXTop, currCellXBottom);
-            const minY = Math.min(startCellYTop, startCellYBottom, currCellYTop, currCellYBottom);
-            const maxX = Math.max(startCellXTop, startCellXBottom, currCellXTop, currCellXBottom);
-            const maxY = Math.max(startCellYTop, startCellYBottom, currCellYTop, currCellYBottom);
-            this.renderor.drawSelectionRectangles(minX, minY, maxX - minX, maxY - minY)
-        // }
+        if (this.startInputCell) {
+            this.updateSelectionData(this.startInputCell, currCell);
+        }
+
+        let currCellXTop = this.horizontalArr[currCell.colInd].x - this.renderor.horizontallyScrolled;
+        let currCellYTop = this.verticalArr[currCell.rowInd].y - this.renderor.verticallyScrolled;
+        let currCellXBottom = this.horizontalArr[currCell.colInd].x + this.horizontalArr[currCell.colInd].width - this.renderor.horizontallyScrolled;
+        let currCellYBottom = this.verticalArr[currCell.rowInd].y + this.verticalArr[currCell.rowInd].height - this.renderor.verticallyScrolled;
+
+        // Get the rectangle's start and end points
+        const minX = Math.min(startCellXTop, startCellXBottom, currCellXTop, currCellXBottom);
+        const minY = Math.min(startCellYTop, startCellYBottom, currCellYTop, currCellYBottom);
+        const maxX = Math.max(startCellXTop, startCellXBottom, currCellXTop, currCellXBottom);
+        const maxY = Math.max(startCellYTop, startCellYBottom, currCellYTop, currCellYBottom);
+        this.renderor.drawSelectionRectangles(minX, minY, maxX - minX, maxY - minY)
     }
 
 
@@ -424,14 +465,14 @@ export class Functionalities {
             x++;
         }
 
-        console.log(this.selectedCells)
+        // console.log(this.selectedCells)
 
     }
 
 
     removeEventListeners() {
         this.spreadsheetCanvas.removeEventListener('mousedown', this.handleMouseDownBound);
-        this.spreadsheetCanvas.removeEventListener('mousemove', this.handleMouseMoveBound);
+        document.removeEventListener('mousemove', this.handleMouseMoveBound);
         document.removeEventListener('mouseup', this.handleMouseUpBound);
     }
 

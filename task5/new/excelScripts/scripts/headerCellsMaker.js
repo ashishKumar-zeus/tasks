@@ -56,7 +56,7 @@ export class HeaderCellsMaker {
             y += this.initialHeightVertical;
         }
 
-        console.log(this.horizontalArr)
+        // console.log(this.horizontalArr)
 
     }
 
@@ -96,12 +96,12 @@ export class HeaderCellsMaker {
         const numNewRows = Math.floor(2 * this.verticalCanvas.height / this.initialHeightVertical);
 
         for (let i = 0; i < numNewRows; i++) {
-            const cell = new HeaderCell(x, y, this.initialWidthVertical, this.initialHeightVertical, currIndex +1);
+            const cell = new HeaderCell(x, y, this.initialWidthVertical, this.initialHeightVertical, currIndex + 1);
             this.verticalArr.push(cell);
             y += this.initialHeightVertical;
             currIndex++;
         }
-        console.log(this.numOfRows)
+        // console.log(this.numOfRows)
         this.numOfRows = this.verticalArr.length;
     }
 

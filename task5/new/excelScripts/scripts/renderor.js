@@ -65,33 +65,83 @@ export class Renderor {
     }
 
     renderCanvasOnScroll(horizontallyScrolled, verticallyScrolled) {
-        //for horizontal scrolling
-        this.horizontallyScrolled = horizontallyScrolled;
-        let i = 0;
-        this.accWidthHor = this.horizontalArr[0].width;
-        while (this.accWidthHor < this.horizontallyScrolled) {
-            i++;
-            this.accWidthHor += this.horizontalArr[i].width;
+
+        if (this.horizontallyScrolled != horizontallyScrolled) {
+
+            //for horizontal scrolling
+
+            this.horizontallyScrolled = horizontallyScrolled;
+            let i = 0;
+            this.accWidthHor = this.horizontalArr[0].width;
+
+            while (this.accWidthHor < this.horizontallyScrolled) {
+                i++;
+                this.accWidthHor += this.horizontalArr[i].width;
+            }
+
+            this.currStartColInd = i;
+
+            this.horStartPos = -this.horizontallyScrolled + this.accWidthHor - this.horizontalArr[i].width;
+            // console.log("hor updated", this.horStartPos, this.currStartColInd)
+
         }
 
-        this.currStartColInd = i;
 
-        this.horStartPos = -this.horizontallyScrolled + this.accWidthHor - this.horizontalArr[i].width;
-        console.log("hor updated", this.horStartPos, this.currStartColInd)
+        //This code is for rendering when scrolling horizontally which works good at initial but when scrolling much more cells then creates problem as at that time it uses O(n) 
+        // if (this.horizontallyScrolled != horizontallyScrolled) {
+
+        //     horizontallyScrolled = parseInt(horizontallyScrolled)
+
+        //     //for horizontal scrolling
+
+        //     if (horizontallyScrolled >= this.horizontallyScrolled) {
+
+        //         console.log("moving right")
+
+        //         while (this.accWidthHor + this.horizontalArr[this.currStartColInd].width < horizontallyScrolled) {
+        //             console.log("adding acc width")
+        //             this.accWidthHor += this.horizontalArr[this.currStartColInd].width;
+        //             this.currStartColInd += 1;
+        //         }
+
+        //         this.horStartPos = -horizontallyScrolled + this.accWidthHor;
+        //         this.horizontallyScrolled = horizontallyScrolled;
+        //         console.log(this.currStartColInd, this.horStartPos ,this.accWidthHor)
+        //     }
+        //     else {
+
+        //         console.log("moving left")
+
+        //         while (this.accWidthHor> horizontallyScrolled) {
+        //             console.log("removing acc width")
+        //             this.accWidthHor -= this.horizontalArr[this.currStartColInd-1].width;
+        //             this.currStartColInd -= 1;
+        //         }
+
+        //         this.horStartPos = -horizontallyScrolled + this.accWidthHor;
+        //         this.horizontallyScrolled = horizontallyScrolled;
+        //         console.log(this.currStartColInd, this.horStartPos,this.accWidthHor)
+        //     }
+
+        // }
+
+        if (this.verticallyScrolled != verticallyScrolled) {
 
 
-        //for vertical scrolling
-        this.verticallyScrolled = verticallyScrolled;
-        i = 0;
-        this.accHeightVer = this.verticalArr[0].height;
-        while (this.accHeightVer < this.verticallyScrolled) {
-            i++;
-            this.accHeightVer += this.verticalArr[i].height;
+            //for vertical scrolling
+            this.verticallyScrolled = verticallyScrolled;
+            let i = 0;
+            this.accHeightVer = this.verticalArr[0].height;
+            while (this.accHeightVer < this.verticallyScrolled) {
+                i++;
+                this.accHeightVer += this.verticalArr[i].height;
+            }
+
+            this.currStartRowInd = i;
+
+            this.verStartPos = -this.verticallyScrolled + this.accHeightVer - this.verticalArr[i].height;
+
         }
-
-        this.currStartRowInd = i;
-
-        this.verStartPos = -this.verticallyScrolled + this.accHeightVer - this.verticalArr[i].height;
 
         //updating
         this.drawHorizontalCanvas(this.currStartColInd);
@@ -123,7 +173,7 @@ export class Renderor {
         this.horizontalCnvCtx.strokeStyle = 'black';
         this.horizontalCnvCtx.lineWidth = 1 - this.offsetSharpness;
 
-        let x = this.horStartPos;
+        let x = this.horStartPos - this.offsetSharpness;
 
         for (let j = startInd; j <= this.horizontalArr.length; j++) {
 
@@ -168,7 +218,7 @@ export class Renderor {
         this.verticalCnvCtx.strokeStyle = 'black';
         this.verticalCnvCtx.lineWidth = 1 - this.offsetSharpness;
 
-        let y = this.verStartPos;
+        let y = this.verStartPos - this.offsetSharpness;
         for (let j = startInd; j <= this.verticalArr.length; j++) {
 
             //making horizontal lines
@@ -216,10 +266,10 @@ export class Renderor {
 
             //making text
             this.spreadsheetCnvCtx.font = '14px Calibri';
-            this.spreadsheetCnvCtx.textAlign = 'right';
+            this.spreadsheetCnvCtx.textAlign = 'left';
             this.spreadsheetCnvCtx.textBaseline = 'bottom';
             this.spreadsheetCnvCtx.fillStyle = 'black';
-            this.spreadsheetCnvCtx.fillText(currRowEle.data, currCol.x - this.horizontallyScrolled + currCol.width - 10, currRow.y - this.verticallyScrolled + currRow.height - 5)
+            this.spreadsheetCnvCtx.fillText(currRowEle.data, currCol.x - this.horizontallyScrolled + 10, currRow.y - this.verticallyScrolled + currRow.height - 5)
 
             currRowEle = currRowEle.right;
 
@@ -239,7 +289,10 @@ export class Renderor {
         this.spreadsheetCnvCtx.strokeStyle = 'black';
         this.spreadsheetCnvCtx.lineWidth = 1 - this.offsetSharpness;
 
-        let x = this.horStartPos;
+        let x = this.horStartPos - this.offsetSharpness;
+
+        //Needed to update for only rendering upto width and height of client
+
         for (let j = startColInd; j <= this.horizontalArr.length; j++) {
             this.spreadsheetCnvCtx.beginPath();
             this.spreadsheetCnvCtx.moveTo(x, 0);
@@ -254,7 +307,8 @@ export class Renderor {
             (j < this.horizontalArr.length) ? x += this.horizontalArr[j].width : "";
         }
 
-        let y = this.verStartPos;
+        let y = this.verStartPos - this.offsetSharpness;
+
         for (let j = startRowInd; j <= this.verticalArr.length; j++) {
             this.spreadsheetCnvCtx.beginPath();
             this.spreadsheetCnvCtx.moveTo(0, y);
@@ -286,7 +340,7 @@ export class Renderor {
     drawRectangleOnMainCanvas(x, y, width, height) {
         // this.drawMainCanvas()
         this.spreadsheetCnvCtx.beginPath();
-        this.spreadsheetCnvCtx.fillStyle ='rgb(131,242,143,0.4)'
+        this.spreadsheetCnvCtx.fillStyle = 'rgb(131,242,143,0.4)'
         this.spreadsheetCnvCtx.fillRect(x, y, width, height);
         this.spreadsheetCnvCtx.rect(x, y, width, height);
         this.spreadsheetCnvCtx.strokeStyle = 'green';
@@ -297,36 +351,35 @@ export class Renderor {
     drawRectangleOnHorizontalCanvas(x, width) {
         // this.drawHorizontalCanvas()
         this.horizontalCnvCtx.beginPath();
-        this.horizontalCnvCtx.fillStyle ='rgb(131,242,143,0.4)'
+        this.horizontalCnvCtx.fillStyle = 'rgb(131,242,143,0.4)'
         this.horizontalCnvCtx.fillRect(x, this.horizontalArr[0].y, width, this.horizontalArr[0].height);
 
-        this.drawLine(this.horizontalCnvCtx, 'green', 6, x,this.horizontalArr[0].y + this.horizontalArr[0].height ,x+width , this.horizontalArr[0].y + this.horizontalArr[0].height  )
+        this.drawLine(this.horizontalCnvCtx, 'green', 6, x, this.horizontalArr[0].y + this.horizontalArr[0].height, x + width, this.horizontalArr[0].y + this.horizontalArr[0].height)
 
     }
 
-    drawLine(ctx,color,lineWidth,x1,y1,x2,y2){
+    drawLine(ctx, color, lineWidth, x1, y1, x2, y2) {
 
         ctx.lineWidth = lineWidth;
         ctx.strokeStyle = color;
-        ctx.moveTo(x1, y1 );
-        ctx.lineTo( x2, y2);
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
         ctx.stroke();
     }
 
     drawRectangleOnVerticalCanvas(y, height) {
-        // this.drawVerticalCanvas()
         this.verticalCnvCtx.beginPath();
-        this.verticalCnvCtx.fillStyle ='rgb(131,242,143,0.4)'
+        this.verticalCnvCtx.fillStyle = 'rgb(131,242,143,0.4)'
         this.verticalCnvCtx.fillRect(this.verticalArr[0].x, y, this.verticalArr[0].width, height);
 
-        this.drawLine(this.verticalCnvCtx, 'green', 6, this.verticalArr[0].x + this.verticalArr[0].width,y ,this.verticalArr[0].x + this.verticalArr[0].width,  y + height  )
+        this.drawLine(this.verticalCnvCtx, 'green', 6, this.verticalArr[0].x + this.verticalArr[0].width, y, this.verticalArr[0].x + this.verticalArr[0].width, y + height)
 
     }
 
-    drawSelectionRectangles(x, y, width, height){
+    drawSelectionRectangles(x, y, width, height) {
         this.drawRectangleOnMainCanvas(x, y, width, height);
-        this.drawRectangleOnHorizontalCanvas(x,width)
-        this.drawRectangleOnVerticalCanvas(y,height)
+        this.drawRectangleOnHorizontalCanvas(x, width)
+        this.drawRectangleOnVerticalCanvas(y, height)
     }
 
 
