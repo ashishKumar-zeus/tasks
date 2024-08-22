@@ -2,8 +2,6 @@ using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using MySql.Data.MySqlClient;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Components.RenderTree;
 
 
 namespace learning.Services;
@@ -31,7 +29,6 @@ public class RabbitMQConsumer
         connection = connectionFactory.CreateConnection();
         channel = connection.CreateModel();
 
-
         //constructor
         configuration = _configuration;//updating the value
         dbConnString = configuration.GetConnectionString("DBConnectionString");//updating the value
@@ -53,11 +50,10 @@ public class RabbitMQConsumer
 
     public void StartListeningToQueue(int queueNumber)
     {
-
-
+        // Console.WriteLine("Started listening to queue " + queueNumber);
         var consumer = new EventingBasicConsumer(channel);//creating a consumer that can listen to queue
 
-        consumer.Received += async (model, ea) =>
+        consumer.Received += (model, ea) =>
         {
             //this is event that is triggered as the queue has got some data in it
             //dealing with body once received
@@ -65,8 +61,9 @@ public class RabbitMQConsumer
             var message = Encoding.UTF8.GetString(body);
 
             //call functiont to insert in db
-            // Console.WriteLine("calling insert to db");
-            await InsertToDB(message, queueNumber);
+            Console.WriteLine("calling to db for queue " + queueNumber + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
+
+            InsertToDB(message, queueNumber);
         };
         //listening to queue
 
@@ -77,32 +74,47 @@ public class RabbitMQConsumer
 
     }
 
-    public async Task InsertToDB(string query, int queueN)
+    public void InsertToDB(string query, int queueN)
     {
         //inserting to db
-        // Console.WriteLine("Inside db");
-        // Console.WriteLine("a");
+
+        long start = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds();
+
+        // Console.WriteLine("insert into db called ");
 
 
-        await Task.Run(() =>
-    {
-        using (var mySQLConnection = new MySqlConnection(dbConnString))
+        Task.Run(() =>
         {
-            mySQLConnection.Open();
-            using (var command = new MySqlCommand(query.ToString(), mySQLConnection))
             {
-                command.ExecuteNonQuery();
+                var watch = new System.Diagnostics.Stopwatch();
+                watch.Start();
+
+                using var mySQLConnection = new MySqlConnection(dbConnString);
+                // Console.WriteLine("Connection established");
+
+                // Console.WriteLine("running task to db");
+                mySQLConnection.Open();
+
+                using (var command = new MySqlCommand(query.ToString(), mySQLConnection))
+                {
+                    command.ExecuteNonQuery();
+                    // Console.WriteLine("execution completed " + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
+                }
+                mySQLConnection.Close();
+                long end = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds();
+                Console.WriteLine("INSERT finally ended at for " + queueN + end);
+
+
+                watch.Stop();
+                Console.WriteLine($"DB Execution Time: {watch.ElapsedMilliseconds} ms");
             }
-            mySQLConnection.Close();
-        }
-    });
+        });
 
-
-        // Console.WriteLine("jiefr");
-
-        // Console.WriteLine($"Entererd data for queue{queueN}");
-
-
+        long end = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds();
+        // Console.WriteLine($"diff time  {queueN} {end - start}");
+        // Console.WriteLine("insert ended at for " + queueN + end);
     }
 
 }
+
+

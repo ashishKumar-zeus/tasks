@@ -47,15 +47,15 @@ public class RabbitMQPublisher
         }
         var body = Encoding.UTF8.GetBytes(chunks);
 
-        // var properties = channel.CreateBasicProperties();
-        // properties.Persistent = true;
+        consumer.StartListeningToQueue(currQueueIndex);
+
+
+        // Console.WriteLine("sending chunk" + currQueueIndex);
 
         channel.BasicPublish(exchange: string.Empty,
                              routingKey: $"queue{currQueueIndex}",
                              basicProperties: null,
                              body: body);
-
-        consumer.StartListeningToQueue(currQueueIndex);
 
         currQueueIndex += 1;
 

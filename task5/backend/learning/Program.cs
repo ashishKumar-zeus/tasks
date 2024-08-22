@@ -18,6 +18,17 @@ var builder = WebApplication.CreateBuilder(args);
         return factory;
     });
 
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAllOrigins",
+            builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
+    });
+
     //adding some more services
     builder.Services.AddSingleton<RabbitMQPublisher>();
     builder.Services.AddSingleton<RabbitMQConsumer>();
@@ -40,7 +51,11 @@ var app = builder.Build();
 
     app.UseAuthorization();
 
+    app.UseCors("AllowAllOrigins");
+
     app.MapControllers();
+
+
 }
 
 app.Run();

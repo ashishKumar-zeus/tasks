@@ -4,6 +4,9 @@ using learning.Services;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 
+
+using System.IO;
+
 namespace learning.Controllers;
 
 [ApiController]
@@ -40,48 +43,43 @@ public class DataController : ControllerBase
 
 
         //using is used to dispose the variable once finished using it which is used only inside {}
-        using (var connection = new MySqlConnection(dbConnString))
+        using var connection = new MySqlConnection(dbConnString);
+        connection.Open();
+
+        var query = "SELECT * FROM usertest2";//creating the syntax
+
+        using (var command = new MySqlCommand(query, connection))
         {
-            connection.Open();
-
-            var query = "SELECT * FROM usertest2";//creating the syntax
-
-            using (var command = new MySqlCommand(query, connection))
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
             {
-                using (var reader = command.ExecuteReader())
+
+                var data = new DataModel
                 {
-                    while (reader.Read())
-                    {
+                    Email_id = reader.GetString("Email_id"),
+                    Name = reader.GetString("Name"),
+                    Country = reader.GetString("Country"),
+                    State = reader.GetString("State"),
+                    City = reader.GetString("City"),
+                    Telephone_number = (int)reader.GetInt64("Telephone_number"),
+                    Address_line_1 = reader.GetString("Address_line_1"),
+                    Address_line_2 = reader.GetString("Address_line_2"),
+                    Date_of_birth = reader.GetString("Date_of_birth"),
+                    Gross_salary_FY2019_20 = (int)reader.GetInt64("Gross_salary_FY2019_20"),
+                    Gross_salary_FY2020_21 = (int)reader.GetInt64("Gross_salary_FY2020_21"),
+                    Gross_salary_FY2021_22 = (int)reader.GetInt64("Gross_salary_FY2021_22"),
+                    Gross_salary_FY2022_23 = (int)reader.GetInt64("Gross_salary_FY2022_23"),
+                    Gross_salary_FY2023_24 = (int)reader.GetInt64("Gross_salary_FY2023_24")
 
-                        var data = new DataModel
-                        {
-                            Email_id = reader.GetString("Email_id"),
-                            Name = reader.GetString("Name"),
-                            Country = reader.GetString("Country"),
-                            State = reader.GetString("State"),
-                            City = reader.GetString("City"),
-                            Telephone_number = (int)reader.GetInt64("Telephone_number"),
-                            Address_line_1 = reader.GetString("Address_line_1"),
-                            Address_line_2 = reader.GetString("Address_line_2"),
-                            Date_of_birth = reader.GetString("Date_of_birth"),
-                            Gross_salary_FY2019_20 = (int)reader.GetInt64("Gross_salary_FY2019_20"),
-                            Gross_salary_FY2020_21 = (int)reader.GetInt64("Gross_salary_FY2020_21"),
-                            Gross_salary_FY2021_22 = (int)reader.GetInt64("Gross_salary_FY2021_22"),
-                            Gross_salary_FY2022_23 = (int)reader.GetInt64("Gross_salary_FY2022_23"),
-                            Gross_salary_FY2023_24 = (int)reader.GetInt64("Gross_salary_FY2023_24")
+                };
 
-                        };
-
-                        listOfData.Add(data);
-                    }
-
-                }
-
+                listOfData.Add(data);
             }
 
-
-            return Ok(listOfData);
         }
+
+
+        return Ok(listOfData);
 
     }
 
@@ -206,6 +204,8 @@ public class DataController : ControllerBase
 
     }
 
+
+
     [HttpPost("insertMultipleData4")]
     public async Task<IActionResult> PostMultipleData4(IFormFile file)
     {
@@ -213,16 +213,75 @@ public class DataController : ControllerBase
         //this method posts a csv data ie. multiple data into mysql with single query without using any chunks
 
         Console.WriteLine("-------------");
-        Console.WriteLine(((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
+        Console.WriteLine("start time "+((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
 
         if (file == null || file.Length == 0)
         {
             return BadRequest("No file uploaded.");
         }
 
-        // await ProcessCsvFile1(file); //without chunking
+        // await ProcessCsvFile4(file);//with chunking
 
-        await ProcessCsvFile4(file);//with chunking
+        //processing it
+
+        Task[] tasks = new Task[10];
+
+        const int batchSize = 10000;
+        using var stream = file.OpenReadStream();
+        using var reader = new StreamReader(stream);
+
+
+
+        await reader.ReadLineAsync(); // Skip header
+
+        var records = new List<DataModel>(batchSize);
+        string? line;
+
+        int i = 0;
+
+        while ((line = await reader.ReadLineAsync()) != null)
+        {
+            var columns = line.Split(',');
+            records.Add(new DataModel
+            {
+                Email_id = columns[0],
+                Name = columns[1],
+                Country = columns[2],
+                State = columns[3],
+                City = columns[4],
+                Telephone_number = (int)Int64.Parse(columns[5]),
+                Address_line_1 = columns[6],
+                Address_line_2 = columns[7],
+                Date_of_birth = columns[8],
+                Gross_salary_FY2019_20 = (int)Int64.Parse(columns[9]),
+                Gross_salary_FY2020_21 = (int)Int64.Parse(columns[10]),
+                Gross_salary_FY2021_22 = (int)Int64.Parse(columns[11]),
+                Gross_salary_FY2022_23 = (int)Int64.Parse(columns[12]),
+                Gross_salary_FY2023_24 = (int)Int64.Parse(columns[13])
+            });
+
+            if (records.Count == batchSize)
+            {
+                // Console.WriteLine("Ram");
+                var recordsCopy = new List<DataModel>(records);
+                records.Clear();
+                // Console.WriteLine("siya");
+
+                tasks[i] = Task.Run(() => ConvertToQuery(recordsCopy));
+                // Console.WriteLine("created task for "+i);
+
+                i++;
+            }
+        }
+
+        if (records.Count > 0)
+        {
+            tasks[i] = Task.Run(() => ConvertToQuery(records));
+
+        }
+
+        // await Task.WhenAll(tasks);
+        Console.WriteLine("end time "+((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
 
         return Ok();
 
@@ -373,67 +432,67 @@ public class DataController : ControllerBase
     }
     //8s
 
-    private async Task ProcessCsvFile4(IFormFile file)
-    {
+    // private async Task ProcessCsvFile4(IFormFile file)
+    // {
 
-        Task[] tasks = new Task[20];
+    //     Task[] tasks = new Task[20];
 
-        const int batchSize = 5000;
-        using var stream = file.OpenReadStream();
-        using var reader = new StreamReader(stream);
+    //     const int batchSize = 5000;
+    //     using var stream = file.OpenReadStream();
+    //     using var reader = new StreamReader(stream);
 
-        Console.WriteLine(((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
+    //     Console.WriteLine(((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
 
 
-        await reader.ReadLineAsync(); // Skip header
+    //     await reader.ReadLineAsync(); // Skip header
 
-        var records = new List<DataModel>(batchSize);
-        string? line;
+    //     var records = new List<DataModel>(batchSize);
+    //     string? line;
 
-        int i = 0;
+    //     int i = 0;
 
-        while ((line = await reader.ReadLineAsync()) != null)
-        {
-            var columns = line.Split(',');
-            records.Add(new DataModel
-            {
-                Email_id = columns[0],
-                Name = columns[1],
-                Country = columns[2],
-                State = columns[3],
-                City = columns[4],
-                Telephone_number = (int)Int64.Parse(columns[5]),
-                Address_line_1 = columns[6],
-                Address_line_2 = columns[7],
-                Date_of_birth = columns[8],
-                Gross_salary_FY2019_20 = (int)Int64.Parse(columns[9]),
-                Gross_salary_FY2020_21 = (int)Int64.Parse(columns[10]),
-                Gross_salary_FY2021_22 = (int)Int64.Parse(columns[11]),
-                Gross_salary_FY2022_23 = (int)Int64.Parse(columns[12]),
-                Gross_salary_FY2023_24 = (int)Int64.Parse(columns[13])
-            });
+    //     while ((line = await reader.ReadLineAsync()) != null)
+    //     {
+    //         var columns = line.Split(',');
+    //         records.Add(new DataModel
+    //         {
+    //             Email_id = columns[0],
+    //             Name = columns[1],
+    //             Country = columns[2],
+    //             State = columns[3],
+    //             City = columns[4],
+    //             Telephone_number = (int)Int64.Parse(columns[5]),
+    //             Address_line_1 = columns[6],
+    //             Address_line_2 = columns[7],
+    //             Date_of_birth = columns[8],
+    //             Gross_salary_FY2019_20 = (int)Int64.Parse(columns[9]),
+    //             Gross_salary_FY2020_21 = (int)Int64.Parse(columns[10]),
+    //             Gross_salary_FY2021_22 = (int)Int64.Parse(columns[11]),
+    //             Gross_salary_FY2022_23 = (int)Int64.Parse(columns[12]),
+    //             Gross_salary_FY2023_24 = (int)Int64.Parse(columns[13])
+    //         });
 
-            if (records.Count == batchSize)
-            {
-                // Console.WriteLine("Ram");
-                var recordsCopy = new List<DataModel>(records);
-                records.Clear();
-                // Console.WriteLine("siya");
+    //         if (records.Count == batchSize)
+    //         {
+    //             // Console.WriteLine("Ram");
+    //             var recordsCopy = new List<DataModel>(records);
+    //             records.Clear();
+    //             // Console.WriteLine("siya");
 
-                tasks[i] = Task.Run(() => ConvertToQuery(recordsCopy));
-                i++;
-            }
-        }
+    //             tasks[i] = Task.Run(() => ConvertToQuery(recordsCopy));
+    //             i++;
+    //         }
+    //     }
 
-        if (records.Count > 0)
-        {
-            tasks[i] = Task.Run(() => ConvertToQuery(records));
-        }
+    //     if (records.Count > 0)
+    //     {
+    //         tasks[i] = Task.Run(() => ConvertToQuery(records));
+    //     }
 
-        await Task.WhenAll(tasks);
-        Console.WriteLine(((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
+    //     await Task.WhenAll(tasks);
+    //     Console.WriteLine(((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
 
-    }
+    // }
 
 
     //functions required to process the csv file ( chunking data and calling bulk query insert for this chunks)
@@ -636,8 +695,12 @@ public class DataController : ControllerBase
 
         queryBuilder.Append(';');
 
-        //query is generated
 
+
+        // Console.WriteLine("---------------------------------------------");
+
+        //query is generated
+        // Console.WriteLine("Sending to publisher ");
         publisher.SendChunk(queryBuilder.ToString());
         // Console.WriteLine("abff");
 
