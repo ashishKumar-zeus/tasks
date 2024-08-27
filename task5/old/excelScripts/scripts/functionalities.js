@@ -443,4 +443,6 @@ export class Functionalities {
     handleMouseEventsOnSheet() {
         this.spreadsheetCanvas.addEventListener('pointerdown', this.handleMouseDownBound);
     }
+
+
 }

@@ -35,7 +35,7 @@ public class RabbitMQConsumer
 
         // mySQLConnection = new MySqlConnection(dbConnString);
 
-        var numberOfQueues = 5;
+        var numberOfQueues = 10;
 
         for (int i = 0; i < numberOfQueues; i++)
         {
@@ -53,7 +53,7 @@ public class RabbitMQConsumer
         // Console.WriteLine("Started listening to queue " + queueNumber);
         var consumer = new EventingBasicConsumer(channel);//creating a consumer that can listen to queue
 
-        consumer.Received += (model, ea) =>
+        consumer.Received += async (model, ea) =>
         {
             //this is event that is triggered as the queue has got some data in it
             //dealing with body once received
@@ -63,7 +63,7 @@ public class RabbitMQConsumer
             //call functiont to insert in db
             Console.WriteLine("calling to db for queue " + queueNumber + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
 
-            InsertToDB(message, queueNumber);
+            await InsertToDBAsync(message, queueNumber);
         };
         //listening to queue
 
@@ -71,10 +71,12 @@ public class RabbitMQConsumer
                              autoAck: true,
                              consumer: consumer);
 
+        Console.WriteLine("out here");
 
     }
 
-    public void InsertToDB(string query, int queueN)
+
+    public async Task InsertToDBAsync(string query, int queueN)
     {
         //inserting to db
 
@@ -83,11 +85,9 @@ public class RabbitMQConsumer
         // Console.WriteLine("insert into db called ");
 
 
-        Task.Run(() =>
+        await Task.Run(() =>
         {
             {
-                var watch = new System.Diagnostics.Stopwatch();
-                watch.Start();
 
                 using var mySQLConnection = new MySqlConnection(dbConnString);
                 // Console.WriteLine("Connection established");
@@ -97,16 +97,19 @@ public class RabbitMQConsumer
 
                 using (var command = new MySqlCommand(query.ToString(), mySQLConnection))
                 {
+                    var watch = new System.Diagnostics.Stopwatch();
+                    watch.Start();
                     command.ExecuteNonQuery();
                     // Console.WriteLine("execution completed " + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds());
+
+                    watch.Stop();
+                    Console.WriteLine($"DB Execution Time: {watch.ElapsedMilliseconds} ms");
                 }
                 mySQLConnection.Close();
                 long end = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds();
                 Console.WriteLine("INSERT finally ended at for " + queueN + end);
 
 
-                watch.Stop();
-                Console.WriteLine($"DB Execution Time: {watch.ElapsedMilliseconds} ms");
             }
         });
 
@@ -118,3 +121,40 @@ public class RabbitMQConsumer
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+// try
+//                 {
+//                     // Process and save the chunk to MySQL
+//                     await MultipleInsert(message);
+//                     log.IsSuccess = true;
+//                     _logger.LogInformation("Chunk successfully processed");
+//                     await SendProgressUpdate(message);
+//                 }
+//                 catch (Exception ex)
+//                 {
+//                     log.IsSuccess = false;
+//                     log.ErrorMessage = ex.Message;
+//                     _logger.LogError(ex, "Error occurred while saving chunk to MySQL. Will retry.");
+//                 }
+//                 finally
+//                 {
+//                     await SaveLogsToDB(log);
+//                     if(log.IsSuccess){
+//                         // Acknowledge the message to RabbitMQ only after successful processing
+//                         channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+//                     }else{
+//                         // Do not acknowledge the message (it will be requeued by RabbitMQ)
+//                         channel.BasicNack(deliveryTag: ea.DeliveryTag, multiple: false, requeue: true);
+//                     }
+//                 }

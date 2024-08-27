@@ -24,7 +24,7 @@ public class RabbitMQPublisher
         channel = connection.CreateModel();
         consumer = _consumer;
 
-        var numberOfQueues = 5;
+        var numberOfQueues = 10;
         currQueueIndex = 0;
 
         for (int i = 0; i < numberOfQueues; i++)
@@ -38,10 +38,10 @@ public class RabbitMQPublisher
         }
     }
 
-    public void SendChunk(string chunks)
+    public  void SendChunk(string chunks)
     {
 
-        if (currQueueIndex == 5)
+        if (currQueueIndex == 10)
         {
             currQueueIndex = 0;
         }
@@ -49,15 +49,13 @@ public class RabbitMQPublisher
 
         consumer.StartListeningToQueue(currQueueIndex);
 
-
-        // Console.WriteLine("sending chunk" + currQueueIndex);
-
         channel.BasicPublish(exchange: string.Empty,
                              routingKey: $"queue{currQueueIndex}",
                              basicProperties: null,
                              body: body);
 
         currQueueIndex += 1;
+
 
     }
 

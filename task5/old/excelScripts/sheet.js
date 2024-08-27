@@ -5,6 +5,7 @@ import { Renderor } from './scripts/renderor.js';
 import { LinkedList } from './scripts/linkedList.js';
 import { HeaderCellsMaker } from './scripts/headerCellsMaker.js';
 import { Functionalities } from './scripts/functionalities.js'
+import { navFunctionalities } from './navFunctionalities.js';
 
 export class Sheet {
 
@@ -139,9 +140,13 @@ export class Sheet {
         this.renderor = new Renderor(this)
 
         this.functionality = new Functionalities(this)
+        
+        this.navFunctionalities = new navFunctionalities(this);
 
         //intiating ScrollFunctionalities
         this.scroll = new Scroll(this);
+
+
 
         // Set up the ResizeObserver
         this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));

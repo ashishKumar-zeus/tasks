@@ -33,7 +33,6 @@ export class LinkedList {
         this.createNewNode(3, 2, "c");
         this.createNewNode(3, 3, "c");
 
-
     }
 
     getUpdatedArray() {

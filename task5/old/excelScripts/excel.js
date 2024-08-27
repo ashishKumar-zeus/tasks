@@ -2,7 +2,7 @@
 import { Sheet } from "./sheet.js";
 
 export class Excel {
-    constructor(rowContainer, row, col) {
+    constructor(controller,rowContainer, row, col) {
         this.rowContainer = rowContainer;
         this.col = col;
         this.row = row;
@@ -15,6 +15,11 @@ export class Excel {
         // this.minScale = 0.5;
         // this.maxScale = 15;
 
+
+        this.controller = controller;
+
+        this.excel = null;
+
         this.init();
     }
 
@@ -22,11 +27,13 @@ export class Excel {
         this.constructExcel();
         this.createFooter();
         this.addNewSheet();
+        this.handleEvents();
     }
 
     constructExcel() {
         const excel = document.createElement('div');
         excel.className = 'excel';
+        this.excel = excel;
 
         const sheetContainer = document.createElement('div');
         sheetContainer.className = 'sheetContainer';
@@ -140,4 +147,18 @@ export class Excel {
             }
         });
     }
+
+
+    handleMouseDown(e){
+        e.preventDefault();
+        this.controller.updateCurrExcel(this.row,this.col,this.sheets[this.currentSheetId]);
+    }
+
+    handleEvents(){
+        this.excel.addEventListener("click",(e)=>{
+            this.handleMouseDown(e);
+        })
+    }
+
+
 }
