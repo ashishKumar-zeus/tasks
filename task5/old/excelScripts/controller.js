@@ -6,6 +6,8 @@ export class Controller {
 
     constructor(mainContainer, maxRow, maxCol) {
 
+
+
         this.mainContainer = mainContainer;//refrence to mainContainer
         this.maxRow = maxRow;
         this.maxCol = maxCol; //max number of rows and columns able to be made
@@ -38,8 +40,9 @@ export class Controller {
         row.setAttribute('id', `row${this.currRow}`)
         row.style.gridTemplateColumns = '100%';
 
-        const excel = new Excel(this,row, this.currRow, 1);
 
+        const excel = new Excel(this, row, this.currRow, 1);
+        console.log(excel);
         this.rowArr[this.currRow - 1] = [excel];
 
 
@@ -48,7 +51,7 @@ export class Controller {
         //applying changes to main grid % values
         let newGTR = ""
         for (let i = 0; i < this.currRow; i++) {
-            newGTR += `${100 / this.currRow }% `;
+            newGTR += `${100 / this.currRow}% `;
         }
 
         this.mainContainer.style.gridTemplateRows = newGTR;
@@ -72,7 +75,7 @@ export class Controller {
 
         colNum += 1;
 
-        const excel = new Excel(this,rowRef, rowNum, colNum);
+        const excel = new Excel(this, rowRef, rowNum, colNum);
 
         this.rowArr[rowNum - 1].push(excel);
 
@@ -178,9 +181,9 @@ export class Controller {
 
                 let colIndex = Array.from(currentElement.parentElement.children).indexOf(currentElement);
 
-                let newRowPerArr = rowPer.map(ele=>ele)
-                newRowPerArr[colIndex]+=perMoved;
-                newRowPerArr[colIndex+1]-=perMoved;
+                let newRowPerArr = rowPer.map(ele => ele)
+                newRowPerArr[colIndex] += perMoved;
+                newRowPerArr[colIndex + 1] -= perMoved;
 
                 // console.log(newRowPerArr)
 
@@ -191,9 +194,9 @@ export class Controller {
                 let perMoved = (dy / this.mainContainer.clientHeight * 100);
                 let rowIndex = Array.from(this.mainContainer.children).indexOf(currentElement.parentElement);
 
-                let newColPerArr = colPer.map(ele=>ele);
+                let newColPerArr = colPer.map(ele => ele);
                 newColPerArr[rowIndex] += perMoved;
-                newColPerArr[rowIndex+1] -= perMoved;
+                newColPerArr[rowIndex + 1] -= perMoved;
 
                 // console.log('Row resize:', newColPerArr);
 
@@ -208,12 +211,30 @@ export class Controller {
         });
     }
 
-    updateCurrExcel(excelRow,excelCol,sheetObj){
+
+
+
+    updateCurrExcel(excelRow, excelCol, sheetObj) {
         this.currExcelRow = excelRow;
         this.currExcelCol = excelCol;
         this.currSheetObj = sheetObj;
-        console.log("updated row col as ",excelRow,excelCol,sheetObj);
+        // console.log("updated row col as ", excelRow, excelCol, sheetObj);
     }
+
+
+
+    handleFileUploadEvents() {
+        document.getElementById('uploadForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.currSheetObj.navFunctionalities.handleFileUpload(e)
+        })
+    }
+
+    handleEvents() {
+        this.handleFileUploadEvents();
+    }
+
+
 
     init() {
 
@@ -222,10 +243,10 @@ export class Controller {
 
         //adding First Row
         this.addNewRow();
-        this.addNewCol(1);
-        this.addNewRow();
+        // this.addNewCol(1);
+        // this.addNewRow();
         this.handleResize()
-
+        this.handleEvents();
 
     }
 }

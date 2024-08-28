@@ -382,7 +382,7 @@ public class DataController : ControllerBase
         await Task.WhenAll(tasks);
 
         int start = 0;
-        int limit = 1000;
+        int limit = 100;
 
         List<DataModel> startData = await GetDataInRange(start,limit);
 

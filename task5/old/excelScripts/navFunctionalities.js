@@ -2,10 +2,11 @@ export class navFunctionalities{
 
     constructor(sheet){
         this.init();
+        this.sheet = sheet;
     }
 
     init(){
-        this.handleEvents();
+        // this.handleEvents();
     }
     
     async handleFileUpload(e) {
@@ -18,7 +19,7 @@ export class navFunctionalities{
 
         if (file) {
 
-            console.log("file found");
+            // console.log("file found");
             const formData = new FormData();
             formData.append('file', file);
 
@@ -29,7 +30,9 @@ export class navFunctionalities{
                 .then(async (response) =>response.json())
                 .then((data)=>{
                     console.log(data);
-                    
+                    // console.log("to be inserted in sheet instance ",this.sheet);
+                    this.sheet.ll.insertMultipleDataInLL(data);
+                    this.sheet.renderor.renderCanvas();
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -42,11 +45,4 @@ export class navFunctionalities{
     }
 
 
-    handleFileUploadEvents() {
-        document.getElementById('uploadForm').addEventListener('submit', (e) => { this.handleFileUpload(e) })
-    }
-
-    handleEvents(){
-        this.handleFileUploadEvents();
-    }
 }

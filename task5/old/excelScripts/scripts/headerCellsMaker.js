@@ -20,8 +20,13 @@ export class HeaderCellsMaker {
         this.initialWidthHorizontal = 100;
         this.initialHeightVertical = 30;
 
-        this.numOfCols = (2 * this.horizontalCanvas.width) / this.initialWidthHorizontal;
-        this.numOfRows = (2 * this.verticalCanvas.height) / this.initialHeightVertical;
+        // this.numOfCols = (2 * this.horizontalCanvas.width) / this.initialWidthHorizontal;
+        // this.numOfRows = (2 * this.verticalCanvas.height) / this.initialHeightVertical;
+
+        
+        this.numOfCols = 20;
+        this.numOfRows =100;
+
 
         this.initialHeightHorizontal = this.horizontalCanvas.clientHeight;
         this.initialWidthVertical = this.verticalCanvas.clientWidth;

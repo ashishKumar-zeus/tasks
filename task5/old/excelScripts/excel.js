@@ -17,6 +17,7 @@ export class Excel {
 
 
         this.controller = controller;
+        console.log(this.controller);
 
         this.excel = null;
 
@@ -28,6 +29,8 @@ export class Excel {
         this.createFooter();
         this.addNewSheet();
         this.handleEvents();
+        this.controller.updateCurrExcel(this.row,this.col,this.sheets[this.currentSheetId]);
+
     }
 
     constructExcel() {
