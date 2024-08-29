@@ -81,16 +81,16 @@ export class LinkedList {
     }
 
 
-    insertMultipleDataInLL(jsonData) {
+    insertMultipleDataInLL(jsonData,startInd) {
         //inserts multiple data from json to LL
         for (let i = 1; i <= jsonData.length; i++) {
             let j = 1;
 
             Object.keys(jsonData[i - 1]).forEach(key => {
 
-                if (jsonData[i]) {
-                    // console.log(i, j, jsonData[i][key]);
-                    this.createNewNode(i, j, jsonData[i][key]);
+                if (jsonData[i-1]) {
+                    console.log(i+startInd, j, jsonData[i-1][key]);
+                    this.createNewNode(i+startInd, j, jsonData[i-1][key]);
                     j++;
                 }
 
@@ -102,10 +102,17 @@ export class LinkedList {
     }
 
 
+
+
     createNewNode(row, col, data) {
 
         let rowInd = row - 1;
         let colInd = col - 1;
+
+        // this.ensurePresenceOfNode(row,col);
+        this.getUpdatedArray();
+
+        console.log(rowInd,colInd)
 
         let newNode = new Node(this.verticalArr[rowInd].value, this.horizontalArr[colInd].value, data)
         // console.log("new node created at", this.verticalArr[rowInd].value, this.horizontalArr[colInd].value, data)

@@ -50,7 +50,7 @@ public class DataController : ControllerBase
         using var connection = new MySqlConnection(dbConnString);
         connection.Open();
 
-        var query = "SELECT * FROM usertest2";//creating the syntax
+        var query = "SELECT * FROM usertest2 limit 10";//creating the syntax
 
         using (var command = new MySqlCommand(query, connection))
         {
@@ -384,17 +384,24 @@ public class DataController : ControllerBase
         int start = 0;
         int limit = 100;
 
-        List<DataModel> startData = await GetDataInRange(start,limit);
+        // List<DataModel> startData = await GetDataInRange(start,limit);
 
         watch.Stop();
         Console.WriteLine($"whole execution time: {watch.ElapsedMilliseconds} ms");
-        return Ok(startData);
+        return Ok();
 
     }
     
+
+
+
+
     [HttpGet("getDataInRange")]
-    public async Task<List<DataModel>> GetDataInRange(int start, int limit)
+    public async Task<List<DataModel>> GetDataInRange([FromQuery] int start,[FromQuery] int limit)
     {
+
+        Console.WriteLine(start);
+        Console.WriteLine(limit);
         var listOfData = new List<DataModel>();
 
         using (var connection = new MySqlConnection(dbConnString))
@@ -439,6 +446,78 @@ public class DataController : ControllerBase
 
         return listOfData;
     }
+
+
+
+
+// async renderPrv(){
+//         if(this.i===0 || this.grid.cells[this.i][this.j].value===this.cellInput.value){
+//             return;
+//         }
+//         this.grid.cells[this.i][this.j].value=this.cellInput.value
+//         try {
+//             const dataModel = {
+//                 row_num: this.i,
+//                 email_id: this.grid.cells[this.i][0].value,
+//                 name: this.grid.cells[this.i][1].value,
+//                 country: this.grid.cells[this.i][2].value,
+//                 state: this.grid.cells[this.i][3].value,
+//                 city: this.grid.cells[this.i][4].value,
+//                 telephone_number: this.grid.cells[this.i][5].value,
+//                 address_line_1: this.grid.cells[this.i][6].value,
+//                 address_line_2: this.grid.cells[this.i][7].value,
+//                 date_of_birth: this.grid.cells[this.i][8].value,
+//                 gross_salary_FY2019_20: this.grid.cells[this.i][9].value,
+//                 gross_salary_FY2020_21: this.grid.cells[this.i][10].value,
+//                 gross_salary_FY2021_22: this.grid.cells[this.i][11].value,
+//                 gross_salary_FY2022_23: this.grid.cells[this.i][12].value,
+//                 gross_salary_FY2023_24: this.grid.cells[this.i][13].value
+//             };
+//             let response = await fetch('https://localhost:7009/api/csv/updateRecord',
+//                 {
+//                     method: "POST",
+//                     headers: {
+//                         'Content-Type': 'application/json', 
+//                     },
+//                     body: JSON.stringify(dataModel),
+//                 }
+//             ); 
+              
+//         } catch (error) {
+//             console.error('error now update the cell',error);
+//         }
+//         this.sheetRender();
+//     }
+
+
+
+    public async Task<IActionResult> updateRecord([FromBody] DataModel record)
+        {
+            Console.WriteLine("Updating");
+            var sql = new StringBuilder("UPDATE usertest2 SET ");
+            var properties = record.GetType().GetProperties();
+            foreach (var field in properties)
+            {
+                sql.Append($"{field.Name}='{field.GetValue(record)}',");
+            }
+            sql.Length--;
+            sql.Append($" WHERE row_num={record.row_num};");
+            Console.WriteLine(sql.ToString());
+            using (var connection = new MySqlConnection(_configuration.GetConnectionString("DefaultConnection")!))
+            {
+                await connection.OpenAsync();
+                using var command = new MySqlCommand(sql.ToString(), connection);
+                var result = await command.ExecuteNonQueryAsync();
+                await connection.CloseAsync();
+                if (result == 0) { 
+                    return BadRequest(); 
+                }
+                else{
+                    return Ok(result);
+                }
+            }
+        }
+
 
 
 

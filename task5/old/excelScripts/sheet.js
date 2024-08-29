@@ -6,6 +6,7 @@ import { LinkedList } from './scripts/linkedList.js';
 import { HeaderCellsMaker } from './scripts/headerCellsMaker.js';
 import { Functionalities } from './scripts/functionalities.js'
 import { navFunctionalities } from './navFunctionalities.js';
+import { HandleApis } from '../handleApis.js';
 
 export class Sheet {
 
@@ -133,7 +134,10 @@ export class Sheet {
         //scalling canvas
         this.scallingCanvas();
 
-        this.headerCellsMaker = new HeaderCellsMaker(this.horizontalCanvas, this.verticalCanvas);
+
+        this.handleApis = new HandleApis(this);
+
+        this.headerCellsMaker = new HeaderCellsMaker(this.horizontalCanvas, this.verticalCanvas,this.handleApis);
 
         this.ll = new LinkedList(this.headerCellsMaker);
 

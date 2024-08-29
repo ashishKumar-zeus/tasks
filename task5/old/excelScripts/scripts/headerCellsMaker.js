@@ -12,7 +12,7 @@ class HeaderCell {
 
 
 export class HeaderCellsMaker {
-    constructor(horizontalCanvas, verticalCanvas) {
+    constructor(horizontalCanvas, verticalCanvas,handleApis) {
 
         this.horizontalCanvas = horizontalCanvas;
         this.verticalCanvas = verticalCanvas;
@@ -20,12 +20,13 @@ export class HeaderCellsMaker {
         this.initialWidthHorizontal = 100;
         this.initialHeightVertical = 30;
 
-        // this.numOfCols = (2 * this.horizontalCanvas.width) / this.initialWidthHorizontal;
-        // this.numOfRows = (2 * this.verticalCanvas.height) / this.initialHeightVertical;
+        this.handleApis = handleApis;
 
-        
-        this.numOfCols = 20;
-        this.numOfRows =100;
+        this.numOfCols = (2 * this.horizontalCanvas.width) / this.initialWidthHorizontal;
+        this.numOfRows = (2 * this.verticalCanvas.height) / this.initialHeightVertical;
+
+        // this.numOfCols = 20;
+        // this.numOfRows = 100;
 
 
         this.initialHeightHorizontal = this.horizontalCanvas.clientHeight;
@@ -61,7 +62,6 @@ export class HeaderCellsMaker {
             y += this.initialHeightVertical;
         }
 
-        // console.log(this.horizontalArr)
 
     }
 
@@ -73,7 +73,10 @@ export class HeaderCellsMaker {
         return this.verticalArr;
     }
 
+
     increaseNumOfCols() {
+
+        console.log("increasing number of rows")
 
         const lastCell = this.horizontalArr[this.horizontalArr.length - 1];
         let x = lastCell.x + lastCell.width;
@@ -81,6 +84,7 @@ export class HeaderCellsMaker {
         let currIndex = Math.floor(this.numOfCols + 1);
 
         const numNewCols = Math.floor(2 * this.horizontalCanvas.width / this.initialWidthHorizontal);
+
 
         for (let i = 0; i < numNewCols; i++) {
             const cell = new HeaderCell(x, y, this.initialWidthHorizontal, this.initialHeightHorizontal, currIndex + 1);
@@ -93,12 +97,18 @@ export class HeaderCellsMaker {
     }
 
     increaseNumOfRows() {
+        console.log("increasing number of rows ")
+
         const lastCell = this.verticalArr[this.verticalArr.length - 1];
         let y = lastCell.y + lastCell.height;
         let x = 0;
         let currIndex = Math.floor(this.numOfRows + 1);
 
         const numNewRows = Math.floor(2*this.verticalCanvas.height / this.initialHeightVertical);
+
+        console.log("from ",this.numOfRows, numNewRows);
+
+        this.handleApis.getDataInRange(this.numOfRows,numNewRows);
 
         for (let i = 0; i < numNewRows; i++) {
             const cell = new HeaderCell(x, y, this.initialWidthVertical, this.initialHeightVertical, currIndex + 1);
