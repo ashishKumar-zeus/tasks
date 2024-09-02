@@ -22,12 +22,11 @@ export class HeaderCellsMaker {
 
         this.handleApis = handleApis;
 
-        // this.numOfCols = (2 * this.horizontalCanvas.width) / this.initialWidthHorizontal;
-        // this.numOfRows = (2 * this.verticalCanvas.height) / this.initialHeightVertical;
+        // this.numOfCols = Math.floor((2 * this.horizontalCanvas.width) / this.initialWidthHorizontal);
+        // this.numOfRows = Math.floor((2 * this.verticalCanvas.height) / this.initialHeightVertical);
 
-        this.numOfCols = 20;
+        this.numOfCols = 100;
         this.numOfRows = 100;
-
 
         this.initialHeightHorizontal = this.horizontalCanvas.clientHeight;
         this.initialWidthVertical = this.verticalCanvas.clientWidth;
@@ -81,7 +80,7 @@ export class HeaderCellsMaker {
         const lastCell = this.horizontalArr[this.horizontalArr.length - 1];
         let x = lastCell.x + lastCell.width;
         let y = 0;
-        let currIndex = Math.floor(this.numOfCols + 1);
+        let currIndex = Math.floor(this.numOfCols );
 
         const numNewCols = Math.floor(2 * this.horizontalCanvas.width / this.initialWidthHorizontal);
 
@@ -102,13 +101,13 @@ export class HeaderCellsMaker {
         const lastCell = this.verticalArr[this.verticalArr.length - 1];
         let y = lastCell.y + lastCell.height;
         let x = 0;
-        let currIndex = Math.floor(this.numOfRows + 1);
+        let currIndex = Math.floor(this.numOfRows );
 
-        const numNewRows = Math.floor(2*this.verticalCanvas.height / this.initialHeightVertical);
+        const numNewRows = Math.floor(2*this.verticalCanvas.height / this.initialHeightVertical)*10;//10 is factor for creating almost 400 rows
 
         console.log("from ",this.numOfRows, numNewRows);
 
-        this.handleApis.getDataInRange(this.numOfRows,numNewRows);
+        // this.handleApis.getDataInRange(this.numOfRows,numNewRows);
 
         for (let i = 0; i < numNewRows; i++) {
             const cell = new HeaderCell(x, y, this.initialWidthVertical, this.initialHeightVertical, currIndex + 1);
@@ -126,6 +125,7 @@ export class HeaderCellsMaker {
             this.horizontalArr[i].x = this.horizontalArr[i - 1].x + this.horizontalArr[i - 1].width;
         }
     }
+
     resizeRow(index, diff) {
 
         let MIN_HEIGHT = 15;
@@ -135,7 +135,6 @@ export class HeaderCellsMaker {
         }
 
     }
-
 
     addRowAtInd(ind) {
 

@@ -381,9 +381,6 @@ public class DataController : ControllerBase
 
         await Task.WhenAll(tasks);
 
-        int start = 0;
-        int limit = 100;
-
         // List<DataModel> startData = await GetDataInRange(start,limit);
 
         watch.Stop();
@@ -491,32 +488,32 @@ public class DataController : ControllerBase
 
 
 
-    public async Task<IActionResult> updateRecord([FromBody] DataModel record)
-        {
-            Console.WriteLine("Updating");
-            var sql = new StringBuilder("UPDATE usertest2 SET ");
-            var properties = record.GetType().GetProperties();
-            foreach (var field in properties)
-            {
-                sql.Append($"{field.Name}='{field.GetValue(record)}',");
-            }
-            sql.Length--;
-            sql.Append($" WHERE row_num={record.row_num};");
-            Console.WriteLine(sql.ToString());
-            using (var connection = new MySqlConnection(_configuration.GetConnectionString("DefaultConnection")!))
-            {
-                await connection.OpenAsync();
-                using var command = new MySqlCommand(sql.ToString(), connection);
-                var result = await command.ExecuteNonQueryAsync();
-                await connection.CloseAsync();
-                if (result == 0) { 
-                    return BadRequest(); 
-                }
-                else{
-                    return Ok(result);
-                }
-            }
-        }
+    // public async Task<IActionResult> updateRecord([FromBody] DataModel record)
+    //     {
+    //         Console.WriteLine("Updating");
+    //         var sql = new StringBuilder("UPDATE usertest2 SET ");
+    //         var properties = record.GetType().GetProperties();
+    //         foreach (var field in properties)
+    //         {
+    //             sql.Append($"{field.Name}='{field.GetValue(record)}',");
+    //         }
+    //         sql.Length--;
+    //         sql.Append($" WHERE row_num={record.row_num};");
+    //         Console.WriteLine(sql.ToString());
+    //         using (var connection = new MySqlConnection(_configuration.GetConnectionString("DefaultConnection")!))
+    //         {
+    //             await connection.OpenAsync();
+    //             using var command = new MySqlCommand(sql.ToString(), connection);
+    //             var result = await command.ExecuteNonQueryAsync();
+    //             await connection.CloseAsync();
+    //             if (result == 0) { 
+    //                 return BadRequest(); 
+    //             }
+    //             else{
+    //                 return Ok(result);
+    //             }
+    //         }
+    //     }
 
 
 

@@ -8,7 +8,8 @@ export class Scroll {
         this.horizontalScroll = sheet.horizontalScroll;
         this.verticalBar = sheet.verticalBar;
         this.verticalScroll = sheet.verticalScroll;
-        this.renderor = sheet.renderor;
+        this.renderer = sheet.renderer;
+        this.handleApis = sheet.handleApis;
 
         this.headerCellsMaker = sheet.headerCellsMaker;
         this.functionality = sheet.functionality;
@@ -52,21 +53,33 @@ export class Scroll {
     }
 
     updateGrid() {
-        this.renderor.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled);
+
+        this.renderer.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled);
         this.functionality.getScrollInstance(this)
         this.functionality.saveInputData()
         this.functionality.updateInputPositionAndValue();
         this.functionality.handleRectangleToMake();
+        // this.functionality.handleMarchingAnts()
     }
 
     increaseNumOfCols() {
         this.headerCellsMaker.increaseNumOfCols();
-        this.renderor.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled)
+        this.renderer.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled)
     }
 
     increaseNumOfRows() {
-        this.headerCellsMaker.increaseNumOfRows();
-        this.renderor.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled)
+        console.log("checking for match")
+
+        console.log(this.renderer.currStartRowInd , this.headerCellsMaker.verticalArr.length - 100)
+        const initialLengthOfVerArr = this.headerCellsMaker.verticalArr.length;
+        if(this.renderer.currStartRowInd >= initialLengthOfVerArr - 100){
+
+            this.headerCellsMaker.increaseNumOfRows();
+            this.handleApis.getDataInRange(initialLengthOfVerArr , 400);
+        }
+
+
+        this.renderer.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled)
     }
 
     updateScrollByDiffHor(diffX) {
@@ -228,6 +241,3 @@ export class Scroll {
     }
 
 }
-
-
-
