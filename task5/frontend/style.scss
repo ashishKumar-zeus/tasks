@@ -19,6 +19,15 @@ body {
         @include resetCss();
         height: 20%;
         box-sizing: border-box;
+
+        .progressBar{
+            width: 50%;
+            margin-top: 20px;
+            display: none
+        }
+        .pBarLabel{
+            display: none;
+        }
     }
 
     >.mainContainer {
@@ -61,13 +70,13 @@ body {
                             display: flex;
 
                             >.nothing {
-                                width: 3%;
+                                width: 5%;
                                 height: 100%;
 
                             }
 
                             >.upperCanvas {
-                                width: 97%;
+                                width: 95%;
                                 height: 100%;
                                 position: relative;
 
@@ -93,7 +102,7 @@ body {
 
                             >.verticalCanvas {
                                 // border: 1px solid grey;
-                                width: 3%;
+                                width: 5%;
                                 height: 98%;
                                 position: absolute;
                                 top: 0;
@@ -103,11 +112,11 @@ body {
                             }
 
                             >.fullCanvas {
-                                width: 97%;
+                                width: 95%;
                                 height: 100%;
                                 display: flex;
                                 position: absolute;
-                                left: 3%;
+                                left: 5%;
                                 top: 0%;
 
                                 >.spreadsheetCanvas {

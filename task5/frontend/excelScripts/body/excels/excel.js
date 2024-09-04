@@ -27,6 +27,7 @@ export class Excel {
         this.addNewSheet();
         this.handleEvents();
 
+        this.excelMaker.updateCurrSheet(this.sheets[this.currentSheetId]);
 
     }
 
@@ -93,9 +94,6 @@ export class Excel {
 
         this.switchSheet(sheetId);
         this.updateFooterSheetsDiv();
-
-        this.excelMaker.updateCurrSheet(this.sheets[this.currentSheetId]);
-
     }
 
     switchSheet(sheetId) {
@@ -109,7 +107,6 @@ export class Excel {
 
         this.currentSheetId = sheetId;
         this.sheetContainer.appendChild(this.sheets[sheetId].sheet);
-
 
 
         const currentActiveButton = document.querySelector(`.footer button[data-sheet-id="${sheetId}"]`);
@@ -189,13 +186,14 @@ export class Excel {
 
     }
 
-    // handleMouseDown(e) {
-        // e.preventDefault();
-    // }
+    handleMouseDown(e) {
+        e.preventDefault();
+        this.excelMaker.updateCurrSheet(this.sheets[this.currentSheetId]);
+    }
 
     handleEvents() {
         this.excel.addEventListener("click", (e) => {
-            this.excelMaker.updateCurrSheet(this.sheets[this.currentSheetId]);
+            this.handleMouseDown(e);
         })
     }
 

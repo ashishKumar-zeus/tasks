@@ -20,7 +20,7 @@ export class Scroll {
         this.totalContentWidth = 0;
         this.totalContentHeight = 0;
 
-        this.wheelScrollRate = 10;
+        this.wheelScrollRate = 5;
 
         this.init();
     }
@@ -44,11 +44,12 @@ export class Scroll {
         this.currentMouseY = 0;
 
         this.updateVerticalScrollBar();
+        this.handleWheelEvent();
 
 
         //creating the totalContentWidth
         this.totalContentWidth = this.horizontalScroll.clientWidth * 2;
-        this.totalContentHeight = this.verticalScroll.clientHeight * 2;
+        this.totalContentHeight = this.headerCellsMaker.verticalArr[this.headerCellsMaker.verticalArr.length - 1].y;
 
     }
 
@@ -59,7 +60,6 @@ export class Scroll {
         this.functionality.saveInputData()
         this.functionality.updateInputPositionAndValue();
         this.functionality.handleRectangleToMake();
-        // this.functionality.handleMarchingAnts()
     }
 
     increaseNumOfCols() {
@@ -68,17 +68,9 @@ export class Scroll {
     }
 
     increaseNumOfRows() {
-        console.log("checking for match")
-
-        console.log(this.renderer.currStartRowInd , this.headerCellsMaker.verticalArr.length - 100)
-        const initialLengthOfVerArr = this.headerCellsMaker.verticalArr.length;
-        if(this.renderer.currStartRowInd >= initialLengthOfVerArr - 100){
-
-            this.headerCellsMaker.increaseNumOfRows();
-            this.handleApis.getDataInRange(initialLengthOfVerArr , 400);
-        }
-
-
+        let initialLengthOfVerArr = this.headerCellsMaker.verticalArr.length;
+        this.headerCellsMaker.increaseNumOfRows(2000);
+        this.handleApis.getDataInRange(initialLengthOfVerArr, 2000);
         this.renderer.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled)
     }
 
@@ -181,9 +173,8 @@ export class Scroll {
         this.verticallyScrolled = newBarTop * this.totalContentHeight / this.verticalScroll.clientHeight;
 
         if (this.verticallyScrolled >= .8 * (this.totalContentHeight - this.verticalScroll.clientHeight)) {
-            this.totalContentHeight += this.verticalScroll.clientHeight;
-            this.increaseNumOfRows();
-
+            this.increaseNumOfRows()
+            this.totalContentHeight = this.headerCellsMaker.verticalArr[this.headerCellsMaker.verticalArr.length - 1].y;
 
         }
         else if (this.verticallyScrolled <= 0) {
@@ -204,9 +195,45 @@ export class Scroll {
         this.updateGrid();
     }
 
+
+
+    handleWheelScrollVer(diffY) {
+
+        // console.log(diffY);
+
+        let newBarTop = this.startBarTop + diffY;
+
+        let maxBarTop = this.verticalScroll.clientHeight - this.verticalBar.offsetHeight;
+
+        newBarTop = Math.max(0, Math.min(newBarTop, maxBarTop));
+
+        let minContentHeight = this.verticalScroll.clientHeight * 2;
+
+        this.verticallyScrolled = Math.max(0, this.verticallyScrolled + diffY);
+
+        if (this.verticallyScrolled >= .8 * (this.totalContentHeight - this.verticalScroll.clientHeight)) {
+            this.increaseNumOfRows();
+            this.totalContentHeight = this.headerCellsMaker.verticalArr[this.headerCellsMaker.verticalArr.length - 1].y;
+        }
+        else if (this.verticallyScrolled <= 0) {
+            this.totalContentHeight = minContentHeight;
+        }
+
+        newBarTop = this.verticallyScrolled * this.verticalScroll.clientHeight / this.totalContentHeight;
+
+        this.verticalBar.style.height = Math.max(30, (this.verticalScroll.clientHeight * this.verticalScroll.clientHeight / this.totalContentHeight)) + "px"
+
+        this.verticalBar.style.top = `${newBarTop}px`;
+
+        this.startMouseY = this.currentMouseY;
+        this.startBarTop = newBarTop;
+
+        this.currentMouseY = 0;
+
+        this.updateGrid();
+    }
+
     updateVerticalScrollBar() {
-
-
 
         this.verticalBar.addEventListener('pointerdown', (e) => {
             e.preventDefault();
@@ -234,10 +261,17 @@ export class Scroll {
 
         });
 
+    }
+
+
+    handleWheelEvent() {
+
         this.fullCanvas.addEventListener('wheel', (e) => {
             e.preventDefault();
-            this.updateScrollByDiffVer(e.deltaY * this.wheelScrollRate / 100)
+            this.handleWheelScrollVer(e.deltaY * this.wheelScrollRate / 10)
         })
     }
+
+
 
 }

@@ -1,5 +1,7 @@
 using learning.Services;
 using RabbitMQ.Client;
+using learning.Hubs;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,18 +22,20 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy("AllowAllOrigins",
+        options.AddPolicy("AllowSpecificOrigins",
             builder =>
             {
-                builder.AllowAnyOrigin()
+                builder.WithOrigins("http://localhost:5500")
                        .AllowAnyMethod()
-                       .AllowAnyHeader();
+                       .AllowAnyHeader()
+                       .AllowCredentials();
             });
     });
 
     //adding some more services
     builder.Services.AddSingleton<RabbitMQPublisher>();
     builder.Services.AddSingleton<RabbitMQConsumer>();
+    builder.Services.AddSignalR();
 
     // builder.Services.AddTransient<RabbitMQConsumer>();//Add transient is for making the consumer trigger once post is made and stop once its finished
 }
@@ -51,7 +55,13 @@ var app = builder.Build();
 
     app.UseAuthorization();
 
-    app.UseCors("AllowAllOrigins");
+    app.UseCors("AllowSpecificOrigins");
+    
+    // app.UseEndpoints(endpoint => {
+    //     endpoint.
+    // });
+
+    app.MapHub<ProgressHub>("/hubs/progressHub");
 
     app.MapControllers();
 

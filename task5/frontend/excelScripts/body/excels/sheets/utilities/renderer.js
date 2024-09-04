@@ -35,9 +35,7 @@ export class Renderer {
         this.horStartPos = 0;
         this.verStartPos = 0;
 
-        this.offset = 0;
-        this.dashOffset = 0;
-
+        this.dashOffset = 0
         this.init();
     }
 
@@ -89,6 +87,43 @@ export class Renderer {
 
         }
 
+        // if (this.horizontallyScrolled != horizontallyScrolled) {
+
+        //     horizontallyScrolled = parseInt(horizontallyScrolled)
+
+        //     //for horizontal scrolling
+
+        //     if (horizontallyScrolled >= this.horizontallyScrolled) {
+
+        //         console.log("moving right")
+
+        //         while (this.accWidthHor + this.horizontalArr[this.currStartColInd].width < horizontallyScrolled) {
+        //             console.log("adding acc width")
+        //             this.accWidthHor += this.horizontalArr[this.currStartColInd].width;
+        //             this.currStartColInd += 1;
+        //         }
+
+        //         this.horStartPos = -horizontallyScrolled + this.accWidthHor;
+        //         this.horizontallyScrolled = horizontallyScrolled;
+        //         console.log(this.currStartColInd, this.horStartPos ,this.accWidthHor)
+        //     }
+        //     else {
+
+        //         console.log("moving left")
+
+        //         while (this.accWidthHor - this.horizontalArr[this.currStartColInd-1].width > horizontallyScrolled) {
+        //             console.log("removing acc width")
+        //             this.accWidthHor -= this.horizontalArr[this.currStartColInd-1].width;
+        //             this.currStartColInd -= 1;
+        //         }
+
+        //         this.horStartPos = +horizontallyScrolled - this.accWidthHor;
+        //         // this.horizontallyScrolled = horizontallyScrolled;
+        //         console.log(this.currStartColInd, this.horStartPos,this.accWidthHor)
+        //     }
+
+        // }
+
         if (this.verticallyScrolled != verticallyScrolled) {
 
 
@@ -108,7 +143,9 @@ export class Renderer {
         }
 
         //updating
-        this.renderCanvas();
+        this.drawHorizontalCanvas(this.currStartColInd);
+        this.drawVerticalCanvas(this.currStartRowInd);
+        this.drawMainCanvas(this.currStartRowInd, this.currStartColInd);
     }
 
     getColName(n) {
@@ -168,6 +205,12 @@ export class Renderer {
 
         }
 
+        //making border
+        this.horizontalCnvCtx.beginPath();
+        this.horizontalCnvCtx.moveTo(0, this.horizontalCanvas.clientHeight -1);
+        this.horizontalCnvCtx.lineTo(this.horizontalCanvas.clientWidth, this.horizontalCanvas.clientHeight-1);
+        this.horizontalCnvCtx.stroke();
+
     }
 
     drawVerticalCanvas(startInd) {
@@ -212,6 +255,13 @@ export class Renderer {
 
         }
 
+        //making border
+        this.verticalCnvCtx.beginPath();
+        this.verticalCnvCtx.moveTo(this.verticalCanvas.clientWidth - 1, 0);
+        this.verticalCnvCtx.lineTo(this.verticalCanvas.clientWidth -1 , this.verticalCanvas.clientHeight);
+        this.verticalCnvCtx.stroke();
+
+
     }
 
     drawCellContentAtRow(currRow, startColInd) {
@@ -228,7 +278,6 @@ export class Renderer {
         while (currRowEle != null) {
 
             let currCol = this.horizontalArr[currRowEle.col.data - 1];
-            let currRow = this.verticalArr[currRowEle.row.data - 1];
 
             if (currCol.x - this.horizontallyScrolled > this.spreadsheetCanvas.width) {
                 break;
@@ -238,27 +287,8 @@ export class Renderer {
             this.spreadsheetCnvCtx.font = '14px Calibri';
             this.spreadsheetCnvCtx.textAlign = 'left';
             this.spreadsheetCnvCtx.textBaseline = 'bottom';
-
-            // this.spreadsheetCnvCtx.save()
-
-            // this.spreadsheetCnvCtx.beginPath();
-            // console.log(currCol.x - this.horizontallyScrolled + 10,
-            //     currRow.y - this.verticallyScrolled,
-            //     currCol.x - this.horizontallyScrolled + currCol.width + 10,
-            //     currRow.y + currRow.height)
-            
-            // this.spreadsheetCnvCtx.rect(currCol.x - this.horizontallyScrolled + 10,
-            //     currRow.y - this.verticallyScrolled,
-            //     currCol.x - this.horizontallyScrolled + currCol.width + 10,
-            //     currRow.y + currRow.height);
-                
-            // this.spreadsheetCnvCtx.clip();
-
             this.spreadsheetCnvCtx.fillStyle = 'black';
             this.spreadsheetCnvCtx.fillText(currRowEle.data, currCol.x - this.horizontallyScrolled + 10, currRow.y - this.verticallyScrolled + currRow.height - 5)
-            // console.log(currRowEle.data, currCol.x - this.horizontallyScrolled + 10, currRow.y - this.verticallyScrolled + currRow.height - 5)
-
-            // this.spreadsheetCnvCtx.restore()
 
             currRowEle = currRowEle.right;
 
@@ -324,14 +354,13 @@ export class Renderer {
         }
     }
 
+
     fillRect(x, y, width, height) {
 
         this.spreadsheetCnvCtx.beginPath();
         this.spreadsheetCnvCtx.fillStyle = 'rgb(131,242,143,0.4)'
         this.spreadsheetCnvCtx.fillRect(x, y, width, height);
     }
-
-
     drawRectangleOnMainCanvas(x, y, width, height) {
         this.spreadsheetCnvCtx.beginPath();
         this.spreadsheetCnvCtx.fillStyle = 'rgb(131,242,143,0.4)'
@@ -381,6 +410,8 @@ export class Renderer {
         this.spreadsheetCnvCtx.setLineDash([]);
     }
 
+
+
     drawRectangleOnHorizontalCanvas(x, width) {
         // this.drawHorizontalCanvas()
         this.horizontalCnvCtx.beginPath();
@@ -414,13 +445,14 @@ export class Renderer {
         this.renderCanvas();
         this.drawRectangleOnMainCanvas(x, y, width, height);
         this.drawRectangleOnHorizontalCanvas(x, width)
-        this.drawRectangleOnVerticalCanvas(y, height);
+        this.drawRectangleOnVerticalCanvas(y, height)
     }
+
 
     drawMarchingAnts(x, y, width, height) {
         this.renderCanvas();
         this.startMarchingAnts(x, y, width, height);
-        
+
         this.drawRectangleOnHorizontalCanvas(x, width)
         this.drawRectangleOnVerticalCanvas(y, height);
     }
@@ -431,6 +463,5 @@ export class Renderer {
         }
         this.wafId = null;
     }
-
 
 }

@@ -1,6 +1,7 @@
 export class HandleUpload {
 
     constructor(excelMaker) {
+
         this.excelMaker = excelMaker;
         this.handleEvents();
     }
@@ -10,7 +11,6 @@ export class HandleUpload {
         document.getElementById('uploadForm').addEventListener('submit', (e) => {
             e.preventDefault();
             this.currSheet = this.excelMaker.getCurrSheet();
-            console.log(this.currSheet);
             this.currSheet.navFunctionalities.handleFileUpload(e);
         })
     }

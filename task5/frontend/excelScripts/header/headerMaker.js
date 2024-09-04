@@ -5,8 +5,10 @@ export class HeaderMaker {
 
         this.headerElement = headerElement;
 
+        this.excelMaker = excelMaker;
+
         this.createHeaderElements();
-        new HandleUpload(excelMaker);
+        new HandleUpload(this.excelMaker);
 
         // this.sheetInstance.
     }
@@ -40,10 +42,26 @@ export class HeaderMaker {
         // Create the tools div
         const toolsDiv = document.createElement('div');
         toolsDiv.className = 'tools';
+        
+        const progressBar = document.createElement('progress');
+        progressBar.setAttribute("id","progressBar");
+        progressBar.className = 'progressBar'
+        progressBar.setAttribute("value",0);
+        progressBar.setAttribute("max",100);
+        
+        const pBarLabel = document.createElement('p');
+        pBarLabel.className = 'pBarLabel'
+        pBarLabel.innerHTML = `${0}%`;
+
 
         // Append both the nav and tools divs to the header element
         this.headerElement.appendChild(navDiv);
         this.headerElement.appendChild(toolsDiv);
+
+        this.headerElement.appendChild(progressBar);
+        this.headerElement.appendChild(pBarLabel)
+        
+
     }
 
 }

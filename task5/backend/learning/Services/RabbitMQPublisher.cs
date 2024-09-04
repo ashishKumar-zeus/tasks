@@ -4,6 +4,7 @@ using RabbitMQ.Client;
 namespace learning.Services;
 
 
+
 public class RabbitMQPublisher
 {
 

@@ -2,6 +2,8 @@ using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using MySql.Data.MySqlClient;
+using Microsoft.AspNetCore.SignalR;
+using learning.Hubs;
 
 
 namespace learning.Services;
@@ -20,14 +22,18 @@ public class RabbitMQConsumer
     private readonly string? dbConnString;//this is the string required to connect to mysql db
 
 
+    private readonly IHubContext<ProgressHub>? hubContext;
+
+
     public int currQueueIndex = 0;
 
-    public RabbitMQConsumer(IConfiguration _configuration, IConnectionFactory _connectionFactory)
+    public RabbitMQConsumer(IConfiguration _configuration, IConnectionFactory _connectionFactory, IHubContext<ProgressHub> _hubContext)
     {
         //constructor
         connectionFactory = _connectionFactory;
         connection = connectionFactory.CreateConnection();
         channel = connection.CreateModel();
+        hubContext = _hubContext;
 
         //constructor
         configuration = _configuration;//updating the value
@@ -85,7 +91,7 @@ public class RabbitMQConsumer
         // Console.WriteLine("insert into db called ");
 
 
-        await Task.Run(() =>
+        await Task.Run(async () =>
         {
             {
 
@@ -109,6 +115,7 @@ public class RabbitMQConsumer
                 long end = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds();
                 Console.WriteLine("INSERT finally ended at for " + queueN + end);
 
+                await hubContext!.Clients.All.SendAsync("ReceiveUpdate","Data received for queueNumber ", queueN);
 
             }
         });

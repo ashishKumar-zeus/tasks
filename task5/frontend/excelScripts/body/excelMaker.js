@@ -14,8 +14,6 @@ export class ExcelMaker {
 
         this.init();
 
-        this.currSheetObj = null;
-
     }
 
     addNewRow() {
@@ -206,14 +204,11 @@ export class ExcelMaker {
     }
 
     updateCurrSheet(sheetObj) {
-        // console.log(sheetObj)
         this.currSheetObj = sheetObj;
-        // console.log(this.currSheetObj)
-        this.getCurrSheet()
     }
 
     getCurrSheet() {
-        // console.log("returning ", this.currSheetObj)
+        console.log(this.currSheetObj)
         return this.currSheetObj;
     }
 

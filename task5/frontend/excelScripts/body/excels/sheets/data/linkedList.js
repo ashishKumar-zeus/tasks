@@ -175,11 +175,13 @@ export class LinkedList {
 
     deleteNode(row, col) {
 
+        console.log("called delete for ",row,col)
         let rowInd = row - 1;
         let colInd = col - 1;
 
-        if (!this.verticalArr[rowInd].next || this.verticalArr[rowInd].next.row.data > row) {
+        if (!this.verticalArr[rowInd].next || this.verticalArr[rowInd].next.col.data > col) {
             // not found
+            console.log("not found")
             return;
         }
         let temp = this.verticalArr[rowInd].next;

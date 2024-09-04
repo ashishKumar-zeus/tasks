@@ -22,11 +22,8 @@ export class HeaderCellsMaker {
 
         this.handleApis = handleApis;
 
-        // this.numOfCols = Math.floor((2 * this.horizontalCanvas.width) / this.initialWidthHorizontal);
-        // this.numOfRows = Math.floor((2 * this.verticalCanvas.height) / this.initialHeightVertical);
-
         this.numOfCols = 100;
-        this.numOfRows = 100;
+        this.numOfRows = 2000;
 
         this.initialHeightHorizontal = this.horizontalCanvas.clientHeight;
         this.initialWidthVertical = this.verticalCanvas.clientWidth;
@@ -61,6 +58,8 @@ export class HeaderCellsMaker {
             y += this.initialHeightVertical;
         }
 
+        // console.log("created array vertical of size ", 1 , " to ", this.numOfRows);
+
 
     }
 
@@ -80,7 +79,7 @@ export class HeaderCellsMaker {
         const lastCell = this.horizontalArr[this.horizontalArr.length - 1];
         let x = lastCell.x + lastCell.width;
         let y = 0;
-        let currIndex = Math.floor(this.numOfCols );
+        let currIndex = Math.floor(this.numOfCols + 1);
 
         const numNewCols = Math.floor(2 * this.horizontalCanvas.width / this.initialWidthHorizontal);
 
@@ -95,15 +94,15 @@ export class HeaderCellsMaker {
         this.numOfCols = this.horizontalArr.length;
     }
 
-    increaseNumOfRows() {
+    increaseNumOfRows(numNewRows) {
         console.log("increasing number of rows ")
 
         const lastCell = this.verticalArr[this.verticalArr.length - 1];
         let y = lastCell.y + lastCell.height;
         let x = 0;
-        let currIndex = Math.floor(this.numOfRows );
+        let currIndex = Math.floor(this.numOfRows + 1);
 
-        const numNewRows = Math.floor(2*this.verticalCanvas.height / this.initialHeightVertical)*10;//10 is factor for creating almost 400 rows
+        // const numNewRows = Math.floor(2*this.verticalCanvas.height / this.initialHeightVertical)*10;//10 is factor for creating almost 400 rows
 
         console.log("from ",this.numOfRows, numNewRows);
 

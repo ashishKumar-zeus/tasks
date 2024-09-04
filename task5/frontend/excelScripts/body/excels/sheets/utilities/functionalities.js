@@ -280,6 +280,7 @@ export class Functionalities {
         this.inputEle.style.left = `${colStartPos}px`;
         this.inputEle.style.width = `${cellWidth - 4}px`;
         this.inputEle.style.height = `${cellHeight - 4}px`;
+        this.inputEle.blur();
 
     }
 
@@ -339,6 +340,7 @@ export class Functionalities {
         }
         this.handleRectangleToMake(e);
 
+
         // Add event listeners for mousemove and mouseup
         this.addMouseEventListeners();
     }
@@ -389,9 +391,9 @@ export class Functionalities {
         }
 
         if (relativeY < edgeDistance && event.movementY < 0) {
-            this.scroll.updateScrollByDiffVer(-5);
+            this.scroll.handleWheelScrollVer(-10);
         } else if (relativeY > canvas.clientHeight - edgeDistance && event.movementY > 0) {
-            this.scroll.updateScrollByDiffVer(+5);
+            this.scroll.handleWheelScrollVer(+10);
         }
     }
 
@@ -463,8 +465,8 @@ export class Functionalities {
     }
 
 
-    getXYWidthHeight(){
-        
+    getXYWidthHeight() {
+
         if (!this.startInputCell || !this.endInputCell) {
             return;
         }
@@ -486,19 +488,29 @@ export class Functionalities {
         const maxX = Math.max(startCellXTop, startCellXBottom, currCellXTop, currCellXBottom);
         const maxY = Math.max(startCellYTop, startCellYBottom, currCellYTop, currCellYBottom);
 
-        return {minX,minY,maxX,maxY}
+        return { minX, minY, maxX, maxY }
 
     }
 
-    handleKeyEventsOnSheet(){
-        window.addEventListener('keydown',(e)=>{
-           if(((e.ctrlKey && e.key === 'c' && this.isDragging == false) || (e.ctrlKey && e.key === 'x' && this.isDragging == false))  ){
-            this.renderer.endMarchingAnts();//if exists
-            let {minX,minY,maxX,maxY} = this.getXYWidthHeight();
-            console.log()
-            this.renderer.drawMarchingAnts(minX,minY,maxX - minX, maxY - minY);
-           }
+    handleKeyEventsOnSheet() {
+        window.addEventListener('keydown', (e) => {
+
+            if (((e.ctrlKey && e.key === 'c' && this.isDragging == false) || (e.ctrlKey && e.key === 'x' && this.isDragging == false))) {
+                this.renderer.endMarchingAnts();//if exists
+                let { minX, minY, maxX, maxY } = this.getXYWidthHeight();
+                this.minorFunctions.copyToClipboard2DArr(this.selectedCells);
+                this.renderer.drawMarchingAnts(minX, minY, maxX - minX, maxY - minY);
+            }
+            else if ((e.ctrlKey && e.key === 'v' && this.isDragging == false)) {
+
+                this.minorFunctions.pasteClipboard(this.startInputCell, this.endInputCell);
+            }
+            else if((e.key === 'Delete')){
+                this.minorFunctions.deleteFromLinkedList(this.startInputCell,this.endInputCell);
+                this.renderer.renderCanvas();
+            }
         })
+
     }
 
 
