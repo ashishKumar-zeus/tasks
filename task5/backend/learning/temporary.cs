@@ -414,3 +414,161 @@
     //     }
 
     // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// https://chatgpt.com/share/f175a43b-fb69-4ea5-a55d-ca0656c48997
+
+  /**
+   * Updates a specific cell in the grid and sends the updated data to the server.
+   * 
+   * @async
+   * @param {number} index - The index of the row to update.
+   * @returns {Promise<void>} - A promise that resolves when the update is complete.
+   * @throws Will throw an error if the fetch request fails.
+//  */
+//   async updateCell(index) {
+//     try {
+//     // Prepare the data model from the grid, with id starting from 1
+//     const dataModel = {
+//       id: index + 1, // The id starts from 1, so add 1 to the index
+//         email_id: this.mainGrid.mainCells[index][0].value,
+//         name: this.mainGrid.mainCells[index][1].value,
+//         country: this.mainGrid.mainCells[index][2].value,
+//         state: this.mainGrid.mainCells[index][3].value,
+//         city: this.mainGrid.mainCells[index][4].value,
+//         telephone_number: this.mainGrid.mainCells[index][5].value,
+//         address_line_1: this.mainGrid.mainCells[index][6].value,
+//         address_line_2: this.mainGrid.mainCells[index][7].value,
+//         date_of_birth: this.mainGrid.mainCells[index][8].value,
+//         gross_salary_FY2019_20:
+//           this.mainGrid.mainCells[index][9].value,
+//         gross_salary_FY2020_21:
+//           this.mainGrid.mainCells[index][10].value,
+//         gross_salary_FY2021_22:
+//           this.mainGrid.mainCells[index][11].value,
+//         gross_salary_FY2022_23:
+//           this.mainGrid.mainCells[index][12].value,
+//         gross_salary_FY2023_24:
+//           this.mainGrid.mainCells[index][13].value,
+//       };
+//       // Send a POST request to update the record in the server
+//       let response = await fetch(
+//         "https://localhost:7220/ExcelApi/UpdateRecord",
+//         {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify(dataModel),
+//         }
+//       );
+
+//       // Optionally handle the response here if necessary (e.g., check response status)
+//       if (!response.ok) {
+//         throw new Error(`Server responded with status ${response.status}`);
+//       }
+//     } catch (error) {
+//       // Log any errors that occur during the update
+//       console.error("error in updating the cell", error);
+//     }
+//   }
+// }
+
+
+
+//     [HttpPost("UpdateRecord")]
+//     public async Task<IActionResult> UpdateRecord([FromBody] Excel record)
+//     {
+//         // Validate the incoming record
+//         if (record == null)
+//         {
+//             return BadRequest("Invalid record data.");
+//         }
+
+//         // Build the SQL update statement dynamically
+//         var query = new StringBuilder("UPDATE FILE SET ");
+
+//         var properties = record.GetType().GetProperties();
+
+//         // Append each property and its value to the SQL update statement
+//         foreach (var property in properties)
+//         {
+//             // Ensure the value is correctly formatted, handling nulls as empty strings
+//             string value = property.GetValue(record)?.ToString() ?? string.Empty;
+//             // Properly escape single quotes to prevent SQL injection
+//             string escapedValue = value.Replace("'", "''");
+//             query.Append($"{property.Name}='{value}',");
+//         }
+//         // Remove the trailing comma from the SQL statement
+//         query.Length--;
+
+//         // Add the WHERE clause to target the specific record by row number
+//         query.Append($" WHERE id={record.id};");
+
+//         // Execute the update query within a try-catch block for error handling
+//         try
+//         {
+//             await _connection.OpenAsync();
+//             await using var command = new MySqlCommand(query.ToString(), _connection);
+
+//             // Execute the query and get the number of affected rows
+//             var result = await command.ExecuteNonQueryAsync();
+
+//             // Close the connection explicitly (optional due to using statement)
+//             await _connection.CloseAsync();
+
+//             // Check if any rows were affected, indicating a successful update
+//             if (result == 0)
+//             {
+//                 // Log the failure and return a BadRequest response
+//                 return BadRequest("Update failed: No records were affected.");
+//             }
+
+//             // Log the success and return an Ok response with the number of affected rows
+//             Console.WriteLine($"Update successful: {result} record(s) updated.");
+//             return Ok(new { Message = "Update successful", RowsAffected = result });
+//         }
+//         catch (MySqlException ex)
+//         {
+//             // Log the exception and return an InternalServerError response
+//             Console.WriteLine($"Database error occurred: {ex.Message}");
+//             return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the record.");
+//         }
+//     }
+    
+//     create table file (
+// 	id int not null auto_increment,
+//     email_id varchar(255),
+//     name varchar(255),
+//     country varchar(255),
+//     state varchar(255),
+//     city varchar(255),
+//     telephone_number varchar(255),
+//     address_line_1 varchar(255),
+//     address_line_2 varchar(255),
+//     date_of_birth varchar(255),
+//     gross_salary_FY2019_20 varchar(255),
+//     gross_salary_FY2020_21 varchar(255),
+//     gross_salary_FY2021_22 varchar(255),
+//     gross_salary_FY2022_23 varchar(255),
+//     gross_salary_FY2023_24 varchar(255),
+// 	PRIMARY KEY (id)
+// );

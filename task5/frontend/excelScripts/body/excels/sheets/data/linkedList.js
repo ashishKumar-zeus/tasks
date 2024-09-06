@@ -57,6 +57,7 @@ export class LinkedList {
         return null;
     }
 
+
     getValueAtInd(rowInd, colInd) {
 
         let currEle = this.findAtIndex(rowInd, colInd);
@@ -65,6 +66,8 @@ export class LinkedList {
         }
         return ""
     }
+
+
 
     setValueAtInd(rowInd, colInd, newValue) {
 
@@ -78,10 +81,18 @@ export class LinkedList {
             // console.log("new data added")
             this.createNewNode(rowInd + 1, colInd + 1, newValue)
         }
+
     }
 
 
     insertMultipleDataInLL(jsonData,startInd) {
+
+        Object.keys(jsonData[0]).forEach((d, i) => {
+            this.createNewNode(1, i+1, d);;
+          });
+          startInd++;
+
+
         //inserts multiple data from json to LL
         for (let i = 1; i <= jsonData.length; i++) {
             let j = 1;

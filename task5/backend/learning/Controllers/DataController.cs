@@ -3,10 +3,13 @@ using learning.Models;
 using learning.Services;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
+
 
 
 using System.IO;
 using System.Data;
+using Google.Protobuf.WellKnownTypes;
 
 namespace learning.Controllers;
 
@@ -388,13 +391,13 @@ public class DataController : ControllerBase
         return Ok();
 
     }
-    
+
 
 
 
 
     [HttpGet("getDataInRange")]
-    public async Task<List<DataModel>> GetDataInRange([FromQuery] int start,[FromQuery] int limit)
+    public async Task<List<DataModel>> GetDataInRange([FromQuery] int start, [FromQuery] int limit)
     {
 
         Console.WriteLine(start);
@@ -445,46 +448,177 @@ public class DataController : ControllerBase
     }
 
 
+    public class UpdateModel
+    {
+        public string? email_id { get; set; }
+        public string? columnName { get; set; }
+
+        public string? value { get; set; }
+
+    }
+
+[HttpPost("UpdateRecord")]
+public async Task<IActionResult> UpdateRecord(string record)
+{
+    if (string.IsNullOrEmpty(record))
+    {
+        return BadRequest("Invalid record data.");
+    }
+
+    Console.WriteLine($"{record}");
+
+    // Deserialize the record into the UpdateModel
+    var json = JsonConvert.DeserializeObject<UpdateModel>(record);
+
+    if (json == null)
+    {
+        return BadRequest("Deserialization failed.");
+    }
+
+    // Extract email_id, columnName, and value from the deserialized object
+    string email = json.email_id ?? string.Empty;
+    string columnName = json.columnName ?? string.Empty;
+    string value = json.value ?? string.Empty;
+
+    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(columnName) || string.IsNullOrEmpty(value))
+    {
+        return BadRequest("Missing required data (email_id, columnName, or value).");
+    }
+
+    // Build the update query
+    var query = new StringBuilder($"UPDATE usertest2 SET ");
+    query.Append($"{columnName} = @value WHERE email_id = @Email");
+
+    try
+    {
+        // Establish connection with the database
+        using var mySqlConnection = new MySqlConnection(dbConnString);
+        await mySqlConnection.OpenAsync();
+
+        // Prepare the SQL command with parameterized query to avoid SQL injection
+        using var command = new MySqlCommand(query.ToString(), mySqlConnection);
+        command.Parameters.AddWithValue("@value", value);
+        command.Parameters.AddWithValue("@Email", email);
+
+        // Execute the update command
+        var result = await command.ExecuteNonQueryAsync();
+
+        // Close the connection (optional as it's within using statement)
+        await mySqlConnection.CloseAsync();
+
+        // Check if any rows were affected, indicating a successful update
+        if (result == 0)
+        {
+            return BadRequest("Update failed: No records were affected.");
+        }
+
+        Console.WriteLine($"Update successful: {result} record(s) updated.");
+        return Ok(new { Message = "Update successful", RowsAffected = result });
+    }
+    catch (MySqlException ex)
+    {
+        // Log the exception and return an InternalServerError response
+        Console.WriteLine($"Database error occurred: {ex.Message}");
+        return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the record.");
+    }
+}
 
 
-// async renderPrv(){
-//         if(this.i===0 || this.grid.cells[this.i][this.j].value===this.cellInput.value){
-//             return;
-//         }
-//         this.grid.cells[this.i][this.j].value=this.cellInput.value
-//         try {
-//             const dataModel = {
-//                 row_num: this.i,
-//                 email_id: this.grid.cells[this.i][0].value,
-//                 name: this.grid.cells[this.i][1].value,
-//                 country: this.grid.cells[this.i][2].value,
-//                 state: this.grid.cells[this.i][3].value,
-//                 city: this.grid.cells[this.i][4].value,
-//                 telephone_number: this.grid.cells[this.i][5].value,
-//                 address_line_1: this.grid.cells[this.i][6].value,
-//                 address_line_2: this.grid.cells[this.i][7].value,
-//                 date_of_birth: this.grid.cells[this.i][8].value,
-//                 gross_salary_FY2019_20: this.grid.cells[this.i][9].value,
-//                 gross_salary_FY2020_21: this.grid.cells[this.i][10].value,
-//                 gross_salary_FY2021_22: this.grid.cells[this.i][11].value,
-//                 gross_salary_FY2022_23: this.grid.cells[this.i][12].value,
-//                 gross_salary_FY2023_24: this.grid.cells[this.i][13].value
-//             };
-//             let response = await fetch('https://localhost:7009/api/csv/updateRecord',
-//                 {
-//                     method: "POST",
-//                     headers: {
-//                         'Content-Type': 'application/json', 
-//                     },
-//                     body: JSON.stringify(dataModel),
-//                 }
-//             ); 
-              
-//         } catch (error) {
-//             console.error('error now update the cell',error);
-//         }
-//         this.sheetRender();
-//     }
+
+    // [HttpPost("UpdateRecord")]
+    // public async Task<IActionResult> UpdateRecord(string record)
+    // {
+    //     if (record == null)
+    //     {
+    //         return BadRequest("Invalid record data.");
+    //     }
+
+    //     Console.WriteLine($"{record}");
+
+    //     var json = JsonConvert.DeserializeObject<UpdateModel>(record);
+
+    //     var properties = json.GetType().GetProperties();
+
+    //     var query = new StringBuilder($"UPDATE usertest2 SET ");
+
+
+    //     foreach (var property in properties)
+    //     {
+    //         var value = property.GetValue(json)?.ToString() ?? string.Empty;
+    //         Console.WriteLine(value);
+
+    //         query.Append($"{property.Name} ='{value}',");
+    //     }
+    //     query.Length--;
+
+    //     try
+    //     {
+    //         var mySqlConnection = new MySqlConnection(dbConnString);
+    //         await mySqlConnection.OpenAsync();
+    //         await using var command = new MySqlCommand(query.ToString(), mySqlConnection);
+
+    //         var result = await command.ExecuteNonQueryAsync();
+
+    //         // Close the connection explicitly (optional due to using statement)
+    //         await mySqlConnection.CloseAsync();
+
+    //         // Check if any rows were affected, indicating a successful update
+    //         if (result == 0)
+    //         {
+    //             return BadRequest("Update failed: No records were affected.");
+    //         }
+
+    //         Console.WriteLine($"Update successful: {result} record(s) updated.");
+    //         return Ok(new { Message = "Update successful", RowsAffected = result });
+    //     }
+    //     catch (MySqlException ex)
+    //     {
+    //         // Log the exception and return an InternalServerError response
+    //         Console.WriteLine($"Database error occurred: {ex.Message}");
+    //         return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the record.");
+    //     }
+    // }
+
+
+
+    // async renderPrv(){
+    //         if(this.i===0 || this.grid.cells[this.i][this.j].value===this.cellInput.value){
+    //             return;
+    //         }
+    //         this.grid.cells[this.i][this.j].value=this.cellInput.value
+    //         try {
+    //             const dataModel = {
+    //                 row_num: this.i,
+    //                 email_id: this.grid.cells[this.i][0].value,
+    //                 name: this.grid.cells[this.i][1].value,
+    //                 country: this.grid.cells[this.i][2].value,
+    //                 state: this.grid.cells[this.i][3].value,
+    //                 city: this.grid.cells[this.i][4].value,
+    //                 telephone_number: this.grid.cells[this.i][5].value,
+    //                 address_line_1: this.grid.cells[this.i][6].value,
+    //                 address_line_2: this.grid.cells[this.i][7].value,
+    //                 date_of_birth: this.grid.cells[this.i][8].value,
+    //                 gross_salary_FY2019_20: this.grid.cells[this.i][9].value,
+    //                 gross_salary_FY2020_21: this.grid.cells[this.i][10].value,
+    //                 gross_salary_FY2021_22: this.grid.cells[this.i][11].value,
+    //                 gross_salary_FY2022_23: this.grid.cells[this.i][12].value,
+    //                 gross_salary_FY2023_24: this.grid.cells[this.i][13].value
+    //             };
+    //             let response = await fetch('https://localhost:7009/api/csv/updateRecord',
+    //                 {
+    //                     method: "POST",
+    //                     headers: {
+    //                         'Content-Type': 'application/json', 
+    //                     },
+    //                     body: JSON.stringify(dataModel),
+    //                 }
+    //             ); 
+
+    //         } catch (error) {
+    //             console.error('error now update the cell',error);
+    //         }
+    //         this.sheetRender();
+    //     }
 
 
 

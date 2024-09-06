@@ -11,7 +11,7 @@ export class Functionalities {
         this.inputEle = sheet.inputEle;
         this.minorFunctions = sheet.minorFunctions;
         this.updateSelectedCellToUI = sheet.updateSelectedCellsInfo;
-
+        this.handleApis  = sheet.handleApis;
         //canvas
         this.horizontalCanvas = sheet.horizontalCanvas;
         this.verticalCanvas = sheet.verticalCanvas;
@@ -300,6 +300,7 @@ export class Functionalities {
             this.ll.deleteNode(rowInd + 1, colInd + 1);
         } else {
             this.ll.setValueAtInd(rowInd, colInd, data);
+            this.handleApis.updateCellToBackend(rowInd,colInd,data)
         }
 
         this.renderer.renderCanvas();

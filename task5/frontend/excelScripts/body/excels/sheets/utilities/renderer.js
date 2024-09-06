@@ -264,38 +264,89 @@ export class Renderer {
 
     }
 
+    // drawCellContentAtRow(currRow, startColInd) {
+
+    //     if (!currRow.next) {
+    //         return;
+    //     }
+    //     let currRowEle = currRow.next;
+
+    //     while (currRowEle != null && (currRowEle.col.data - 1) < startColInd) {
+    //         currRowEle = currRowEle.right;
+    //     }
+
+    //     while (currRowEle != null) {
+
+    //         let currCol = this.horizontalArr[currRowEle.col.data - 1];
+
+    //         if (currCol.x - this.horizontallyScrolled > this.spreadsheetCanvas.width) {
+    //             break;
+    //         }
+
+    //         //making text
+    //         this.spreadsheetCnvCtx.font = '14px Calibri';
+    //         this.spreadsheetCnvCtx.textAlign = 'left';
+    //         this.spreadsheetCnvCtx.textBaseline = 'bottom';
+    //         this.spreadsheetCnvCtx.fillStyle = 'black';
+    //         this.spreadsheetCnvCtx.fillText(currRowEle.data, currCol.x - this.horizontallyScrolled + 10, currRow.y - this.verticallyScrolled + currRow.height - 5)
+
+    //         currRowEle = currRowEle.right;
+
+    //     }
+
+    // }
     drawCellContentAtRow(currRow, startColInd) {
 
         if (!currRow.next) {
             return;
         }
         let currRowEle = currRow.next;
-
+    
         while (currRowEle != null && (currRowEle.col.data - 1) < startColInd) {
             currRowEle = currRowEle.right;
         }
-
+    
         while (currRowEle != null) {
-
+    
             let currCol = this.horizontalArr[currRowEle.col.data - 1];
-
+    
+            // Check if cell is outside the canvas
             if (currCol.x - this.horizontallyScrolled > this.spreadsheetCanvas.width) {
                 break;
             }
-
-            //making text
+    
+            // Save canvas state
+            this.spreadsheetCnvCtx.save();
+    
+            // Define clipping area (cell boundaries)
+            this.spreadsheetCnvCtx.beginPath();
+            this.spreadsheetCnvCtx.rect(
+                currCol.x - this.horizontallyScrolled,
+                currRow.y - this.verticallyScrolled,
+                currCol.width,
+                currRow.height
+            );
+            this.spreadsheetCnvCtx.clip();
+    
+            // Render the text within the clipping region
             this.spreadsheetCnvCtx.font = '14px Calibri';
             this.spreadsheetCnvCtx.textAlign = 'left';
             this.spreadsheetCnvCtx.textBaseline = 'bottom';
             this.spreadsheetCnvCtx.fillStyle = 'black';
-            this.spreadsheetCnvCtx.fillText(currRowEle.data, currCol.x - this.horizontallyScrolled + 10, currRow.y - this.verticallyScrolled + currRow.height - 5)
-
+            this.spreadsheetCnvCtx.fillText(
+                currRowEle.data,
+                currCol.x - this.horizontallyScrolled + 10,
+                currRow.y - this.verticallyScrolled + currRow.height - 5
+            );
+    
+            // Restore canvas state to avoid clipping other elements
+            this.spreadsheetCnvCtx.restore();
+    
             currRowEle = currRowEle.right;
-
         }
-
+    
     }
-
+    
     drawMainCanvas(startRowInd, startColInd) {
 
         if (!this.spreadsheetCnvCtx) {

@@ -184,8 +184,6 @@ export class Sheet {
         this.spreadsheetCnvCtx.scale(dpr, dpr)
 
 
-
-
     }
 
 

@@ -11,10 +11,40 @@ export class HandleApis {
     }
 
 
-    updateProgressBar(amt){
-        document.getElementById('progressBar').value = amt;
-        console.log(document.getElementById('progressBar').value)
+    handleSignalR() {
+        //establish connection
+        this.signalRconnection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:5228/hubs/progressHub", {
+                skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets,
+            })
+            .withAutomaticReconnect() // Automatically reconnect on failure
+            .build();
+
+
+        //start connection
+        this.signalRconnection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+        let amountOfSuccess = 0;
+        //on receiving
+        let j = 0;
+        this.signalRconnection.on("ReceiveUpdate", function (message) {
+            j++;
+            console.log("Progress update: ", message, j);
+            amountOfSuccess += 10;
+            console.log("calling update")
+            // this.updateProgressBar(amountOfSuccess);
+
+            console.log("calaled")
+            console.log(document.getElementById('progressBar').getAttribute('value'))
+
+            document.getElementById('progressBar').setAttribute("value", amountOfSuccess)
+
+        });
+
     }
+
 
     async uploadFile(formData) {
 
@@ -22,26 +52,7 @@ export class HandleApis {
 
 
         let amountOfSuccess = 0;
-        
-        const connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://localhost:5228/hubs/progressHub", {
-          skipNegotiation: true,
-          transport: signalR.HttpTransportType.WebSockets,
-        })
-        .withAutomaticReconnect() // Automatically reconnect on failure
-        .build();
-
-        let j=0;
-        connection.on("ReceiveUpdate", function (message) {
-            j++;
-            console.log("Progress update: ", message,j);
-            amountOfSuccess+=10;
-            this.updateProgressBar(amountOfSuccess);
-        });
-
-        connection.start().catch(function (err) {
-            return console.error(err.toString());
-        });
+        this.handleSignalR()
 
 
         const res = await fetch('http://localhost:5228/api/Data/insertMultipleData6', {
@@ -70,18 +81,47 @@ export class HandleApis {
                     'Accept': 'text/plain'
                 }
             });
-        
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-        
+
             const data = await response.json();
             console.log(data);
-        
+
             this.sheet.ll.insertMultipleDataInLL(data, startInd);
         } catch (error) {
             console.error('Error:', error.message || error);
         }
-        
+
+    }
+
+
+    async updateCellToBackend(rowInd, colInd, value) {
+
+        console.log(this.sheet.headerCellsMaker.verticalArr[rowInd]);
+
+        const email_id =this.sheet.headerCellsMaker.verticalArr[rowInd].next.data;
+
+        const columnName = this.sheet.headerCellsMaker.horizontalArr[colInd].next.data;
+
+        const data = {
+            "email_id":email_id,
+            "columnName":columnName,
+            "value":value,
+        }
+
+        let response = await fetch(`http://localhost:5228/api/Data/UpdateRecord?record=${JSON.stringify(data)}`,
+            {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: ""
+            }
+        );
+
+
+
     }
 }

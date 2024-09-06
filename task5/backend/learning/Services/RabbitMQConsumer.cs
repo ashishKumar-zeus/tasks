@@ -25,6 +25,8 @@ public class RabbitMQConsumer
     private readonly IHubContext<ProgressHub>? hubContext;
 
 
+    // private long?  totalChunkCount = 1;
+
     public int currQueueIndex = 0;
 
     public RabbitMQConsumer(IConfiguration _configuration, IConnectionFactory _connectionFactory, IHubContext<ProgressHub> _hubContext)
@@ -56,6 +58,7 @@ public class RabbitMQConsumer
 
     public void StartListeningToQueue(int queueNumber)
     {
+
         // Console.WriteLine("Started listening to queue " + queueNumber);
         var consumer = new EventingBasicConsumer(channel);//creating a consumer that can listen to queue
 
@@ -80,6 +83,11 @@ public class RabbitMQConsumer
         Console.WriteLine("out here");
 
     }
+
+
+    // public void ResetChunksCount(long totalChunks){
+    //     totalChunkCount = totalChunks;
+    // }
 
 
     public async Task InsertToDBAsync(string query, int queueN)

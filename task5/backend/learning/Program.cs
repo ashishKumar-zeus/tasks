@@ -25,7 +25,7 @@ var builder = WebApplication.CreateBuilder(args);
         options.AddPolicy("AllowSpecificOrigins",
             builder =>
             {
-                builder.WithOrigins("http://localhost:5500")
+                builder.WithOrigins("http://127.0.0.1:5500")
                        .AllowAnyMethod()
                        .AllowAnyHeader()
                        .AllowCredentials();
@@ -56,10 +56,7 @@ var app = builder.Build();
     app.UseAuthorization();
 
     app.UseCors("AllowSpecificOrigins");
-    
-    // app.UseEndpoints(endpoint => {
-    //     endpoint.
-    // });
+
 
     app.MapHub<ProgressHub>("/hubs/progressHub");
 
