@@ -17,6 +17,7 @@ export class Renderer {
         [this.horizontalCanvas, this.verticalCanvas, this.spreadsheetCanvas] = sheet.getCnv();
 
         this.inputEle = sheet.inputEle;
+        this.sheet = sheet;
 
         this.horizontalArr = sheet.headerCellsMaker.getHorizontalArray()
         this.verticalArr = sheet.headerCellsMaker.getVerticalArray()
@@ -348,6 +349,8 @@ export class Renderer {
     }
     
     drawMainCanvas(startRowInd, startColInd) {
+    
+        // this.functionality.updateInputPositionAndValue();
 
         if (!this.spreadsheetCnvCtx) {
             alert("main Canvas ctx not found")

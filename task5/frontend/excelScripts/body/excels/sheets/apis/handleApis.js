@@ -87,7 +87,7 @@ export class HandleApis {
             }
 
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
 
             this.sheet.ll.insertMultipleDataInLL(data, startInd);
         } catch (error) {
@@ -99,7 +99,7 @@ export class HandleApis {
 
     async updateCellToBackend(rowInd, colInd, value) {
 
-        console.log(this.sheet.headerCellsMaker.verticalArr[rowInd]);
+        // console.log(this.sheet.headerCellsMaker.verticalArr[rowInd]);
 
         const email_id =this.sheet.headerCellsMaker.verticalArr[rowInd].next.data;
 
@@ -110,7 +110,11 @@ export class HandleApis {
             "columnName":columnName,
             "value":value,
         }
+        
 
+        if (!this.tableName) {
+            return;
+        }
         let response = await fetch(`http://localhost:5228/api/Data/UpdateRecord?record=${JSON.stringify(data)}`,
             {
                 method: "POST",

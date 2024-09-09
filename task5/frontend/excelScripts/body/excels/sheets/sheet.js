@@ -7,6 +7,7 @@ import { Functionalities } from './utilities/functionalities.js';
 import { HandleApis } from './apis/handleApis.js';
 import { NavFunctionalities } from './utilities/navFunctionalitites.js';
 import { MinorFunctions } from './utilities/minorFunctions.js';
+import { Graph } from './utilities/graph.js';
 
 export class Sheet {
 
@@ -16,13 +17,42 @@ export class Sheet {
 
         this.sheet = currSheet;
 
-        this.createCanvas()
+        this.createCanvas();
+        this.createGraphs();
 
         this.updateSelectedCellsInfo = updateSelectedCellsInfoFunc;
 
         setTimeout(() => {
             this.init()
         }, 1);
+    }
+
+    createGraphs() {
+        // Create the main graph div
+        const graphDiv = document.createElement('div');
+        graphDiv.classList.add('graph');
+        graphDiv.setAttribute('id','graph')
+
+        // Create the close button
+        const closeButton = document.createElement('button');
+        closeButton.classList.add('graphClose');
+        closeButton.innerHTML = 'X'
+
+        // Create the canvas element
+        const canvas = document.createElement('canvas');
+        canvas.setAttribute('id', 'graphCanvas');
+
+        // Append the button and canvas to the graph div
+        graphDiv.appendChild(closeButton);
+        graphDiv.appendChild(canvas);
+
+        // Append the graph div to the container
+        document.body.appendChild(graphDiv);
+
+        // Event listener to close the graph when the close button is clicked
+        closeButton.addEventListener('click', function () {
+            graphDiv.remove();
+        });
     }
 
     createCanvas() {
@@ -146,6 +176,8 @@ export class Sheet {
         //intiating ScrollFunctionalities
         this.scroll = new Scroll(this);
 
+        this.graph = new Graph(this);
+
         // Set up the ResizeObserver
         this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
         this.resizeObserver.observe(this.spreadsheetCanvas);
@@ -162,23 +194,22 @@ export class Sheet {
 
         const dpr = window.devicePixelRatio;
 
-        //scalling horizontal canvas
-
-        this.horizontalCanvas.width = Math.floor(this.horizontalCanvas.clientWidth * dpr)
-        this.horizontalCanvas.height = Math.floor(this.horizontalCanvas.clientHeight * dpr)
+        //scalling horizontal c
+        this.horizontalCanvas.width = Math.floor(this.horizontalCanvas.clientWidth)
+        this.horizontalCanvas.height = Math.floor(this.horizontalCanvas.clientHeight)
 
         this.horizontalCnvCtx.scale(dpr, dpr)
 
         //scalling vertical canvas
 
-        this.verticalCanvas.width = Math.floor(this.verticalCanvas.clientWidth * dpr)
-        this.verticalCanvas.height = Math.floor(this.verticalCanvas.clientHeight * dpr)
+        this.verticalCanvas.width = Math.floor(this.verticalCanvas.clientWidth)
+        this.verticalCanvas.height = Math.floor(this.verticalCanvas.clientHeight)
 
         this.verticalCnvCtx.scale(dpr, dpr)
 
         //scalling main canvas
-        this.spreadsheetCanvas.width = Math.floor(this.spreadsheetCanvas.clientWidth * dpr)
-        this.spreadsheetCanvas.height = Math.floor(this.spreadsheetCanvas.clientHeight * dpr)
+        this.spreadsheetCanvas.width = Math.floor(this.spreadsheetCanvas.clientWidth)
+        this.spreadsheetCanvas.height = Math.floor(this.spreadsheetCanvas.clientHeight)
 
 
         this.spreadsheetCnvCtx.scale(dpr, dpr)

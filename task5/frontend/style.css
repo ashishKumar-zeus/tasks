@@ -19,6 +19,12 @@ body > header .progressBar {
 body > header .pBarLabel {
   display: none;
 }
+body > header .graphBtns {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  padding: 5px 10px;
+}
 body > .mainContainer {
   margin: 0px;
   padding: 0px;
@@ -271,4 +277,34 @@ body > .mainContainer > .row > .excel > .footer > .selectedCellInfo > .selectedC
   box-sizing: border-box;
   font-size: 14px;
   color: grey;
+}
+body > .graph {
+  height: -moz-fit-content;
+  height: fit-content;
+  width: 500px;
+  position: absolute;
+  top: 20%;
+  left: 35%;
+  border: 1px dotted;
+  padding: 30px;
+  border-radius: 3px;
+  background-color: white;
+  border: 1px solid black;
+}
+body > .graph > .graphClose {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  border-radius: 5px;
+  right: 5px;
+  top: 5px;
+  text-align: center;
+  font-size: 12px;
+  color: white;
+  background-color: red;
 }/*# sourceMappingURL=style.css.map */

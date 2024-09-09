@@ -60,7 +60,29 @@ export class HeaderMaker {
 
         this.headerElement.appendChild(progressBar);
         this.headerElement.appendChild(pBarLabel)
+
+
+        const barGraphBtn = document.createElement('button');
+        barGraphBtn.className = ' graphBtns';
+        barGraphBtn.setAttribute('id','barGraphBtn')
+        barGraphBtn.innerHTML = 'Bar';
+
+
+        const pieGraphBtn = document.createElement('button');
+        pieGraphBtn.className = 'graphBtns';
+        pieGraphBtn.setAttribute('id','pieGraphBtn')
+
+        pieGraphBtn.innerHTML = 'Pie';
+
+        const lineGraphBtn = document.createElement('button');
+        lineGraphBtn.className = 'lineGraphBtn graphBtns';
+        lineGraphBtn.setAttribute('id','lineGraphBtn');
+        lineGraphBtn.innerHTML = 'Line';
         
+        this.headerElement.appendChild(barGraphBtn)
+        this.headerElement.appendChild(pieGraphBtn)
+        this.headerElement.appendChild(lineGraphBtn)
+
 
     }
 

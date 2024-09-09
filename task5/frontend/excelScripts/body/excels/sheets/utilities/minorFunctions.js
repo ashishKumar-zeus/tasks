@@ -97,6 +97,7 @@ export class MinorFunctions {
         }
 
         this.sheet.renderer.renderCanvas();
+        this.sheet.functionality.updateInputPositionAndValue();
     }
 
     async pasteClipboard(start, end) {

@@ -313,7 +313,6 @@ export class Functionalities {
 
     handleMouseDown(e) {
         e.preventDefault();
-        e.stopPropagation();
 
         // console.log("mouse down");
 
