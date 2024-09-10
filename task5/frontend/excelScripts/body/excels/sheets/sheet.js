@@ -31,16 +31,17 @@ export class Sheet {
         // Create the main graph div
         const graphDiv = document.createElement('div');
         graphDiv.classList.add('graph');
-        graphDiv.setAttribute('id','graph')
+        graphDiv.setAttribute('id',`graph_${this.id}`)
 
         // Create the close button
         const closeButton = document.createElement('button');
         closeButton.classList.add('graphClose');
+        closeButton.setAttribute('id',`graphCloseBtn_${this.id}`)
         closeButton.innerHTML = 'X'
 
         // Create the canvas element
         const canvas = document.createElement('canvas');
-        canvas.setAttribute('id', 'graphCanvas');
+        canvas.setAttribute('id', `graphCanvas_${this.id}`);
 
         // Append the button and canvas to the graph div
         graphDiv.appendChild(closeButton);
@@ -49,10 +50,6 @@ export class Sheet {
         // Append the graph div to the container
         document.body.appendChild(graphDiv);
 
-        // Event listener to close the graph when the close button is clicked
-        closeButton.addEventListener('click', function () {
-            graphDiv.remove();
-        });
     }
 
     createCanvas() {

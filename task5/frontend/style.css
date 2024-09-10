@@ -281,7 +281,8 @@ body > .mainContainer > .row > .excel > .footer > .selectedCellInfo > .selectedC
 body > .graph {
   height: -moz-fit-content;
   height: fit-content;
-  width: 500px;
+  width: -moz-fit-content;
+  width: fit-content;
   position: absolute;
   top: 20%;
   left: 35%;
@@ -290,6 +291,7 @@ body > .graph {
   border-radius: 3px;
   background-color: white;
   border: 1px solid black;
+  display: none;
 }
 body > .graph > .graphClose {
   margin: 0px;

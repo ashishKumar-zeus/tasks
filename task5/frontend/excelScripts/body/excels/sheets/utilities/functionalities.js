@@ -286,8 +286,6 @@ export class Functionalities {
 
 
     saveInputData() {
-        // console.log("saving data");
-
         if (!this.startInputCell) {
             return;
         }
@@ -298,6 +296,8 @@ export class Functionalities {
 
         if (data === '') {
             this.ll.deleteNode(rowInd + 1, colInd + 1);
+            this.handleApis.updateCellToBackend(rowInd,colInd,data)
+
         } else {
             this.ll.setValueAtInd(rowInd, colInd, data);
             this.handleApis.updateCellToBackend(rowInd,colInd,data)
@@ -420,6 +420,14 @@ export class Functionalities {
         const maxY = Math.max(startCellYTop, startCellYBottom, currCellYTop, currCellYBottom);
 
         this.renderer.drawSelectionRectangles(minX, minY, maxX - minX, maxY - minY);
+    }
+
+    getStartIndexEndIndex(){
+        return [this.startInputCell,this.endInputCell]
+    }
+
+    getSelectedCells(){
+        return this.selectedCells;
     }
 
     updateSelectionData(startCell, endCell) {

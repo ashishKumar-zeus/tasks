@@ -115,6 +115,8 @@ export class HandleApis {
         if (!this.tableName) {
             return;
         }
+
+        console.log("sending request to backend")
         let response = await fetch(`http://localhost:5228/api/Data/UpdateRecord?record=${JSON.stringify(data)}`,
             {
                 method: "POST",

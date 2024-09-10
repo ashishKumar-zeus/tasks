@@ -457,71 +457,164 @@ public class DataController : ControllerBase
 
     }
 
-[HttpPost("UpdateRecord")]
-public async Task<IActionResult> UpdateRecord(string record)
-{
-    if (string.IsNullOrEmpty(record))
+    [HttpPost("UpdateRecord")]
+    public async Task<IActionResult> UpdateRecord(string record)
     {
-        return BadRequest("Invalid record data.");
-    }
-
-    Console.WriteLine($"{record}");
-
-    // Deserialize the record into the UpdateModel
-    var json = JsonConvert.DeserializeObject<UpdateModel>(record);
-
-    if (json == null)
-    {
-        return BadRequest("Deserialization failed.");
-    }
-
-    // Extract email_id, columnName, and value from the deserialized object
-    string email = json.email_id ?? string.Empty;
-    string columnName = json.columnName ?? string.Empty;
-    string value = json.value ?? string.Empty;
-
-    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(columnName) || string.IsNullOrEmpty(value))
-    {
-        return BadRequest("Missing required data (email_id, columnName, or value).");
-    }
-
-    // Build the update query
-    var query = new StringBuilder($"UPDATE usertest2 SET ");
-    query.Append($"{columnName} = @value WHERE email_id = @Email");
-
-    try
-    {
-        // Establish connection with the database
-        using var mySqlConnection = new MySqlConnection(dbConnString);
-        await mySqlConnection.OpenAsync();
-
-        // Prepare the SQL command with parameterized query to avoid SQL injection
-        using var command = new MySqlCommand(query.ToString(), mySqlConnection);
-        command.Parameters.AddWithValue("@value", value);
-        command.Parameters.AddWithValue("@Email", email);
-
-        // Execute the update command
-        var result = await command.ExecuteNonQueryAsync();
-
-        // Close the connection (optional as it's within using statement)
-        await mySqlConnection.CloseAsync();
-
-        // Check if any rows were affected, indicating a successful update
-        if (result == 0)
+        if (string.IsNullOrEmpty(record))
         {
-            return BadRequest("Update failed: No records were affected.");
+            return BadRequest("Invalid record data.");
         }
 
-        Console.WriteLine($"Update successful: {result} record(s) updated.");
-        return Ok(new { Message = "Update successful", RowsAffected = result });
+        Console.WriteLine($"{record}");
+
+        // Deserialize the record into the UpdateModel
+        var json = JsonConvert.DeserializeObject<UpdateModel>(record);
+
+        if (json == null)
+        {
+            return BadRequest("Deserialization failed.");
+        }
+
+        // Extract email_id, columnName, and value from the deserialized object
+        string email = json.email_id ?? string.Empty;
+        string columnName = json.columnName ?? string.Empty;
+        string value = json.value ?? string.Empty;
+
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(columnName) || string.IsNullOrEmpty(value))
+        {
+            return BadRequest("Missing required data (email_id, columnName, or value).");
+        }
+
+        // Build the update query
+        var query = new StringBuilder($"UPDATE usertest2 SET ");
+        query.Append($"{columnName} = @value WHERE email_id = @Email");
+
+        try
+        {
+            // Establish connection with the database
+            using var mySqlConnection = new MySqlConnection(dbConnString);
+            await mySqlConnection.OpenAsync();
+
+            // Prepare the SQL command with parameterized query to avoid SQL injection
+            using var command = new MySqlCommand(query.ToString(), mySqlConnection);
+            command.Parameters.AddWithValue("@value", value);
+            command.Parameters.AddWithValue("@Email", email);
+
+            // Execute the update command
+            var result = await command.ExecuteNonQueryAsync();
+
+            // Close the connection (optional as it's within using statement)
+            await mySqlConnection.CloseAsync();
+
+            // Check if any rows were affected, indicating a successful update
+            if (result == 0)
+            {
+                return BadRequest("Update failed: No records were affected.");
+            }
+
+            Console.WriteLine($"Update successful: {result} record(s) updated.");
+            return Ok(new { Message = "Update successful", RowsAffected = result });
+        }
+        catch (MySqlException ex)
+        {
+            // Log the exception and return an InternalServerError response
+            Console.WriteLine($"Database error occurred: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the record.");
+        }
     }
-    catch (MySqlException ex)
+
+
+
+
+    public class BatchUpdateModel
     {
-        // Log the exception and return an InternalServerError response
-        Console.WriteLine($"Database error occurred: {ex.Message}");
-        return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the record.");
+        public string? Email { get; set; }
+        public List<ColumnUpdate>? Columns { get; set; }
     }
-}
+
+    public class ColumnUpdate
+    {
+        public string? ColumnName { get; set; }
+        public string? Value { get; set; }
+    }
+
+
+
+    [HttpPost("UpdateRecordsBatch")]
+    public async Task<IActionResult> UpdateRecordsBatch(List<BatchUpdateModel> updates)
+    {
+        if (updates == null || updates.Count == 0)
+        {
+            return BadRequest("Invalid update data.");
+        }
+
+        var query = new StringBuilder();
+        var emailList = new List<string>();
+
+        try
+        {
+            // Loop through each update entry
+            foreach (var update in updates)
+            {
+                var email = update.Email;
+                if (string.IsNullOrEmpty(email) || update.Columns == null || update.Columns.Count == 0)
+                {
+                    continue; // Skip invalid entries
+                }
+
+                emailList.Add(email);
+
+                // Create the dynamic update query for each column
+                foreach (var columnUpdate in update.Columns)
+                {
+                    query.AppendLine($"UPDATE usertest2 SET {columnUpdate.ColumnName} = CASE email_id");
+                    foreach (var emailId in emailList)
+                    {
+                        query.AppendLine($" WHEN '{emailId}' THEN @Value_{emailId}_{columnUpdate.ColumnName}");
+                    }
+                    query.AppendLine($" END WHERE email_id IN ({string.Join(",", emailList.Select(e => $"'{e}'"))});");
+                }
+            }
+
+            // Establish the database connection
+            using var mySqlConnection = new MySqlConnection(dbConnString);
+            await mySqlConnection.OpenAsync();
+
+            // Prepare the SQL command
+            using var command = new MySqlCommand(query.ToString(), mySqlConnection);
+
+            // Add parameters for each update value
+            foreach (var update in updates)
+            {
+                foreach (var columnUpdate in update.Columns!)
+                {
+                    command.Parameters.AddWithValue($"@Value_{update.Email}_{columnUpdate.ColumnName}", columnUpdate.Value);
+                }
+            }
+
+            // Execute the update query
+            var result = await command.ExecuteNonQueryAsync();
+
+            // Close the connection
+            await mySqlConnection.CloseAsync();
+
+            // Check if rows were affected
+            if (result == 0)
+            {
+                return BadRequest("Update failed: No records were affected.");
+            }
+
+            Console.WriteLine($"Batch update successful: {result} record(s) updated.");
+            return Ok(new { Message = "Batch update successful", RowsAffected = result });
+        }
+        catch (MySqlException ex)
+        {
+            // Log the exception and return an error response
+            Console.WriteLine($"Database error occurred: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the records.");
+        }
+    }
+
 
 
 

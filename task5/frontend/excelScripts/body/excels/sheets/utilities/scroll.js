@@ -57,7 +57,7 @@ export class Scroll {
 
         this.renderer.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled);
         this.functionality.getScrollInstance(this)
-        this.functionality.saveInputData()
+        // this.functionality.saveInputData()
         this.functionality.updateInputPositionAndValue();
         this.functionality.handleRectangleToMake();
     }

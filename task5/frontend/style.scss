@@ -330,7 +330,7 @@ body {
     >.graph {
 
         height: fit-content;
-        width: 500px;
+        width: fit-content;
         position: absolute;
         top: 20%;
         left: 35%;
@@ -339,6 +339,7 @@ body {
         border-radius: 3px;
         background-color: white;
         border: 1px solid black;
+        display: none;
 
 
         

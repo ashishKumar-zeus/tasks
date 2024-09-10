@@ -219,6 +219,7 @@ export class ExcelMaker {
 
         //adding First Row
         this.addNewRow();
+        // this.addNewCol(1);
         this.handleResize()
 
     }

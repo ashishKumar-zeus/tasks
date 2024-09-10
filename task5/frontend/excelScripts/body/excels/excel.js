@@ -97,6 +97,7 @@ export class Excel {
     }
 
     switchSheet(sheetId) {
+
         if (this.currentSheetId) {
             this.sheetContainer.innerHTML = '';
             const previousActiveButton = document.querySelector(`.footer button[data-sheet-id="${this.currentSheetId}"]`);
@@ -113,6 +114,8 @@ export class Excel {
         if (currentActiveButton) {
             currentActiveButton.classList.add('active');
         }
+
+        console.log(this.currentSheetId)
     }
 
     deleteSheet(sheetId) {
