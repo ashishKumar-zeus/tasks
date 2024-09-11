@@ -55,22 +55,55 @@ export class MinorFunctions {
         copyToClipboard(arrayToClipboardString);
 
     }
+    
 
     deleteFromLinkedList(start, end) {
+        // List to store the desired structure
+        const batchDeleteArray = [];
 
-        let [rowStart, colStart, rowEnd, colEnd] = this.getRowColStartEnd(start, end)
+        // Get start and end row/column indices
+        let [rowStart, colStart, rowEnd, colEnd] = this.getRowColStartEnd(start, end);
 
+        // Iterate through each row in the range
         for (let i = rowStart; i <= rowEnd; i++) {
+            const email = this.getPrimaryKeyEmail(i); // Get the primary key email
 
+            // Initialize an object for this row
+            let rowObject = {
+                email: email,
+                columns: []
+            };
+
+            // Iterate through each column in the range
             for (let j = colStart; j <= colEnd; j++) {
+                const columnName = this.getColumnNameFromInd(j); // Get the column name
 
-                this.sheet.ll.deleteNode(i+1, j+1);
+                // Log the email and column name (for debugging as in your original code)
+                console.log(email);
+                console.log(columnName);
 
+                // Delete the node in the linked list
+                this.sheet.ll.deleteNode(i + 1, j + 1);
+
+                // Add the column name and an empty value to the row object
+                rowObject.columns.push({
+                    columnName: columnName,
+                    value: "" // Set value to empty string as per requirement
+                });
             }
+
+            // Add the row object to the batch delete array
+            batchDeleteArray.push(rowObject);
         }
 
+        console.log(batchDeleteArray)
 
+        this.sheet.handleApis.bulkUpdateToBackend(batchDeleteArray);
+
+        // Return the constructed list of dictionaries
+        // return batchDeleteArray;
     }
+
 
     getRowColStartEnd(start, end) {
 
@@ -83,22 +116,85 @@ export class MinorFunctions {
         return [rowStart, colStart, rowEnd, colEnd];
     }
 
+
+    getPrimaryKeyEmail(rowInd) {
+        // console.log(this.sheet.headerCellsMaker.verticalArr[rowInd].next.data);
+        return (this.sheet.headerCellsMaker.verticalArr[rowInd].next.data)
+    }
+
+    getColumnNameFromInd(colInd) {
+        // console.log(this.sheet.headerCellsMaker.horizontalArr[colInd].next.data);
+        return (this.sheet.headerCellsMaker.horizontalArr[colInd].next.data);
+    }
+
+    // pasteToLinkedList(start, end, dataArr) {
+    //     // this.deleteFromLinkedList(start, end);
+
+    //     let [rowStart, colStart, rowEnd , colEnd] = this.getRowColStartEnd(start, end);
+
+
+    //     for (let i = 0; (i < dataArr.length); i++) {
+    //         console.log(this.getPrimaryKeyEmail(i+rowStart));
+    //         for (let j = 0; (j < dataArr[i].length); j++) {
+    //             console.log(this.getColumnNameFromInd(j+colStart));
+    //             this.sheet.ll.setValueAtInd(i + rowStart, j + colStart, dataArr[i][j]);
+    //         }
+    //     }
+
+    //     this.sheet.renderer.renderCanvas();
+    //     this.sheet.functionality.updateInputPositionAndValue();
+    // }
     pasteToLinkedList(start, end, dataArr) {
+        // List to store the desired structure
+        const batchUpdateArray = [];
 
-        this.deleteFromLinkedList(start, end);
+        // Get start and end row/column indices
+        let [rowStart, colStart, rowEnd, colEnd] = this.getRowColStartEnd(start, end);
 
-        let [rowStart, colStart, rowEnd , colEnd] = this.getRowColStartEnd(start, end);
+        // Iterate through each row in the data array
+        for (let i = 0; i < dataArr.length; i++) {
+            const email = this.getPrimaryKeyEmail(i + rowStart); // Get the primary key email
 
-        for (let i = 0; (i < dataArr.length); i++) {
-            for (let j = 0; (j < dataArr[i].length); j++) {
-                console.log(i + rowStart, j + colStart, dataArr[i][j])
-                this.sheet.ll.setValueAtInd(i + rowStart, j + colStart, dataArr[i][j]);
+            // Initialize an object for this row
+            let rowObject = {
+                email: email,
+                columns: []
+            };
+
+            // Iterate through each column in the row
+            for (let j = 0; j < dataArr[i].length; j++) {
+                const columnName = this.getColumnNameFromInd(j + colStart); // Get the column name
+                const value = dataArr[i][j]; // Get the value from the data array
+
+                // Log the email and column name (as in your original code)
+                console.log(email);
+                console.log(columnName);
+
+                // Set the value in the linked list
+                this.sheet.ll.setValueAtInd(i + rowStart, j + colStart, value);
+
+                // Add the column name and value to the row object
+                rowObject.columns.push({
+                    columnName: columnName,
+                    value: value
+                });
             }
+
+            // Add the row object to the batch update array
+            batchUpdateArray.push(rowObject);
         }
 
+        // Render and update input positions (as in your original code)
         this.sheet.renderer.renderCanvas();
         this.sheet.functionality.updateInputPositionAndValue();
+
+        console.log(batchUpdateArray);
+
+        this.sheet.handleApis.bulkUpdateToBackend(batchUpdateArray);
+
     }
+
+
 
     async pasteClipboard(start, end) {
         try {

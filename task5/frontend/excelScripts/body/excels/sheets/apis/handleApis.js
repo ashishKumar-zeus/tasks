@@ -7,7 +7,9 @@ export class HandleApis {
     }
 
     init() {
-        this.tableName = null;
+        this.tableName = "usertest2";
+        this.getDataInRange(0, 2000);
+
     }
 
 
@@ -101,6 +103,10 @@ export class HandleApis {
 
         // console.log(this.sheet.headerCellsMaker.verticalArr[rowInd]);
 
+        if(!this.sheet.headerCellsMaker.verticalArr[rowInd].next){
+            return;
+        }
+
         const email_id =this.sheet.headerCellsMaker.verticalArr[rowInd].next.data;
 
         const columnName = this.sheet.headerCellsMaker.horizontalArr[colInd].next.data;
@@ -124,6 +130,30 @@ export class HandleApis {
                     'Content-Type': 'application/json',
                 },
                 body: ""
+            }
+        );
+
+
+
+    }
+
+    
+    async bulkUpdateToBackend(batchUpdateArray) {
+
+        // console.log(this.sheet.headerCellsMaker.verticalArr[rowInd]);
+
+        if (!this.tableName) {
+            return;
+        }
+
+        console.log("sending request to backend")
+        let response = await fetch(`http://localhost:5228/api/Data/UpdateRecordsBatch`,
+            {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(batchUpdateArray)
             }
         );
 

@@ -162,7 +162,7 @@ export class Sheet {
 
         this.minorFunctions = new MinorFunctions(this);
 
-        this.ll = new LinkedList(this.headerCellsMaker);
+        this.ll = new LinkedList(this.headerCellsMaker,this.handleApis);
 
         this.renderer = new Renderer(this)
 

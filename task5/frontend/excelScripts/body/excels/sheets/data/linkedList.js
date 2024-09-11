@@ -15,9 +15,10 @@ class Node {
 export class LinkedList {
 
     // Initialize Class Variables
-    constructor(headerCellsMaker) {
+    constructor(headerCellsMaker,handleApis) {
 
         this.headerCellsMaker = headerCellsMaker;
+        this.handleApis = handleApis;
 
         this.head = null;
         this.size = 0;
@@ -43,6 +44,10 @@ export class LinkedList {
 
     findAtIndex(rowInd, colInd) {
         this.getUpdatedArray();
+
+        if(rowInd >= this.verticalArr.length || colInd >= this.horizontalArr.length){
+            return null;
+        }
 
         let currEle = this.verticalArr[rowInd].next;
 
@@ -73,24 +78,31 @@ export class LinkedList {
 
         let currEle = this.findAtIndex(rowInd, colInd);
         if (currEle) {
-            // console.log("data updated")
+            if(currEle.data == newValue){
+                return;
+            }
             currEle.data = newValue;
         }
         else {
-            console.log(rowInd, colInd, newValue)
+            // console.log(rowInd, colInd, newValue)
             // console.log("new data added")
             this.createNewNode(rowInd + 1, colInd + 1, newValue)
         }
+
 
     }
 
 
     insertMultipleDataInLL(jsonData,startInd) {
 
-        Object.keys(jsonData[0]).forEach((d, i) => {
-            this.createNewNode(1, i+1, d);;
-          });
-          startInd++;
+        if(startInd == 0 ){
+
+            Object.keys(jsonData[0]).forEach((d, i) => {
+                this.createNewNode(1, i+1, d);;
+              });
+              startInd++;
+    
+        }
 
 
         //inserts multiple data from json to LL
@@ -100,7 +112,6 @@ export class LinkedList {
             Object.keys(jsonData[i - 1]).forEach(key => {
 
                 if (jsonData[i-1]) {
-                    // console.log(i+startInd, j, jsonData[i-1][key]);
                     this.createNewNode(i+startInd, j, jsonData[i-1][key]);
                     j++;
                 }
@@ -109,7 +120,6 @@ export class LinkedList {
 
         }
 
-        console.log("data inserted to ll")
     }
 
 

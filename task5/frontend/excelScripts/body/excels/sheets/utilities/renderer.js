@@ -506,7 +506,6 @@ export class Renderer {
     drawMarchingAnts(x, y, width, height) {
         this.renderCanvas();
         this.startMarchingAnts(x, y, width, height);
-
         this.drawRectangleOnHorizontalCanvas(x, width)
         this.drawRectangleOnVerticalCanvas(y, height);
     }

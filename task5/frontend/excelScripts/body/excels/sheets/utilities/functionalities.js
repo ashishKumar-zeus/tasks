@@ -11,7 +11,7 @@ export class Functionalities {
         this.inputEle = sheet.inputEle;
         this.minorFunctions = sheet.minorFunctions;
         this.updateSelectedCellToUI = sheet.updateSelectedCellsInfo;
-        this.handleApis  = sheet.handleApis;
+        this.handleApis = sheet.handleApis;
         //canvas
         this.horizontalCanvas = sheet.horizontalCanvas;
         this.verticalCanvas = sheet.verticalCanvas;
@@ -63,6 +63,7 @@ export class Functionalities {
         this.handleMouseEventsOnSheet();
         this.handleKeyEventsOnSheet();
 
+
     }
 
 
@@ -85,11 +86,35 @@ export class Functionalities {
         this.scroll = scrollInstance;
     }
 
+
+    getColOnHorizontalCanvas() {
+
+    }
+
     handleResizeHorizontal() {
 
         let resizingColumn = 0;
         let startXPos = 0;
         let resizeWidth = this.resizeWidth;
+
+        
+        let selectColumnStart = 0;
+        let selectColumnEnd = 0;
+
+
+
+        const getCurrColIndex = (pos) => {
+            this.updateScrollChanges();
+            let colStartPosition = this.horStartPos;
+            let colInd = this.currStartColInd;
+            while (colInd < this.horizontalArr.length && colStartPosition < pos) {
+                colStartPosition += this.horizontalArr[colInd].width;
+                colInd += 1;
+            }
+
+            return colInd
+        }
+
 
 
         const checkForResizeRange = (pos) => {
@@ -103,13 +128,15 @@ export class Functionalities {
             if (colInd > 0 && Math.abs(pos - colStartPosition) < resizeWidth / 2) {
                 return [true, colInd - 1];
             }
-            return [false, ""];
+            return [false, colInd];
         };
 
         const onMouseDown = (e) => {
 
             e.preventDefault()
             e.stopPropagation();
+
+
             startXPos = e.offsetX;
 
             let [isResizable, colInd] = checkForResizeRange(startXPos);
@@ -118,6 +145,12 @@ export class Functionalities {
             if (isResizable) {
                 this.isResizingHor = true;
                 resizingColumn = colInd;
+            }
+            else{
+                this.isSelectingColumn = true;
+                selectColumnStart = getCurrColIndex(startXPos);
+                selectColumnEnd = selectColumnStart;
+
             }
         };
 
@@ -141,6 +174,29 @@ export class Functionalities {
                 this.updateInputPositionAndValue();
                 this.handleRectangleToMake();
             }
+            else if(this.isSelectingColumn){
+                selectColumnEnd = getCurrColIndex(endXPos)
+                console.log(selectColumnStart , selectColumnEnd);
+                let startColIndPos = this.headerCellsMaker.horizontalArr[selectColumnStart-1].x;
+                let width = this.headerCellsMaker.horizontalArr[selectColumnEnd-1].x + this.headerCellsMaker.horizontalArr[selectColumnEnd-1].width - startColIndPos;
+                
+                this.renderer.renderCanvas();
+                this.updateInputPositionAndValue();
+                this.renderer.drawRectangleOnHorizontalCanvas(startColIndPos , width);
+
+                this.startInputCell = {
+                    rowInd : 0,
+                    colInd: selectColumnStart-1
+                }
+
+                this.endInputCell = { 
+                    rowInd : this.headerCellsMaker.verticalArr.length-1,
+                    colInd : selectColumnEnd -1 
+                }
+                
+                this.updateSelectionData(this.startInputCell, this.endInputCell)
+                this.handleRectangleToMake();
+            }
         };
 
 
@@ -150,6 +206,10 @@ export class Functionalities {
             e.stopPropagation();
             if (this.isResizingHor) {
                 this.isResizingHor = false;
+            }
+
+            if (this.isSelectingColumn) {
+                this.isSelectingColumn = false;
             }
         };
 
@@ -161,6 +221,8 @@ export class Functionalities {
         window.addEventListener('mouseup', onMouseUp);
 
     }
+
+
 
     handleResizeVertical() {
         let resizingRow = 0;
@@ -209,10 +271,10 @@ export class Functionalities {
                 this.headerCellsMaker.resizeRow(resizingRow, diff);
 
                 startYPos = endYPos;
-
-                this.renderer.renderCanvas();
-                this.updateInputPositionAndValue();
-                this.handleRectangleToMake();
+                
+            this.renderer.renderCanvas();
+            this.updateInputPositionAndValue();
+            this.handleRectangleToMake();
             }
         };
 
@@ -294,14 +356,14 @@ export class Functionalities {
         let colInd = this.startInputCell.colInd;
         let data = this.inputEle.value;
 
-        if (data === '') {
-            this.ll.deleteNode(rowInd + 1, colInd + 1);
-            this.handleApis.updateCellToBackend(rowInd,colInd,data)
+        // if (data === '') {
+        //     this.ll.deleteNode(rowInd + 1, colInd + 1);
+        //     this.handleApis.updateCellToBackend(rowInd,colInd,data)
 
-        } else {
-            this.ll.setValueAtInd(rowInd, colInd, data);
-            this.handleApis.updateCellToBackend(rowInd,colInd,data)
-        }
+        // } else {
+        this.ll.setValueAtInd(rowInd, colInd, data);
+        this.handleApis.updateCellToBackend(rowInd, colInd, data)
+        // }
 
         this.renderer.renderCanvas();
     }
@@ -326,6 +388,7 @@ export class Functionalities {
         //reset marching ants event if present
 
         this.renderer.endMarchingAnts();
+        this.isMarching = false;
 
         this.startInputCell = this.getRowColFromCanvasPosition(e.offsetX, e.offsetY);
         this.endInputCell = this.startInputCell;
@@ -419,14 +482,20 @@ export class Functionalities {
         const maxX = Math.max(startCellXTop, startCellXBottom, currCellXTop, currCellXBottom);
         const maxY = Math.max(startCellYTop, startCellYBottom, currCellYTop, currCellYBottom);
 
+        if (this.isMarching) {
+            this.renderer.endMarchingAnts()
+            // console.log("called marching ant from rectangle make")
+            this.renderer.drawMarchingAnts(minX, minY, maxX - minX, maxY - minY);
+        }
+
         this.renderer.drawSelectionRectangles(minX, minY, maxX - minX, maxY - minY);
     }
 
-    getStartIndexEndIndex(){
-        return [this.startInputCell,this.endInputCell]
+    getStartIndexEndIndex() {
+        return [this.startInputCell, this.endInputCell]
     }
 
-    getSelectedCells(){
+    getSelectedCells() {
         return this.selectedCells;
     }
 
@@ -505,18 +574,34 @@ export class Functionalities {
 
             if (((e.ctrlKey && e.key === 'c' && this.isDragging == false) || (e.ctrlKey && e.key === 'x' && this.isDragging == false))) {
                 this.renderer.endMarchingAnts();//if exists
+                this.isMarching = false;
                 let { minX, minY, maxX, maxY } = this.getXYWidthHeight();
                 this.minorFunctions.copyToClipboard2DArr(this.selectedCells);
+                // console.log("marching ants ")
                 this.renderer.drawMarchingAnts(minX, minY, maxX - minX, maxY - minY);
+                this.isMarching = true;
             }
             else if ((e.ctrlKey && e.key === 'v' && this.isDragging == false)) {
-
+                this.isMarching = false;
                 this.minorFunctions.pasteClipboard(this.startInputCell, this.endInputCell);
-            }
-            else if((e.key === 'Delete')){
-                this.minorFunctions.deleteFromLinkedList(this.startInputCell,this.endInputCell);
+
+
                 this.renderer.renderCanvas();
+                this.updateInputPositionAndValue();
+                this.handleRectangleToMake();
+
             }
+            else if ((e.key === 'Delete')) {
+                this.minorFunctions.deleteFromLinkedList(this.startInputCell, this.endInputCell);
+
+
+                this.renderer.renderCanvas();
+                this.updateInputPositionAndValue();
+                this.handleRectangleToMake();
+
+            }
+
+
         })
 
     }
