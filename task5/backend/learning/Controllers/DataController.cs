@@ -63,6 +63,7 @@ public class DataController : ControllerBase
 
                 var data = new DataModel
                 {
+                    row_id = reader.GetInt32("row_id"),
                     Email_id = reader.GetString("Email_id"),
                     Name = reader.GetString("Name"),
                     Country = reader.GetString("Country"),
@@ -418,6 +419,7 @@ public class DataController : ControllerBase
                     {
                         var data = new DataModel
                         {
+                            row_id = reader.GetInt32("row_id"),
                             Email_id = reader.GetString("Email_id"),
                             Name = reader.GetString("Name"),
                             Country = reader.GetString("Country"),
@@ -561,7 +563,7 @@ public class DataController : ControllerBase
                 var email = update.Email;
                 if (string.IsNullOrEmpty(email) || update.Columns == null || update.Columns.Count == 0)
                 {
-                    continue; // Skip invalid entries
+                    continue;
                 }
 
                 emailList.Add(email);
@@ -615,6 +617,73 @@ public class DataController : ControllerBase
             Console.WriteLine($"Database error occurred: {ex.Message}");
             return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the records.");
         }
+    }
+
+
+
+
+
+    [HttpPost("FindRow")]
+    public async Task<IActionResult> FindIds([FromBody] string findText)
+    {
+        if (string.IsNullOrWhiteSpace(findText))
+        {
+            return BadRequest("Search term cannot be empty.");
+        }
+
+        var ids = new List<int>();
+
+        // Get property names of the Excel class
+        var properties = typeof(DataModel).GetProperties();
+
+        // Build SQL query with proper syntax
+        var queryBuilder = new StringBuilder("SELECT row_id FROM usertest2 WHERE ");
+
+        for (int i = 0; i < properties.Length; i++)
+        {
+            var property = properties[i];
+            queryBuilder.Append($"{property.Name} LIKE @searchTerm");
+            if (i < properties.Length - 1)
+            {
+                queryBuilder.Append(" OR ");
+            }
+        }
+
+        var query = queryBuilder.ToString();
+
+        try
+        {
+            using var mySqlConnection = new MySqlConnection(dbConnString);
+
+            // Establish connection to MySQL
+            await mySqlConnection.OpenAsync();
+
+            // Create the command
+            await using var command = new MySqlCommand(query, mySqlConnection);
+            command.Parameters.AddWithValue("@searchTerm", "%" + findText + "%");
+
+            // Execute the query and process results
+            await using var reader = await command.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                ids.Add(reader.GetInt32("row_id"));
+            }
+
+            await mySqlConnection.CloseAsync();
+        }
+        catch (MySqlException ex)
+        {
+            return StatusCode(500, $"Database error: {ex.Message}");
+        }
+
+        if (ids.Count == 0)
+        {
+            return NotFound("No records found matching the search term.");
+        }
+
+        // Return the list of matching IDs
+        return Ok(ids);
     }
 
 

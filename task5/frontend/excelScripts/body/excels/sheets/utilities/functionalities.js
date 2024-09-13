@@ -42,6 +42,8 @@ export class Functionalities {
         //scroll
         this.scroll = null;
 
+        this.sheet = sheet;
+
         //creating bounds for input selection and scrolling with selection
         this.handleMouseDownBound = this.handleMouseDown.bind(this);
         this.handleMouseMoveBound = this.handleMouseMove.bind(this);
@@ -63,6 +65,8 @@ export class Functionalities {
         this.handleMouseEventsOnSheet();
         this.handleKeyEventsOnSheet();
 
+
+        this.handleDocumentClick()
 
     }
 
@@ -97,9 +101,9 @@ export class Functionalities {
         let startXPos = 0;
         let resizeWidth = this.resizeWidth;
 
-        
-        let selectColumnStart = 0;
-        let selectColumnEnd = 0;
+
+        this.selectColumnStart = 0;
+        this.selectColumnEnd = 0;
 
 
 
@@ -140,16 +144,25 @@ export class Functionalities {
             startXPos = e.offsetX;
 
             let [isResizable, colInd] = checkForResizeRange(startXPos);
-            isResizable ? this.horizontalCanvas.style.cursor = 'col-resize' : "";
+            isResizable && !this.isSelectingColumn ? this.horizontalCanvas.style.cursor = 'col-resize' : "";
 
             if (isResizable) {
                 this.isResizingHor = true;
                 resizingColumn = colInd;
             }
-            else{
+            else {
+                this.selectedCells = []
+                this.startInputCell = null
+                this.endInputCell = null
+                this.hideInputElement()
+                this.isInputOn = false;
+                this.handleRowOn = false;
                 this.isSelectingColumn = true;
-                selectColumnStart = getCurrColIndex(startXPos);
-                selectColumnEnd = selectColumnStart;
+                this.selectColumnStart = getCurrColIndex(startXPos);
+                this.selectColumnEnd = this.selectColumnStart;
+                this.handleColumnOn = true;
+                this.handleSelection()
+
 
             }
         };
@@ -161,9 +174,9 @@ export class Functionalities {
             let endXPos = e.offsetX;
 
             let [isResizable, colInd] = checkForResizeRange(endXPos);
-            isResizable ? this.horizontalCanvas.style.cursor = 'col-resize' : this.horizontalCanvas.style.cursor = "default";
+            isResizable && !this.isSelectingColumn ? this.horizontalCanvas.style.cursor = 'col-resize' : this.horizontalCanvas.style.cursor = "default";
 
-            if (this.isResizingHor) {
+            if (this.isResizingHor && !this.isSelectingColumn) {
                 const diff = endXPos - startXPos;
                 this.horizontalCanvas.style.cursor = 'col-resize';
                 this.headerCellsMaker.resizeColumn(resizingColumn, diff);
@@ -171,31 +184,16 @@ export class Functionalities {
                 startXPos = endXPos;
 
                 this.renderer.renderCanvas();
-                this.updateInputPositionAndValue();
+                // this.updateInputPositionAndValue();
                 this.handleRectangleToMake();
             }
-            else if(this.isSelectingColumn){
-                selectColumnEnd = getCurrColIndex(endXPos)
-                console.log(selectColumnStart , selectColumnEnd);
-                let startColIndPos = this.headerCellsMaker.horizontalArr[selectColumnStart-1].x;
-                let width = this.headerCellsMaker.horizontalArr[selectColumnEnd-1].x + this.headerCellsMaker.horizontalArr[selectColumnEnd-1].width - startColIndPos;
-                
-                this.renderer.renderCanvas();
-                this.updateInputPositionAndValue();
-                this.renderer.drawRectangleOnHorizontalCanvas(startColIndPos , width);
+            else if (this.isSelectingColumn) {
+                this.isInputOn = false
+                this.selectColumnEnd = getCurrColIndex(endXPos)
 
-                this.startInputCell = {
-                    rowInd : 0,
-                    colInd: selectColumnStart-1
-                }
+                this.handleSelection();
+                this.handleScrolling(e)
 
-                this.endInputCell = { 
-                    rowInd : this.headerCellsMaker.verticalArr.length-1,
-                    colInd : selectColumnEnd -1 
-                }
-                
-                this.updateSelectionData(this.startInputCell, this.endInputCell)
-                this.handleRectangleToMake();
             }
         };
 
@@ -214,10 +212,10 @@ export class Functionalities {
         };
 
         this.horizontalCanvas.addEventListener('mousedown', onMouseDown);
-        this.horizontalCanvas.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mousemove', onMouseMove);
 
-        this.horizontalCanvas.addEventListener('mouseup', onMouseUp);
+        window.addEventListener('mouseup', onMouseUp);
         window.addEventListener('mouseup', onMouseUp);
 
     }
@@ -228,6 +226,22 @@ export class Functionalities {
         let resizingRow = 0;
         let startYPos = 0;
         let resizeHeight = this.resizeHeight;
+
+        this.selectRowStart = 0;
+        this.selectRowEnd = 0;
+
+
+        const getCurrRowIndex = (pos) => {
+            this.updateScrollChanges();
+            let rowStartPosition = this.verStartPos;
+            let rowInd = this.currStartRowInd;
+            while (rowInd < this.verticalArr.length && rowStartPosition < pos) {
+                rowStartPosition += this.verticalArr[rowInd].height;
+                rowInd += 1;
+            }
+
+            return rowInd
+        }
 
         const checkForResizeRange = (pos) => {
             this.updateScrollChanges();
@@ -255,6 +269,21 @@ export class Functionalities {
                 this.isResizingVer = true;
                 resizingRow = rowInd;
             }
+            else {
+                this.selectedCells = []
+                this.startInputCell = null
+                this.endInputCell = null
+                this.hideInputElement()
+                this.isInputOn = false;
+                this.handleColumnOn = false;
+                this.isSelectingRow = true;
+                this.isMarching = false;
+                this.selectRowStart = getCurrRowIndex(startYPos);
+                this.selectRowEnd = this.selectRowStart;
+                this.handleRowOn = true;
+                this.handleSelection()
+
+            }
         };
 
         const onMouseMove = (e) => {
@@ -265,16 +294,25 @@ export class Functionalities {
             let [isResizable, rowInd] = checkForResizeRange(endYPos);
             isResizable ? this.verticalCanvas.style.cursor = 'row-resize' : this.verticalCanvas.style.cursor = "default";
 
-            if (this.isResizingVer) {
+            if (this.isResizingVer && !this.isSelectingColumn) {
                 const diff = endYPos - startYPos;
                 this.verticalCanvas.style.cursor = 'row-resize';
                 this.headerCellsMaker.resizeRow(resizingRow, diff);
 
                 startYPos = endYPos;
-                
-            this.renderer.renderCanvas();
-            this.updateInputPositionAndValue();
-            this.handleRectangleToMake();
+
+                this.renderer.renderCanvas();
+                // this.updateInputPositionAndValue();
+                this.handleRectangleToMake();
+            }
+            else if (this.isSelectingRow) {
+
+                this.isInputOn = false
+                this.selectRowEnd = getCurrRowIndex(endYPos)
+
+                this.handleSelection()
+                this.handleScrolling(e)
+
             }
         };
 
@@ -283,6 +321,9 @@ export class Functionalities {
             e.stopPropagation();
             if (this.isResizingVer) {
                 this.isResizingVer = false;
+            }
+            if (this.isSelectingRow) {
+                this.isSelectingRow = false;
             }
         };
 
@@ -325,7 +366,7 @@ export class Functionalities {
 
 
     updateInputPositionAndValue() {
-        if (!this.startInputCell) {
+        if (!this.startInputCell || this.handleColumnOn) {
             return;
         }
 
@@ -345,6 +386,23 @@ export class Functionalities {
         this.inputEle.blur();
 
     }
+
+    hideInputElement() {
+        if (this.isInputOn) {
+            this.inputEle.style.display = 'none';
+
+        }
+    }
+
+    handleDocumentClick() {
+        window.addEventListener("click", (e) => {
+
+            if (!this.sheet.sheet.contains(e.target)) {
+                this.hideInputElement();
+            }
+        });
+    }
+
 
 
     saveInputData() {
@@ -385,8 +443,13 @@ export class Functionalities {
 
         this.isInputOn = true;
 
-        //reset marching ants event if present
 
+        this.handleColumnOn = false;
+        this.selectColumnStart = null;
+        this.selectColumnEnd = null;
+
+        //reset marching ants event if present
+        this.handleColumnOn = false;
         this.renderer.endMarchingAnts();
         this.isMarching = false;
 
@@ -398,11 +461,10 @@ export class Functionalities {
         this.isDragging = true;
         this.selectedCells = [];
 
-        if (this.startInputCell) {
+        if (this.startInputCell && !this.isSelectingColumn) {
             this.updateSelectionData(this.startInputCell, this.startInputCell);
         }
         this.handleRectangleToMake(e);
-
 
         // Add event listeners for mousemove and mouseup
         this.addMouseEventListeners();
@@ -411,6 +473,10 @@ export class Functionalities {
     handleMouseMove(e) {
         e.preventDefault();
         e.stopPropagation();
+
+        if (this.isSelectingColumn) {
+            return;
+        }
 
         if (this.isInputOn && this.isDragging) {
             this.handleScrolling(e);
@@ -460,7 +526,84 @@ export class Functionalities {
         }
     }
 
+    getXWidthForColumnSelect(colStartInd, colEndInd) {
+        let colStartLeft = this.horizontalArr[colStartInd - 1].x;
+        let colStartRight = this.horizontalArr[colStartInd - 1].x + this.horizontalArr[colStartInd - 1].width;
+        // console.log(colStartLeft,colStartRight)
+
+        let colEndLeft = this.horizontalArr[colEndInd - 1].x;
+        let colEndRight = this.horizontalArr[colEndInd - 1].x + this.horizontalArr[colEndInd - 1].width;
+        // console.log(colEndLeft,colEndRight)
+
+
+        let x = Math.min(colStartLeft, colEndLeft)
+        let end = Math.max(colStartRight, colEndRight)
+
+        return [x, end - x]
+
+    }
+
+    getYHeightForRowSelect(rowStartInd, rowEndInd) {
+        let rowStartTop = this.verticalArr[rowStartInd - 1].y;
+        let rowStartBottom = this.verticalArr[rowStartInd - 1].y + this.verticalArr[rowStartInd - 1].height;
+        // console.log(colStartLeft,colStartRight)
+
+        let rowEndTop = this.verticalArr[rowEndInd - 1].y;
+        let rowEndBottom = this.verticalArr[rowEndInd - 1].y + this.verticalArr[rowEndInd - 1].height;
+        // console.log(colEndLeft,colEndRight)
+
+
+        let y = Math.min(rowStartTop, rowEndTop)
+        let end = Math.max(rowStartBottom, rowEndBottom)
+
+        return [y, end - y]
+
+    }
+
+    getScrolls() {
+        let horizontallyScrolled = this.sheet.scroll.getHorizontallyScrolled();
+        let verticallyScrolled = this.sheet.scroll.getVerticallyScrolled();
+        return [horizontallyScrolled, verticallyScrolled]
+    }
+
+    handleColumnSelection(horizontallyScrolled) {
+        this.renderer.renderCanvas();
+        let [x, width] = this.getXWidthForColumnSelect(this.selectColumnStart, this.selectColumnEnd)
+        this.renderer.drawRectangleOnHorizontalCanvas(x - horizontallyScrolled, width);
+        this.renderer.drawRectangleOnVerticalCanvas(0, this.spreadsheetCanvas.height)
+        this.renderer.drawRectangleOnMainCanvas(x - horizontallyScrolled, 0, width, this.spreadsheetCanvas.height)
+    }
+
+
+    handleRowSelection(verticallyScrolled) {
+        this.renderer.renderCanvas();
+        let [y, height] = this.getYHeightForRowSelect(this.selectRowStart, this.selectRowEnd)
+        this.renderer.drawRectangleOnHorizontalCanvas(0, this.spreadsheetCanvas.width);
+        this.renderer.drawRectangleOnVerticalCanvas(y - verticallyScrolled, height)
+        this.renderer.drawRectangleOnMainCanvas(0, y - verticallyScrolled, this.spreadsheetCanvas.width, height)
+    }
+
+    handleSelection() {
+        let [horizontallyScrolled, verticallyScrolled] = this.getScrolls()
+        this.renderer.renderCanvas();
+        if (this.startInputCell && this.endInputCell) {
+            console.log("calling handle rect to make ", this.startInputCell, this.endInputCell)
+            this.handleRectangleToMake();
+        }
+        else if (this.handleColumnOn) {
+            console.log("calling column select ", this.handleColumnOn)
+            this.handleColumnSelection(horizontallyScrolled)
+        }
+        else if (this.handleRowOn) {
+            console.log("calling row select ", this.handleRowOn)
+            this.handleRowSelection(verticallyScrolled)
+        }
+    }
+
     handleRectangleToMake() {
+
+        console.log(this.startInputCell, this.endInputCell
+        )
         if (!this.startInputCell || !this.endInputCell) {
             return;
         }
@@ -484,7 +627,6 @@ export class Functionalities {
 
         if (this.isMarching) {
             this.renderer.endMarchingAnts()
-            // console.log("called marching ant from rectangle make")
             this.renderer.drawMarchingAnts(minX, minY, maxX - minX, maxY - minY);
         }
 
@@ -541,7 +683,6 @@ export class Functionalities {
         this.spreadsheetCanvas.addEventListener('pointerdown', this.handleMouseDownBound);
     }
 
-
     getXYWidthHeight() {
 
         if (!this.startInputCell || !this.endInputCell) {
@@ -591,7 +732,7 @@ export class Functionalities {
                 this.handleRectangleToMake();
 
             }
-            else if ((e.key === 'Delete')) {
+            else if ((e.key === 'Delete') && !this.handleColumnOn) {
                 this.minorFunctions.deleteFromLinkedList(this.startInputCell, this.endInputCell);
 
 
@@ -599,6 +740,14 @@ export class Functionalities {
                 this.updateInputPositionAndValue();
                 this.handleRectangleToMake();
 
+            }
+            else if (e.key == 'Enter' && this.isInputOn) {
+                this.startInputCell = null;
+                this.endInputCell = null;
+                this.selectedCells = [];
+                this.hideInputElement();
+                this.renderer.renderCanvas()
+                // this.updateInputPositionAndValue()
             }
 
 

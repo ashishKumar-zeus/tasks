@@ -167,8 +167,8 @@ export class MinorFunctions {
                 const value = dataArr[i][j]; // Get the value from the data array
 
                 // Log the email and column name (as in your original code)
-                console.log(email);
-                console.log(columnName);
+                // console.log(email);
+                // console.log(columnName);
 
                 // Set the value in the linked list
                 this.sheet.ll.setValueAtInd(i + rowStart, j + colStart, value);

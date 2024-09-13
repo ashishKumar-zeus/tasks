@@ -3,7 +3,7 @@ export class HandleUpload {
     constructor(excelMaker) {
 
         this.excelMaker = excelMaker;
-        
+
         this.barGraphBtn = document.getElementById("barGraphBtn")
         this.pieGraphBtn = document.getElementById("pieGraphBtn")
         this.lineGraphBtn = document.getElementById("lineGraphBtn")
@@ -20,8 +20,19 @@ export class HandleUpload {
         })
     }
 
-    handleGraphCreation(){
-        
+    handleSearch() {
+        let searchInput = document.getElementById('searchInput');
+        this.currSheet = this.excelMaker.getCurrSheet()
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const searchTerm = searchInput.value.trim();
+            console.log(searchTerm);
+            this.currSheet.handleApis.search(searchTerm);
+        })
+    }
+
+
+    handleGraphCreation() {
+
         this.barGraphBtn.addEventListener("click", () => {
             this.currSheet = this.excelMaker.getCurrSheet();
             this.currSheet.graph.drawBarGraph();
@@ -41,6 +52,7 @@ export class HandleUpload {
     handleEvents() {
         this.handleFileUploadEvents();
         this.handleGraphCreation()
+        this.handleSearch();
     }
 
 

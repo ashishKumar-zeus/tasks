@@ -3,7 +3,7 @@ namespace learning.Models;
 public class DataModel {
 
     //this creates the model for the data to be stored
-
+    public int? row_id { get; set;}
     public string? Email_id {get; set;}
     public string? Name {get; set;}
     public string? Country {get; set;}

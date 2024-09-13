@@ -179,6 +179,7 @@ export class Sheet {
         this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
         this.resizeObserver.observe(this.spreadsheetCanvas);
 
+
     }
 
 

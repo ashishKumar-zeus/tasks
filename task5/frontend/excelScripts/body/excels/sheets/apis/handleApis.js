@@ -160,4 +160,36 @@ export class HandleApis {
 
 
     }
+
+
+    async search(query){
+        
+        console.log("getting search result")
+
+        if (!this.tableName) {
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:5228/api/Data/FindRow`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify(query)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+
+            const data = await response.json();
+            console.log(data);
+
+        } catch (error) {
+            console.error('Error:', error.message || error);
+        }
+    }
+
+
 }

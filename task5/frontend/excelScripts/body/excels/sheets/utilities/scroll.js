@@ -53,13 +53,25 @@ export class Scroll {
 
     }
 
+    getHorizontallyScrolled(){
+        return this.horizontallyScrolled;
+    }
+
+    getVerticallyScrolled(){
+        return this.verticallyScrolled;
+    }
+
     updateGrid() {
 
         this.renderer.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled);
         this.functionality.getScrollInstance(this)
         // this.functionality.saveInputData()
         this.functionality.updateInputPositionAndValue();
-        this.functionality.handleRectangleToMake();
+        
+        this.functionality.handleSelection()
+
+        // this.functionality.handleColumnSelection(this.horizontallyScrolled)
+        // this.functionality.handleRectangleToMake();
     }
 
     increaseNumOfCols() {

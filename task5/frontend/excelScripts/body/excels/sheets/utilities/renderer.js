@@ -8,15 +8,12 @@ export class Renderer {
 
         this.headerCellsMaker = sheet.headerCellsMaker;
 
-        this.isResizingHor = false;
-        this.isResizingVer = false;
-
         this.horizontalCanvas = null;
         this.verticalCanvas = null;
         this.spreadsheetCanvas = null;
         [this.horizontalCanvas, this.verticalCanvas, this.spreadsheetCanvas] = sheet.getCnv();
 
-        this.inputEle = sheet.inputEle;
+        // this.inputEle = sheet.inputEle;
         this.sheet = sheet;
 
         this.horizontalArr = sheet.headerCellsMaker.getHorizontalArray()
@@ -45,6 +42,7 @@ export class Renderer {
     }
 
     renderCanvas() {
+        //creating canvases
         this.drawHorizontalCanvas(this.currStartColInd);
         this.drawVerticalCanvas(this.currStartRowInd);
         this.drawMainCanvas(this.currStartRowInd, this.currStartColInd);
@@ -88,42 +86,45 @@ export class Renderer {
 
         }
 
-        // if (this.horizontallyScrolled != horizontallyScrolled) {
 
-        //     horizontallyScrolled = parseInt(horizontallyScrolled)
+        {
+            // if (this.horizontallyScrolled != horizontallyScrolled) {
 
-        //     //for horizontal scrolling
+            //     horizontallyScrolled = parseInt(horizontallyScrolled)
 
-        //     if (horizontallyScrolled >= this.horizontallyScrolled) {
+            //     //for horizontal scrolling
 
-        //         console.log("moving right")
+            //     if (horizontallyScrolled >= this.horizontallyScrolled) {
 
-        //         while (this.accWidthHor + this.horizontalArr[this.currStartColInd].width < horizontallyScrolled) {
-        //             console.log("adding acc width")
-        //             this.accWidthHor += this.horizontalArr[this.currStartColInd].width;
-        //             this.currStartColInd += 1;
-        //         }
+            //         console.log("moving right")
 
-        //         this.horStartPos = -horizontallyScrolled + this.accWidthHor;
-        //         this.horizontallyScrolled = horizontallyScrolled;
-        //         console.log(this.currStartColInd, this.horStartPos ,this.accWidthHor)
-        //     }
-        //     else {
+            //         while (this.accWidthHor + this.horizontalArr[this.currStartColInd].width < horizontallyScrolled) {
+            //             console.log("adding acc width")
+            //             this.accWidthHor += this.horizontalArr[this.currStartColInd].width;
+            //             this.currStartColInd += 1;
+            //         }
 
-        //         console.log("moving left")
+            //         this.horStartPos = -horizontallyScrolled + this.accWidthHor;
+            //         this.horizontallyScrolled = horizontallyScrolled;
+            //         console.log(this.currStartColInd, this.horStartPos ,this.accWidthHor)
+            //     }
+            //     else {
 
-        //         while (this.accWidthHor - this.horizontalArr[this.currStartColInd-1].width > horizontallyScrolled) {
-        //             console.log("removing acc width")
-        //             this.accWidthHor -= this.horizontalArr[this.currStartColInd-1].width;
-        //             this.currStartColInd -= 1;
-        //         }
+            //         console.log("moving left")
 
-        //         this.horStartPos = +horizontallyScrolled - this.accWidthHor;
-        //         // this.horizontallyScrolled = horizontallyScrolled;
-        //         console.log(this.currStartColInd, this.horStartPos,this.accWidthHor)
-        //     }
+            //         while (this.accWidthHor - this.horizontalArr[this.currStartColInd-1].width > horizontallyScrolled) {
+            //             console.log("removing acc width")
+            //             this.accWidthHor -= this.horizontalArr[this.currStartColInd-1].width;
+            //             this.currStartColInd -= 1;
+            //         }
 
-        // }
+            //         this.horStartPos = +horizontallyScrolled - this.accWidthHor;
+            //         // this.horizontallyScrolled = horizontallyScrolled;
+            //         console.log(this.currStartColInd, this.horStartPos,this.accWidthHor)
+            //     }
+
+            // }
+        }
 
         if (this.verticallyScrolled != verticallyScrolled) {
 
@@ -142,11 +143,7 @@ export class Renderer {
             this.verStartPos = -this.verticallyScrolled + this.accHeightVer - this.verticalArr[i].height;
 
         }
-
-        //updating
-        this.drawHorizontalCanvas(this.currStartColInd);
-        this.drawVerticalCanvas(this.currStartRowInd);
-        this.drawMainCanvas(this.currStartRowInd, this.currStartColInd);
+        this.renderCanvas();
     }
 
     getColName(n) {
@@ -208,8 +205,8 @@ export class Renderer {
 
         //making border
         this.horizontalCnvCtx.beginPath();
-        this.horizontalCnvCtx.moveTo(0, this.horizontalCanvas.clientHeight -1);
-        this.horizontalCnvCtx.lineTo(this.horizontalCanvas.clientWidth, this.horizontalCanvas.clientHeight-1);
+        this.horizontalCnvCtx.moveTo(0, this.horizontalCanvas.clientHeight - 1);
+        this.horizontalCnvCtx.lineTo(this.horizontalCanvas.clientWidth, this.horizontalCanvas.clientHeight - 1);
         this.horizontalCnvCtx.stroke();
 
     }
@@ -259,66 +256,35 @@ export class Renderer {
         //making border
         this.verticalCnvCtx.beginPath();
         this.verticalCnvCtx.moveTo(this.verticalCanvas.clientWidth - 1, 0);
-        this.verticalCnvCtx.lineTo(this.verticalCanvas.clientWidth -1 , this.verticalCanvas.clientHeight);
+        this.verticalCnvCtx.lineTo(this.verticalCanvas.clientWidth - 1, this.verticalCanvas.clientHeight);
         this.verticalCnvCtx.stroke();
 
 
     }
 
-    // drawCellContentAtRow(currRow, startColInd) {
-
-    //     if (!currRow.next) {
-    //         return;
-    //     }
-    //     let currRowEle = currRow.next;
-
-    //     while (currRowEle != null && (currRowEle.col.data - 1) < startColInd) {
-    //         currRowEle = currRowEle.right;
-    //     }
-
-    //     while (currRowEle != null) {
-
-    //         let currCol = this.horizontalArr[currRowEle.col.data - 1];
-
-    //         if (currCol.x - this.horizontallyScrolled > this.spreadsheetCanvas.width) {
-    //             break;
-    //         }
-
-    //         //making text
-    //         this.spreadsheetCnvCtx.font = '14px Calibri';
-    //         this.spreadsheetCnvCtx.textAlign = 'left';
-    //         this.spreadsheetCnvCtx.textBaseline = 'bottom';
-    //         this.spreadsheetCnvCtx.fillStyle = 'black';
-    //         this.spreadsheetCnvCtx.fillText(currRowEle.data, currCol.x - this.horizontallyScrolled + 10, currRow.y - this.verticallyScrolled + currRow.height - 5)
-
-    //         currRowEle = currRowEle.right;
-
-    //     }
-
-    // }
     drawCellContentAtRow(currRow, startColInd) {
 
         if (!currRow.next) {
             return;
         }
         let currRowEle = currRow.next;
-    
+
         while (currRowEle != null && (currRowEle.col.data - 1) < startColInd) {
             currRowEle = currRowEle.right;
         }
-    
+
         while (currRowEle != null) {
-    
+
             let currCol = this.horizontalArr[currRowEle.col.data - 1];
-    
+
             // Check if cell is outside the canvas
             if (currCol.x - this.horizontallyScrolled > this.spreadsheetCanvas.width) {
                 break;
             }
-    
+
             // Save canvas state
             this.spreadsheetCnvCtx.save();
-    
+
             // Define clipping area (cell boundaries)
             this.spreadsheetCnvCtx.beginPath();
             this.spreadsheetCnvCtx.rect(
@@ -328,7 +294,7 @@ export class Renderer {
                 currRow.height
             );
             this.spreadsheetCnvCtx.clip();
-    
+
             // Render the text within the clipping region
             this.spreadsheetCnvCtx.font = '14px Calibri';
             this.spreadsheetCnvCtx.textAlign = 'left';
@@ -339,17 +305,17 @@ export class Renderer {
                 currCol.x - this.horizontallyScrolled + 10,
                 currRow.y - this.verticallyScrolled + currRow.height - 5
             );
-    
+
             // Restore canvas state to avoid clipping other elements
             this.spreadsheetCnvCtx.restore();
-    
+
             currRowEle = currRowEle.right;
         }
-    
+
     }
-    
+
     drawMainCanvas(startRowInd, startColInd) {
-    
+
         // this.functionality.updateInputPositionAndValue();
 
         if (!this.spreadsheetCnvCtx) {
@@ -412,31 +378,19 @@ export class Renderer {
     fillRect(x, y, width, height) {
 
         this.spreadsheetCnvCtx.beginPath();
-        this.spreadsheetCnvCtx.fillStyle = 'rgb(131,242,143,0.4)'
+        this.spreadsheetCnvCtx.fillStyle = 'rgb(0, 128, 0, 0.1)'
         this.spreadsheetCnvCtx.fillRect(x, y, width, height);
     }
+
+
     drawRectangleOnMainCanvas(x, y, width, height) {
         this.spreadsheetCnvCtx.beginPath();
-        this.spreadsheetCnvCtx.fillStyle = 'rgb(131,242,143,0.4)'
+        this.spreadsheetCnvCtx.fillStyle = 'rgb(0, 128, 0, 0.1)'
         this.spreadsheetCnvCtx.fillRect(x, y, width, height);
         this.spreadsheetCnvCtx.rect(x, y, width, height);
         this.spreadsheetCnvCtx.strokeStyle = 'green';
         this.spreadsheetCnvCtx.lineWidth = 3;
         this.spreadsheetCnvCtx.stroke();
-    }
-
-
-
-    /**
-     * Handles Marching Ant Animation logic
-     * @returns {void}
-     */
-    handleMarchingAnt() {
-        this.isAnimated = true;
-        if (this.isAnimated) {
-            window.cancelAnimationFrame(this.wafId);
-        }
-        this.startMarchingAnts();
     }
 
     startMarchingAnts(x, y, width, height) {
@@ -464,20 +418,15 @@ export class Renderer {
         this.spreadsheetCnvCtx.setLineDash([]);
     }
 
-
-
-    drawRectangleOnHorizontalCanvas(x, width) {
-        // this.drawHorizontalCanvas()
+    drawRectangleOnHorizontalCanvas(x, width,color = 'rgb(0, 128, 0, 0.1)' ) {
         this.horizontalCnvCtx.beginPath();
-        this.horizontalCnvCtx.fillStyle = 'rgb(131,242,143,0.4)'
+        this.horizontalCnvCtx.fillStyle = color;
         this.horizontalCnvCtx.fillRect(x, this.horizontalArr[0].y, width, this.horizontalArr[0].height);
 
-        this.drawLine(this.horizontalCnvCtx, 'green', 6, x, this.horizontalArr[0].y + this.horizontalArr[0].height, x + width, this.horizontalArr[0].y + this.horizontalArr[0].height)
-
+        this.drawLine(this.horizontalCnvCtx, 'green', 4, x, this.horizontalArr[0].y + this.horizontalArr[0].height, x + width, this.horizontalArr[0].y + this.horizontalArr[0].height)
     }
 
     drawLine(ctx, color, lineWidth, x1, y1, x2, y2) {
-
         ctx.lineWidth = lineWidth;
         ctx.strokeStyle = color;
         ctx.moveTo(x1, y1);
@@ -485,29 +434,30 @@ export class Renderer {
         ctx.stroke();
     }
 
-    drawRectangleOnVerticalCanvas(y, height) {
+    drawRectangleOnVerticalCanvas(y, height,color='rgb(0, 128, 0, 0.1)') {
+        
+
         this.verticalCnvCtx.beginPath();
-        this.verticalCnvCtx.fillStyle = 'rgb(131,242,143,0.4)'
+        this.verticalCnvCtx.fillStyle = color;
         this.verticalCnvCtx.fillRect(this.verticalArr[0].x, y, this.verticalArr[0].width, height);
 
-        this.drawLine(this.verticalCnvCtx, 'green', 6, this.verticalArr[0].x + this.verticalArr[0].width, y, this.verticalArr[0].x + this.verticalArr[0].width, y + height)
-
+        this.drawLine(this.verticalCnvCtx, 'green', 4, this.verticalArr[0].x + this.verticalArr[0].width, y, this.verticalArr[0].x + this.verticalArr[0].width, y + height)
     }
-
 
     drawSelectionRectangles(x, y, width, height) {
+        let color = 'rgb(0, 128, 0, 0.1)'
         this.renderCanvas();
         this.drawRectangleOnMainCanvas(x, y, width, height);
-        this.drawRectangleOnHorizontalCanvas(x, width)
-        this.drawRectangleOnVerticalCanvas(y, height)
+        this.drawRectangleOnHorizontalCanvas(x, width,color)
+        this.drawRectangleOnVerticalCanvas(y, height,color)
     }
 
-
     drawMarchingAnts(x, y, width, height) {
+        let color = 'rgb(0, 128, 0, 0.1)'
         this.renderCanvas();
         this.startMarchingAnts(x, y, width, height);
-        this.drawRectangleOnHorizontalCanvas(x, width)
-        this.drawRectangleOnVerticalCanvas(y, height);
+        this.drawRectangleOnHorizontalCanvas(x, width,color)
+        this.drawRectangleOnVerticalCanvas(y, height,color);
     }
 
     endMarchingAnts() {
