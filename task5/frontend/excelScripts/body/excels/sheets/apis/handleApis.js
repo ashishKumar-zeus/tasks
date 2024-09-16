@@ -29,6 +29,8 @@ export class HandleApis {
             return console.error(err.toString());
         });
         let amountOfSuccess = 0;
+        
+
         //on receiving
         let j = 0;
         this.signalRconnection.on("ReceiveUpdate", function (message) {
@@ -38,10 +40,14 @@ export class HandleApis {
             console.log("calling update")
             // this.updateProgressBar(amountOfSuccess);
 
+            // if(amountOfSuccess == 100){
+            //     document.getElementById('progressBarContainer').style.display = 'none'
+            // }
+
             console.log("calaled")
             console.log(document.getElementById('progressBar').getAttribute('value'))
-
             document.getElementById('progressBar').setAttribute("value", amountOfSuccess)
+            document.getElementById('pBarLabel').innerHTML = `${amountOfSuccess} %`
 
         });
 
@@ -49,11 +55,9 @@ export class HandleApis {
 
 
     async uploadFile(formData) {
+        document.getElementById('progressBarContainer').style.display = 'block';
 
-        document.getElementById('progressBar').style.display = 'block';
 
-
-        let amountOfSuccess = 0;
         this.handleSignalR()
 
 
@@ -103,20 +107,20 @@ export class HandleApis {
 
         // console.log(this.sheet.headerCellsMaker.verticalArr[rowInd]);
 
-        if(!this.sheet.headerCellsMaker.verticalArr[rowInd].next){
+        if (!this.sheet.headerCellsMaker.verticalArr[rowInd].next) {
             return;
         }
 
-        const email_id =this.sheet.headerCellsMaker.verticalArr[rowInd].next.data;
+        const rowId = this.sheet.headerCellsMaker.verticalArr[rowInd].next.data;
 
         const columnName = this.sheet.headerCellsMaker.horizontalArr[colInd].next.data;
 
         const data = {
-            "email_id":email_id,
-            "columnName":columnName,
-            "value":value,
+            "rowId": rowId,
+            "columnName": columnName,
+            "value": value,
         }
-        
+
 
         if (!this.tableName) {
             return;
@@ -137,7 +141,7 @@ export class HandleApis {
 
     }
 
-    
+
     async bulkUpdateToBackend(batchUpdateArray) {
 
         // console.log(this.sheet.headerCellsMaker.verticalArr[rowInd]);
@@ -162,8 +166,8 @@ export class HandleApis {
     }
 
 
-    async search(query){
-        
+    async search(query) {
+
         console.log("getting search result")
 
         if (!this.tableName) {
@@ -175,21 +179,78 @@ export class HandleApis {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body:JSON.stringify(query)
+                body: JSON.stringify(query)
             });
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-
             const data = await response.json();
-            console.log(data);
+            return data;
 
         } catch (error) {
             console.error('Error:', error.message || error);
         }
     }
+
+
+
+    async deleteRows(rowIds) {
+        try {
+            const response = await fetch('http://localhost:5228/api/Data/DeleteRows', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(rowIds)
+            });
+            const result = await response.json();
+
+            if (result) {
+                console.log('Rows deleted successfully');
+                // delete from linked list too 
+            } else {
+                console.error('Failed to delete rows');
+            }
+        } catch (error) {
+            console.error('Error deleting rows:', error);
+        }
+    }
+
+    async  insertRows(startInd, numberOfRows) {
+    const requestBody = {
+        StartInd: startInd,
+        NumberOfRows: numberOfRows
+    };
+
+    try {
+        const response = await fetch('http://localhost:5228/api/Data/InsertRows', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result) {
+            console.log('Rows inserted successfully');
+        } else {
+            console.log('Failed to insert rows');
+        }
+    } catch (error) {
+        console.error('Error inserting rows:', error);
+    }
+}
+    
+
+
 
 
 }

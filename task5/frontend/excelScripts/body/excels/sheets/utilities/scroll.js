@@ -22,6 +22,8 @@ export class Scroll {
 
         this.wheelScrollRate = 5;
 
+        this.sheet = sheet;
+
         this.init();
     }
 
@@ -53,11 +55,11 @@ export class Scroll {
 
     }
 
-    getHorizontallyScrolled(){
+    getHorizontallyScrolled() {
         return this.horizontallyScrolled;
     }
 
-    getVerticallyScrolled(){
+    getVerticallyScrolled() {
         return this.verticallyScrolled;
     }
 
@@ -65,13 +67,10 @@ export class Scroll {
 
         this.renderer.renderCanvasOnScroll(this.horizontallyScrolled, this.verticallyScrolled);
         this.functionality.getScrollInstance(this)
-        // this.functionality.saveInputData()
         this.functionality.updateInputPositionAndValue();
-        
+
         this.functionality.handleSelection()
 
-        // this.functionality.handleColumnSelection(this.horizontallyScrolled)
-        // this.functionality.handleRectangleToMake();
     }
 
     increaseNumOfCols() {
@@ -172,8 +171,46 @@ export class Scroll {
     }
 
 
-    //fucntion to update the scroll bar and content using the diff
-    updateScrollByDiffVer(diffY) {
+
+
+    scrollTillRowInd(rowInd) {
+        // Store the animation frame ID
+        let animationFrameId = null;
+
+        let targetVerticallyScrolled = this.headerCellsMaker.verticalArr[rowInd].y;
+
+        const scrollStep = () => {
+            // Recalculate the difference between current and target positions
+            let diff = targetVerticallyScrolled - this.verticallyScrolled;
+
+            // Check if the scrolling is within a small tolerance (precision issue fix)
+            if (Math.abs(diff) < 1) {
+                this.updateScrollByDiffVer(diff); // Final small step to reach exact position
+                cancelAnimationFrame(animationFrameId);
+                return;
+            }
+
+            console.log(this.verticallyScrolled, targetVerticallyScrolled)
+
+            // Adjust step size dynamically
+            let step = Math.sign(diff) * Math.min(Math.abs(diff) / 10, 5); // Allow slightly larger steps
+            console.log(step);
+            let finished = this.updateScrollByDiffVer(step, targetVerticallyScrolled);
+
+            if (finished) {
+                cancelAnimationFrame(animationFrameId); // Cancel the animation if scrolling is finished
+                return;
+            }
+
+            // Request the next animation frame
+            animationFrameId = requestAnimationFrame(scrollStep);
+        };
+
+        scrollStep(); // Start the smooth scrolling
+    }
+
+    // Function to update the scroll bar and content using the diff
+    updateScrollByDiffVer(diffY, targetVerticallyScrolled = null) {
 
         let newBarTop = this.startBarTop + diffY;
 
@@ -182,20 +219,34 @@ export class Scroll {
 
         let minContentHeight = this.verticalScroll.clientHeight * 2;
 
-        this.verticallyScrolled = newBarTop * this.totalContentHeight / this.verticalScroll.clientHeight;
+        let newVerticallyScrolled = newBarTop * this.totalContentHeight / this.verticalScroll.clientHeight;
 
-        if (this.verticallyScrolled >= .8 * (this.totalContentHeight - this.verticalScroll.clientHeight)) {
-            this.increaseNumOfRows()
-            this.totalContentHeight = this.headerCellsMaker.verticalArr[this.headerCellsMaker.verticalArr.length - 1].y;
+        // Check if the scrolling has reached or exceeded the target
 
+        if (targetVerticallyScrolled && targetVerticallyScrolled > this.verticallyScrolled && newVerticallyScrolled >= targetVerticallyScrolled) {
+            this.verticallyScrolled = Math.max(0,targetVerticallyScrolled-100) ; // Snap to exact target position
+            this.updateGrid();
+            return 1; // Indicate that scrolling has finished
         }
-        else if (this.verticallyScrolled <= 0) {
+
+        if (targetVerticallyScrolled && targetVerticallyScrolled < this.verticallyScrolled && newVerticallyScrolled <= targetVerticallyScrolled) {
+            this.verticallyScrolled = Math.max(0,targetVerticallyScrolled-100); // Snap to exact target position
+            this.updateGrid();
+            return 1; // Indicate that scrolling has finished
+        }
+
+        this.verticallyScrolled = newVerticallyScrolled;
+
+        if (this.verticallyScrolled >= 0.8 * (this.totalContentHeight - this.verticalScroll.clientHeight)) {
+            this.increaseNumOfRows();
+            this.totalContentHeight = this.headerCellsMaker.verticalArr[this.headerCellsMaker.verticalArr.length - 1].y;
+        } else if (this.verticallyScrolled <= 0) {
             this.totalContentHeight = minContentHeight;
         }
 
         newBarTop = this.verticallyScrolled * this.verticalScroll.clientHeight / this.totalContentHeight;
 
-        this.verticalBar.style.height = Math.max(30, (this.verticalScroll.clientHeight * this.verticalScroll.clientHeight / this.totalContentHeight)) + "px"
+        this.verticalBar.style.height = Math.max(30, (this.verticalScroll.clientHeight * this.verticalScroll.clientHeight / this.totalContentHeight)) + "px";
 
         this.verticalBar.style.top = `${newBarTop}px`;
 
@@ -209,7 +260,10 @@ export class Scroll {
 
 
 
+
     handleWheelScrollVer(diffY) {
+
+        // console.log('scrolling by diff ', diffY);
 
         // console.log(diffY);
 

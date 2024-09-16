@@ -20,14 +20,12 @@ export class Graph {
         this.startSelectionIndex = null;
         this.endSelectionIndex = null;
 
-
-
         this.isDragging = false;
 
 
         // Initialize event listeners
         this.init();
-    }
+    } 
 
     // Initialize event listeners for graph buttons
     init() {

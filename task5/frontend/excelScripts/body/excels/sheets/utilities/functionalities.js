@@ -65,6 +65,8 @@ export class Functionalities {
         this.handleMouseEventsOnSheet();
         this.handleKeyEventsOnSheet();
 
+        this.handleContextMenu()
+
 
         this.handleDocumentClick()
 
@@ -151,20 +153,24 @@ export class Functionalities {
                 resizingColumn = colInd;
             }
             else {
-                this.selectedCells = []
-                this.startInputCell = null
-                this.endInputCell = null
-                this.hideInputElement()
-                this.isInputOn = false;
-                this.handleRowOn = false;
-                this.isSelectingColumn = true;
-                this.selectColumnStart = getCurrColIndex(startXPos);
-                this.selectColumnEnd = this.selectColumnStart;
-                this.handleColumnOn = true;
-                this.handleSelection()
+                if (e.button == 0) {
+
+                    this.selectedCells = []
+                    this.startInputCell = null
+                    this.endInputCell = null
+                    this.hideInputElement()
+                    this.isInputOn = false;
+                    this.handleRowOn = false;
+                    this.isSelectingColumn = true;
+                    this.selectColumnStart = getCurrColIndex(startXPos);
+                    this.selectColumnEnd = this.selectColumnStart;
+                    this.handleColumnOn = true;
 
 
+                }
             }
+            this.handleSelection()
+
         };
 
         const onMouseMove = (e) => {
@@ -184,17 +190,18 @@ export class Functionalities {
                 startXPos = endXPos;
 
                 this.renderer.renderCanvas();
-                // this.updateInputPositionAndValue();
+                this.updateInputPositionAndValue();
                 this.handleRectangleToMake();
             }
             else if (this.isSelectingColumn) {
                 this.isInputOn = false
                 this.selectColumnEnd = getCurrColIndex(endXPos)
 
-                this.handleSelection();
                 this.handleScrolling(e)
 
             }
+            this.handleSelection();
+
         };
 
 
@@ -270,20 +277,25 @@ export class Functionalities {
                 resizingRow = rowInd;
             }
             else {
-                this.selectedCells = []
-                this.startInputCell = null
-                this.endInputCell = null
-                this.hideInputElement()
-                this.isInputOn = false;
-                this.handleColumnOn = false;
-                this.isSelectingRow = true;
-                this.isMarching = false;
-                this.selectRowStart = getCurrRowIndex(startYPos);
-                this.selectRowEnd = this.selectRowStart;
-                this.handleRowOn = true;
-                this.handleSelection()
 
+                if (e.button == 0) {
+
+                    this.selectedCells = []
+                    this.startInputCell = null
+                    this.endInputCell = null
+                    this.hideInputElement()
+                    this.isInputOn = false;
+                    this.handleColumnOn = false;
+                    this.isSelectingRow = true;
+                    this.isMarching = false;
+                    this.selectRowStart = getCurrRowIndex(startYPos);
+                    this.selectRowEnd = this.selectRowStart;
+                    this.handleRowOn = true;
+
+                }
             }
+            this.handleSelection()
+
         };
 
         const onMouseMove = (e) => {
@@ -310,10 +322,11 @@ export class Functionalities {
                 this.isInputOn = false
                 this.selectRowEnd = getCurrRowIndex(endYPos)
 
-                this.handleSelection()
                 this.handleScrolling(e)
 
             }
+            this.handleSelection()
+
         };
 
         const onMouseUp = (e) => {
@@ -450,6 +463,7 @@ export class Functionalities {
 
         //reset marching ants event if present
         this.handleColumnOn = false;
+        this.handleRowOn = false;
         this.renderer.endMarchingAnts();
         this.isMarching = false;
 
@@ -567,19 +581,21 @@ export class Functionalities {
     }
 
     handleColumnSelection(horizontallyScrolled) {
+        let headerColorOnSelect = 'rgb(37,160,84,0.8';
         this.renderer.renderCanvas();
         let [x, width] = this.getXWidthForColumnSelect(this.selectColumnStart, this.selectColumnEnd)
-        this.renderer.drawRectangleOnHorizontalCanvas(x - horizontallyScrolled, width);
+        this.renderer.drawRectangleOnHorizontalCanvas(x - horizontallyScrolled, width, headerColorOnSelect);
         this.renderer.drawRectangleOnVerticalCanvas(0, this.spreadsheetCanvas.height)
         this.renderer.drawRectangleOnMainCanvas(x - horizontallyScrolled, 0, width, this.spreadsheetCanvas.height)
     }
 
 
     handleRowSelection(verticallyScrolled) {
+        let headerColorOnSelect = 'rgb(37,160,84,0.8';
         this.renderer.renderCanvas();
         let [y, height] = this.getYHeightForRowSelect(this.selectRowStart, this.selectRowEnd)
         this.renderer.drawRectangleOnHorizontalCanvas(0, this.spreadsheetCanvas.width);
-        this.renderer.drawRectangleOnVerticalCanvas(y - verticallyScrolled, height)
+        this.renderer.drawRectangleOnVerticalCanvas(y - verticallyScrolled, height, headerColorOnSelect)
         this.renderer.drawRectangleOnMainCanvas(0, y - verticallyScrolled, this.spreadsheetCanvas.width, height)
     }
 
@@ -587,23 +603,22 @@ export class Functionalities {
         let [horizontallyScrolled, verticallyScrolled] = this.getScrolls()
         this.renderer.renderCanvas();
         if (this.startInputCell && this.endInputCell) {
-            console.log("calling handle rect to make ", this.startInputCell, this.endInputCell)
+            // console.log("calling handle rect to make ", this.startInputCell, this.endInputCell)
             this.handleRectangleToMake();
         }
         else if (this.handleColumnOn) {
-            console.log("calling column select ", this.handleColumnOn)
+            // console.log("calling column select ", this.handleColumnOn)
             this.handleColumnSelection(horizontallyScrolled)
         }
         else if (this.handleRowOn) {
-            console.log("calling row select ", this.handleRowOn)
+            // console.log("calling row select ", this.handleRowOn)
             this.handleRowSelection(verticallyScrolled)
         }
     }
 
     handleRectangleToMake() {
 
-        console.log(this.startInputCell, this.endInputCell
-        )
+        // console.log(this.startInputCell, this.endInputCell)
         if (!this.startInputCell || !this.endInputCell) {
             return;
         }
@@ -732,14 +747,13 @@ export class Functionalities {
                 this.handleRectangleToMake();
 
             }
-            else if ((e.key === 'Delete') && !this.handleColumnOn) {
+            else if ((e.key === 'Delete') && !this.handleColumnOn && !this.handleRowOn) {
                 this.minorFunctions.deleteFromLinkedList(this.startInputCell, this.endInputCell);
 
 
                 this.renderer.renderCanvas();
                 this.updateInputPositionAndValue();
                 this.handleRectangleToMake();
-
             }
             else if (e.key == 'Enter' && this.isInputOn) {
                 this.startInputCell = null;
@@ -749,10 +763,100 @@ export class Functionalities {
                 this.renderer.renderCanvas()
                 // this.updateInputPositionAndValue()
             }
+            else if ((e.key === 'Delete' && this.handleColumnOn)) {
+                //delete whole column
+                console.log("delete whole column")
+            }
+            else if ((e.key === 'Delete' && this.handleRowOn)) {
+                //delete whole row
+                console.log("delete whole row")
+                this.deleteSelectedRows();
+            }
+            else if ((e.key === 'i' && this.handleRowOn)) {
+                console.log("inserting");
+                this.insertRows(1)
+            }
+        })
+    }
+
+    deleteSelectedRows() {
+        let listOfRowInd = [];
+        for (let i = this.selectRowStart; i <= this.selectRowEnd; i++) {
+            listOfRowInd.push(this.verticalArr[i - 1].next.data);
+        }
+        this.sheet.handleApis.deleteRows(listOfRowInd);
+        console.log(listOfRowInd)
+
+        this.sheet.ll.deleteRowsBulk(this.selectRowStart, this.selectRowEnd)
+
+        this.sheet.renderer.renderCanvas();
+        this.handleSelection()
+    }
 
 
+
+    handleContextMenu() {
+        let contextMenu = document.getElementById('contextMenuHeaders')
+
+        this.sheet.verticalCanvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault(); // Prevent the default context menu
+
+            // Get the x and y coordinates of the click
+            const x = e.clientX;
+            const y = e.clientY;
+
+            console.log(x, y)
+
+            // Set the position of the context menu
+            contextMenu.style.top = `${y}px`;
+            contextMenu.style.left = `${x}px`;
+
+            // Show the context menu
+            contextMenu.style.display = 'block';
         })
 
+        // Hide the context menu when clicking outside
+        document.addEventListener('click', function (event) {
+            // if (!contextMenu.contains(event.target)) {
+                contextMenu.style.display = 'none'; // Hide the context menu
+            // }
+        });
+
+        this.handleContextMenuEvents()
+    }
+
+    insertRowsAfter(numOfRows){
+        this.sheet.handleApis.insertRows(this.selectRowStart, numOfRows);
+        this.sheet.ll.insertRows(this.selectRowStart, numOfRows);
+        this.sheet.renderer.renderCanvas();
+    }
+    
+    insertRowsBefore(numOfRows){
+        this.sheet.handleApis.insertRows(this.selectRowStart-1, numOfRows);
+        this.sheet.ll.insertRows(this.selectRowStart-1, numOfRows);
+        this.sheet.renderer.renderCanvas();
+    }
+
+    handleContextMenuEvents() {
+        document.getElementById('deleteRowBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.deleteSelectedRows();
+        })
+
+        document.getElementById('insertRowAfterBtn').addEventListener('click', (e)=>{
+            e.preventDefault();
+            let numOfRows = parseInt(prompt("Number of Rows to insert "));
+            console.log(numOfRows)
+            this.insertRowsAfter(numOfRows);
+        })
+
+        
+        document.getElementById('insertRowBeforeBtn').addEventListener('click', (e)=>{
+            e.preventDefault();
+            let numOfRows = parseInt(prompt("Number of Rows to insert "));
+            console.log(numOfRows)
+            this.insertRowsBefore(numOfRows);
+        })
     }
 
 

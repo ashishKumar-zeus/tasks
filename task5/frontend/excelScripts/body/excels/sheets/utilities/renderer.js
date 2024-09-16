@@ -176,7 +176,6 @@ export class Renderer {
 
         for (let j = startInd; position <= this.horizontalCanvas.clientWidth + this.horizontallyScrolled; j++) {
 
-
             //making vertical line
             this.horizontalCnvCtx.beginPath();
             this.horizontalCnvCtx.moveTo(x, 0);

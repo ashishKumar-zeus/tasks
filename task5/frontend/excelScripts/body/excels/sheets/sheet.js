@@ -19,6 +19,7 @@ export class Sheet {
 
         this.createCanvas();
         this.createGraphs();
+        this.createContextMenu();
 
         this.updateSelectedCellsInfo = updateSelectedCellsInfoFunc;
 
@@ -27,16 +28,44 @@ export class Sheet {
         }, 1);
     }
 
+
+    createContextMenu() {
+        const contextMenu = document.createElement('div');
+        contextMenu.classList.add('contextMenu');
+        contextMenu.setAttribute('id', 'contextMenuHeaders')
+        contextMenu.style.display = 'none'; // Hide initially
+        document.body.appendChild(contextMenu);
+
+        // Add options to the context menu
+        const ul = document.createElement('ul');
+        const deleteOption = document.createElement('li');
+        deleteOption.textContent = 'Delete Selected Row';
+        deleteOption.setAttribute('id','deleteRowBtn')
+        ul.appendChild(deleteOption);
+
+        const insertRowBefore = document.createElement('li');
+        insertRowBefore.textContent = 'Insert Row Before';
+        insertRowBefore.setAttribute('id','insertRowBeforeBtn');
+        ul.appendChild(insertRowBefore);
+
+        const insertRowAfter = document.createElement('li');
+        insertRowAfter.textContent = 'Insert Row After';
+        insertRowAfter.setAttribute('id','insertRowAfterBtn');
+        ul.appendChild(insertRowAfter);
+
+        contextMenu.appendChild(ul);
+    }
+
     createGraphs() {
         // Create the main graph div
         const graphDiv = document.createElement('div');
         graphDiv.classList.add('graph');
-        graphDiv.setAttribute('id',`graph_${this.id}`)
+        graphDiv.setAttribute('id', `graph_${this.id}`)
 
         // Create the close button
         const closeButton = document.createElement('button');
         closeButton.classList.add('graphClose');
-        closeButton.setAttribute('id',`graphCloseBtn_${this.id}`)
+        closeButton.setAttribute('id', `graphCloseBtn_${this.id}`)
         closeButton.innerHTML = 'X'
 
         // Create the canvas element
@@ -156,13 +185,15 @@ export class Sheet {
         //scalling canvas
         this.scallingCanvas();
 
+        // this.eventListeners = new EventListeners(this);
+
         this.handleApis = new HandleApis(this);
 
         this.headerCellsMaker = new HeaderCellsMaker(this.horizontalCanvas, this.verticalCanvas, this.handleApis);
 
         this.minorFunctions = new MinorFunctions(this);
 
-        this.ll = new LinkedList(this.headerCellsMaker,this.handleApis);
+        this.ll = new LinkedList(this.headerCellsMaker, this.handleApis);
 
         this.renderer = new Renderer(this)
 
@@ -178,8 +209,6 @@ export class Sheet {
         // Set up the ResizeObserver
         this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
         this.resizeObserver.observe(this.spreadsheetCanvas);
-
-
     }
 
 
@@ -193,21 +222,21 @@ export class Sheet {
         const dpr = window.devicePixelRatio;
 
         //scalling horizontal c
-        this.horizontalCanvas.width = Math.floor(this.horizontalCanvas.clientWidth)
-        this.horizontalCanvas.height = Math.floor(this.horizontalCanvas.clientHeight)
+        this.horizontalCanvas.width = Math.floor(this.horizontalCanvas.clientWidth) * dpr
+        this.horizontalCanvas.height = Math.floor(this.horizontalCanvas.clientHeight) * dpr
 
         this.horizontalCnvCtx.scale(dpr, dpr)
 
         //scalling vertical canvas
 
-        this.verticalCanvas.width = Math.floor(this.verticalCanvas.clientWidth)
-        this.verticalCanvas.height = Math.floor(this.verticalCanvas.clientHeight)
+        this.verticalCanvas.width = Math.floor(this.verticalCanvas.clientWidth) * dpr
+        this.verticalCanvas.height = Math.floor(this.verticalCanvas.clientHeight) * dpr
 
         this.verticalCnvCtx.scale(dpr, dpr)
 
         //scalling main canvas
-        this.spreadsheetCanvas.width = Math.floor(this.spreadsheetCanvas.clientWidth)
-        this.spreadsheetCanvas.height = Math.floor(this.spreadsheetCanvas.clientHeight)
+        this.spreadsheetCanvas.width = Math.floor(this.spreadsheetCanvas.clientWidth) * dpr
+        this.spreadsheetCanvas.height = Math.floor(this.spreadsheetCanvas.clientHeight) * dpr
 
 
         this.spreadsheetCnvCtx.scale(dpr, dpr)

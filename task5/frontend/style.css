@@ -4,6 +4,7 @@ body {
   box-sizing: border-box;
   height: 100vh;
   width: 100vw;
+  position: relative;
 }
 body > header {
   margin: 0px;
@@ -12,18 +13,161 @@ body > header {
   height: 20%;
   box-sizing: border-box;
 }
-body > header .progressBar {
-  margin-top: 20px;
-  display: none;
+body > header > .mainNavigation {
+  height: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(0, 93, 0);
 }
-body > header .pBarLabel {
-  display: none;
-}
-body > header .graphBtns {
+body > header > .mainNavigation > .wrapper {
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
+  height: 100%;
+  width: 98%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+}
+body > header > .mainNavigation > .wrapper ul {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 70%;
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+}
+body > header > .mainNavigation > .wrapper ul li {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  padding: 5px 20px;
+  font-size: 18px;
+  color: white;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  box-sizing: border-box;
+  font-weight: bold;
+  cursor: pointer;
+}
+body > header > .mainNavigation > .wrapper ul li.active {
+  border-bottom: 4px solid white;
+}
+body > header > .mainNavigation > .wrapper > .searchElement {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+body > header > .mainNavigation > .wrapper > .searchElement > input {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  height: -moz-fit-content;
+  height: fit-content;
+  background-color: rgb(241, 240, 240);
+  padding: 5px 8px;
+  border-radius: 3px;
+}
+body > header > .mainNavigation > .wrapper > .searchElement > .searchBtn {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  cursor: pointer;
+  padding: 0px 5px;
+}
+body > header > .mainNavigation > .wrapper > .searchElement > .searchControlButtons {
+  display: flex;
+  flex-direction: column;
+  margin: 0px 15px;
+  justify-content: space-between;
+}
+body > header > .mainNavigation > .wrapper > .searchElement > .searchControlButtons > .findControls {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+body > header > .mainNavigation > .wrapper > .searchElement > .searchControlButtons > .findControls:hover {
+  color: gray;
+}
+body > header > .mainNavigation > .wrapper > .searchElement #resultDisplay {
+  width: -moz-fit-content;
+  width: fit-content;
+  color: white;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+body > header > .subNav {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  height: 65%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(240, 240, 240);
+  border-bottom: 1px solid gray;
+}
+body > header > .subNav .subNavIndividual {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  width: 98%;
+  height: 100%;
+  padding: 20px;
+}
+body > header > .subNav .subNavIndividual.active {
+  display: flex;
+}
+body > header > .subNav .file {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: start;
+}
+body > header > .subNav .file i {
+  font-size: 20px;
+}
+body > header > .subNav .file #progressBarContainer {
+  width: 100%;
+  display: none;
+}
+body > header > .subNav .file #progressBarContainer #progressBar {
+  width: 90%;
+}
+body > header > .subNav .file #progressBarContainer .pBarLabel {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  display: inline;
+}
+body > header > .subNav .graphs {
+  display: none;
+  justify-content: start;
+  align-items: center;
+}
+body > header > .subNav .graphs > .indiGraphs {
   padding: 5px 10px;
+  cursor: pointer;
+}
+body > header > .subNav .graphs > .indiGraphs > i {
+  font-size: 28px;
+}
+body > header > .subNav .graphs > .indiGraphs p {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  text-align: center;
+  margin-top: 4px;
 }
 body > .mainContainer {
   margin: 0px;
@@ -32,6 +176,7 @@ body > .mainContainer {
   height: 80%;
   background-color: black;
   grid-gap: 3px;
+  border-bottom: 1px solid bl;
 }
 body > .mainContainer > .row {
   margin: 0px;
@@ -47,7 +192,7 @@ body > .mainContainer > .row > .excel {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  background-color: aliceblue;
+  background-color: #f3f0f0;
   overflow: hidden;
 }
 body > .mainContainer > .row > .excel > .sheetContainer {
@@ -160,8 +305,10 @@ body > .mainContainer > .row > .excel > .sheetContainer > .sheet > .middleSectio
   position: absolute;
   border: none;
   outline: none;
-  padding: 5px 10px;
+  padding: 0px 9px;
   margin: 2px;
+  font-size: 14px;
+  font-family: "Calibri";
 }
 body > .mainContainer > .row > .excel > .footer {
   min-height: 30px;
@@ -309,4 +456,25 @@ body > .graph > .graphClose {
   font-size: 12px;
   color: white;
   background-color: red;
+}
+body > .contextMenu {
+  display: none;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 1000;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+  width: 150px;
+}
+body > .contextMenu > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+body > .contextMenu > ul > li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+body > .contextMenu > ul > li:hover {
+  background-color: #f0f0f0;
 }/*# sourceMappingURL=style.css.map */

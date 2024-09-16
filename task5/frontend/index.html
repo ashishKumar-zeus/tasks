@@ -7,17 +7,70 @@
     <title>newExcelX</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
 
+
+
 <body>
-    <header id="header"></header>
+    <header id="header">
+        <div class="mainNavigation">
+            <div class="wrapper">
+                <ul>
+                    <li class="navButtons">File</li>
+                    <li class="navButtons">Graphs</li>
+                </ul>
+                <div class="searchElement">
+                    <div class="searchControlButtons">
+                        <i  id="prevBtn" class="fa-solid fa-angle-up findControls"   ></i>
+                        <i  id="nextBtn" class="fa-solid fa-angle-down findControls"   ></i>
+                    </div>
+                    <input type="text" class="searchInput" id="searchInput" placeholder="Find text...">
+                    <i class="fa-solid fa-magnifying-glass searchBtn" id="searchBtn" style="font-size: 20px; color: white;"></i>
+                    <p id="resultDisplay"></p>
+                </div>
+            </div>
+        </div>
+        <div class="subNav">
+            <div class="subNavIndividual file">
+                <form id="uploadForm">
+                    <input type="file" name="uploadFileInput" id="uploadFileInput" class="uploadFileInput">
+                    <button type="submit">Upload</button>
+
+                </form>
+                <div id="progressBarContainer">
+                    <progress id="progressBar" class="progressBar" value="0" max="100"></progress>
+                    <p class="pBarLabel" id="pBarLabel">0%</p>
+                </div>
+            </div>
+            <div class="subNavIndividual graphs">
+                <div class="indiGraphs" id="barGraphBtn">
+                    <i class="fa-solid fa-chart-simple" style="color:rgb(0,93,0)"></i>
+                    <p>Bar</p>
+                </div>
+                <div class="indiGraphs" id="lineGraphBtn">
+                    <i class="fa-solid fa-chart-line" style="color:rgb(0,93,0)"></i>
+                    <p>Line</p>
+                </div>
+                <div class="indiGraphs" id="pieGraphBtn">
+                    <i class="fa-solid fa-chart-pie" style="color:rgb(0,93,0)"></i>
+                    <p>Pie</p>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+
     <div class="mainContainer" id="mainContainer"></div>
 
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
+
     <script type="module" src="index.js"></script>
 </body>
 

@@ -14,25 +14,208 @@ body {
     @include resetCss();
     height: 100vh;
     width: 100vw;
+    position: relative;
+
+    // >header {
+    //     @include resetCss();
+    //     height: 20%;
+    //     box-sizing: border-box;
+
+    //     .progressBar {
+    //         // width: 50%;
+    //         margin-top: 20px;
+    //         display: none
+    //     }
+
+    //     .pBarLabel {
+    //         display: none;
+    //     }
+
+    //     .graphBtns {
+    //         @include resetCss();
+    //         padding: 5px 10px
+    //     }
+    // }
 
     >header {
         @include resetCss();
         height: 20%;
         box-sizing: border-box;
 
-        .progressBar {
-            // width: 50%;
-            margin-top: 20px;
-            display: none
+
+        >.mainNavigation {
+            height: 35%;
+            @include centerFlex();
+            background-color: rgb(0,93,0);
+
+
+            >.wrapper {
+                @include resetCss();
+                height: 100%;
+                width: 98%;
+                @include centerFlex();
+                justify-content: space-between;
+
+                ul {
+                    @include resetCss();
+                    height: 70%;
+                    display: flex;
+                    flex-direction: row;
+                    list-style-type: none;
+
+                    li {
+                        @include resetCss();
+                        @include centerFlex();
+                        text-decoration: none;
+                        padding: 5px 20px;
+                        font-size: 18px;
+                        color: white;
+                        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                        box-sizing: border-box;
+                        font-weight: bold;
+                        cursor: pointer;
+
+                        // &:hover {
+                        //     border-bottom: 4px solid white;
+                        // }
+                    }
+
+                    li.active {
+                        border-bottom: 4px solid white;
+                    }
+
+                }
+
+                >.searchElement {
+                    @include resetCss();
+                    display: flex;
+                    align-items: center;
+
+                    >input {
+                        @include resetCss();
+                        border: none;
+                        outline: none;
+                        height: fit-content;
+                        background-color: rgb(241, 240, 240);
+                        padding: 5px 8px;
+                        border-radius: 3px;
+                    }
+
+                    >.searchBtn {
+                        @include resetCss();
+                        cursor: pointer;
+                        padding: 0px 5px;
+
+                    }
+
+                    >.searchControlButtons{
+                        display: flex;
+                        flex-direction: column;
+                        margin: 0px 15px;
+                        justify-content: space-between;
+
+                        >.findControls{
+                            color: white;
+                            font-size: 20px;
+                            font-weight: bold;
+
+                            &:hover{
+                                color: gray;
+                            }
+                        }
+                    }
+
+                    #resultDisplay{
+                        width: fit-content;
+                        color: white;
+                        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+                    }
+
+
+                }
+
+            }
+
+
         }
 
-        .pBarLabel {
-            display: none;
-        }
-
-        .graphBtns{
+        >.subNav {
+            // background-color: rgb(61, 168, 61);
             @include resetCss();
-            padding: 5px 10px
+            height: 65%;
+            width: 100%;
+            @include centerFlex();
+            background-color: rgb(240, 240, 240);
+            border-bottom: 1px solid gray;
+
+
+
+
+            .subNavIndividual {
+                @include resetCss();
+                width: 98%;
+                height: 100%;
+                padding: 20px;
+
+
+            }
+
+            .subNavIndividual.active {
+                display: flex;
+            }
+
+            .file {
+                display: none;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: start;
+
+                i {
+                    font-size: 20px;
+                }
+
+                #progressBarContainer{
+                    width: 100%;
+                    display: none;
+
+                    #progressBar{
+                        width: 90%;
+                    }
+
+                    .pBarLabel{
+                        @include resetCss();
+                        display: inline;
+                        
+                    }
+                }
+
+
+
+            }
+
+            .graphs {
+                display: none;
+                justify-content: start;
+                align-items: center;
+
+                >.indiGraphs {
+
+                    padding: 5px 10px;
+                    cursor: pointer;
+
+                    >i {
+                        font-size: 28px
+                    }
+
+                    p{
+                        @include resetCss();
+                        text-align: center;
+                        margin-top: 4px
+                    }
+
+                }
+            }
+
         }
     }
 
@@ -42,6 +225,7 @@ body {
         height: 80%;
         background-color: black;
         grid-gap: 3px;
+        border-bottom: 1px solid bl;
 
         >.row {
             @include resetCss();
@@ -53,7 +237,8 @@ body {
                 display: flex;
                 flex-direction: column;
                 box-sizing: border-box;
-                background-color: aliceblue;
+                // background-color: rgb(240, 240, 240);
+                background-color: #f3f0f0;
                 overflow: hidden;
 
                 >.sheetContainer {
@@ -182,8 +367,10 @@ body {
                                     position: absolute;
                                     border: none;
                                     outline: none;
-                                    padding: 5px 10px;
+                                    padding: 0px 9px;
                                     margin: 2px;
+                                    font-size: 14px;
+                                    font-family: 'Calibri';
                                 }
                             }
                         }
@@ -342,24 +529,50 @@ body {
         display: none;
 
 
-        
-    >.graphClose {
-        @include resetCss();
-        outline: none;
-        border: none;
-        height: 20px;
-        width: 20px;
-        position: absolute;
-        border-radius: 5px;
-        right: 5px;
-        top: 5px;
-        text-align: center;
-        font-size: 12px;
-        color: white;
-        background-color: red;
+
+        >.graphClose {
+            @include resetCss();
+            outline: none;
+            border: none;
+            height: 20px;
+            width: 20px;
+            position: absolute;
+            border-radius: 5px;
+            right: 5px;
+            top: 5px;
+            text-align: center;
+            font-size: 12px;
+            color: white;
+            background-color: red;
+        }
+
+
     }
 
 
+    >.contextMenu {
+        display: none;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        z-index: 1000;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        width: 150px;
+
+        >ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            >li {
+                padding: 8px 12px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #f0f0f0;
+                }
+            }
+        }
     }
 
 }

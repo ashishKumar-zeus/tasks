@@ -15,7 +15,7 @@ class Node {
 export class LinkedList {
 
     // Initialize Class Variables
-    constructor(headerCellsMaker,handleApis) {
+    constructor(headerCellsMaker, handleApis) {
 
         this.headerCellsMaker = headerCellsMaker;
         this.handleApis = handleApis;
@@ -45,7 +45,7 @@ export class LinkedList {
     findAtIndex(rowInd, colInd) {
         this.getUpdatedArray();
 
-        if(rowInd >= this.verticalArr.length || colInd >= this.horizontalArr.length){
+        if (rowInd >= this.verticalArr.length || colInd >= this.horizontalArr.length) {
             return null;
         }
 
@@ -78,7 +78,7 @@ export class LinkedList {
 
         let currEle = this.findAtIndex(rowInd, colInd);
         if (currEle) {
-            if(currEle.data == newValue){
+            if (currEle.data == newValue) {
                 return;
             }
             currEle.data = newValue;
@@ -93,15 +93,15 @@ export class LinkedList {
     }
 
 
-    insertMultipleDataInLL(jsonData,startInd) {
+    insertMultipleDataInLL(jsonData, startInd) {
 
-        if(startInd == 0 ){
+        if (startInd == 0) {
 
             Object.keys(jsonData[0]).forEach((d, i) => {
-                this.createNewNode(1, i+1, d);;
-              });
-              startInd++;
-    
+                this.createNewNode(1, i + 1, d);;
+            });
+            startInd++;
+
         }
 
 
@@ -111,8 +111,8 @@ export class LinkedList {
 
             Object.keys(jsonData[i - 1]).forEach(key => {
 
-                if (jsonData[i-1]) {
-                    this.createNewNode(i+startInd, j, jsonData[i-1][key]);
+                if (jsonData[i - 1]) {
+                    this.createNewNode(i + startInd, j, jsonData[i - 1][key]);
                     j++;
                 }
 
@@ -196,7 +196,7 @@ export class LinkedList {
 
     deleteNode(row, col) {
 
-        console.log("called delete for ",row,col)
+        console.log("called delete for ", row, col)
         let rowInd = row - 1;
         let colInd = col - 1;
 
@@ -240,35 +240,72 @@ export class LinkedList {
 
     }
 
-    insertARow(ind) {
-        let rowInd = ind - 1;
-        // this.miniCanvas.addRowAtInd(rowInd);
-        // this.miniCanvas.renderCanvas();
+    insertRows(startRow, numOfRows) {
+        let startRowInd = startRow - 1;
+
+        //updating data
+        for (let i = this.verticalArr.length - 1; i > startRowInd + 1; i--) {
+            this.verticalArr[i - 1].next.data += numOfRows;
+        }
+
+
+        for (let i = this.verticalArr.length - 1; i > startRowInd + numOfRows; i--) {
+            this.verticalArr[i].next = this.verticalArr[i - numOfRows].next;
+        }
+
+        for (let i = startRowInd; i < numOfRows + startRowInd; i++) {
+            this.verticalArr[i + 1].next = null;
+            console.log(i+1);
+            this.createNewNode(i+2 , 1, i+1);
+        }
 
     }
+
+
 
     insertACol(ind) {
         let colInd = ind - 1;
         // this.miniCanvas.addColAtInd(colInd);
         // this.miniCanvas.renderCanvas();
 
+
+
     }
 
-    deleteARow(ind) {
-        let rowInd = ind - 1;
-        let tempCurr = this.verticalArr[rowInd].next;
+    deleteRowsBulk(startIndex, endIndex) {
+        let startRowInd = startIndex - 1;
+        let endRowInd = endIndex - 1;
 
-        while (tempCurr != null) {
+        console.log(`Deleting rows from index ${startIndex} to ${endIndex}`);
 
-            let colInd = tempCurr.col.data - 1;
+        // Loop through the rows from startIndex to endIndex and unlink them
+        for (let rowInd = startRowInd; rowInd <= endRowInd; rowInd++) {
+            let tempCurr = this.verticalArr[rowInd].next;
 
-            tempCurr.top ? tempCurr.top.bottom = tempCurr.bottom : this.horizontalArr[colInd].next = tempCurr.bottom;
-            tempCurr.bottom ? tempCurr.bottom.top = tempCurr.top : ""
+            while (tempCurr != null) {
+                let colInd = tempCurr.col.data - 1;
 
-            tempCurr = tempCurr.right;
+                // Adjust the links between top and bottom cells
+                tempCurr.top ? tempCurr.top.bottom = tempCurr.bottom : this.horizontalArr[colInd].next = tempCurr.bottom;
+                tempCurr.bottom ? tempCurr.bottom.top = tempCurr.top : "";
+
+                tempCurr = tempCurr.right;
+            }
         }
-        // this.miniCanvas.deleteRowAtInd(rowInd);
-        // this.miniCanvas.renderCanvas();
+
+        // After deleting the rows, shift the remaining rows upwards
+        let rowsToDelete = endRowInd - startRowInd + 1;
+
+        for (let i = startRowInd; i + rowsToDelete < this.verticalArr.length; i++) {
+            console.log(`Shifting row ${i + rowsToDelete} to ${i}`);
+            this.verticalArr[i + rowsToDelete].next.data = i;
+            this.verticalArr[i].next = this.verticalArr[i + rowsToDelete].next;
+        }
+
+        // Adjust the length of the vertical array to remove the deleted rows
+        this.verticalArr.length = this.verticalArr.length - rowsToDelete;
+
+        console.log(`Successfully deleted rows from ${startIndex} to ${endIndex}`);
     }
 
     deleteACol(ind) {

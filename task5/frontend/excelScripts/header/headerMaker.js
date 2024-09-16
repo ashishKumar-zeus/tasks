@@ -7,8 +7,9 @@ export class HeaderMaker {
 
         this.excelMaker = excelMaker;
 
-        this.createHeaderElements();
+        // this.createHeaderElements();
         new HandleUpload(this.excelMaker);
+        this.handleEvents();
 
         // this.sheetInstance.
     }
@@ -99,20 +100,22 @@ export class HeaderMaker {
         const prevBtn = document.createElement('button');
         prevBtn.setAttribute('id', 'prevBtn');
         prevBtn.innerText = 'Prev';
-        prevBtn.disabled = true;  // Initially disabled
 
         // Next button
         const nextBtn = document.createElement('button');
         nextBtn.setAttribute('id', 'nextBtn');
         nextBtn.innerText = 'Next';
-        nextBtn.disabled = true;  // Initially disabled
 
+        const resultDisplay = document.createElement('p');
+        resultDisplay.setAttribute('id','resultDisplay')
+        resultDisplay.innerHTML = '';
 
 
         search.appendChild(searchInput)
         search.appendChild(searchBtn)
         search.appendChild(prevBtn)
         search.appendChild(nextBtn)
+        search.appendChild(resultDisplay)
 
 
         this.headerElement.appendChild(barGraphBtn)
@@ -120,6 +123,12 @@ export class HeaderMaker {
         this.headerElement.appendChild(lineGraphBtn)
         this.headerElement.appendChild(search)
 
+
+    }
+
+    handleEvents(){
+
+        
 
     }
 

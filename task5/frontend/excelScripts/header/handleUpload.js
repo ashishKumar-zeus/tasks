@@ -26,7 +26,15 @@ export class HandleUpload {
         document.getElementById('searchBtn').addEventListener('click', () => {
             const searchTerm = searchInput.value.trim();
             console.log(searchTerm);
-            this.currSheet.handleApis.search(searchTerm);
+            this.currSheet.navFunctionalities.handleSearch(searchTerm);
+        })
+
+
+        document.getElementById('prevBtn').addEventListener('click',()=>{
+            this.currSheet.navFunctionalities.goToPrevResult();
+        })
+        document.getElementById('nextBtn').addEventListener('click',()=>{
+            this.currSheet.navFunctionalities.goToNextResult();
         })
     }
 
