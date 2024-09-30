@@ -1,0 +1,48 @@
+@import '../../../mixins.scss';
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+.header {
+    background-color: #25313F;
+    height: 8vh;
+    width: 100%;
+    font-family: 'Quicksand';
+
+
+    >.container {
+        margin: 0px auto;    
+        height: 100%;
+        width: 95%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        >.logo{
+            font-size: 32px;
+            color: white;
+        }
+
+        >ul{
+            display: flex;
+            color: #3FD28B;
+            align-items: center;
+
+            >li,span{
+                text-decoration: none;
+                list-style-type: none;
+                padding: 4px 10px;
+
+            }
+            >span{
+                @include centerFlex();
+                height: 30px;
+                width: 30px;
+                border-radius: 50%;
+                background-color: #3C4E62;
+                border: 2px solid #3FD28B ;
+                color: white;
+                font-weight: 28px;
+                margin: 0px 10px;
+            }
+        }
+    }
+}

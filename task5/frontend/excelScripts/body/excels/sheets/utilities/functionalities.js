@@ -151,6 +151,8 @@ export class Functionalities {
             if (isResizable) {
                 this.isResizingHor = true;
                 resizingColumn = colInd;
+                this.handleSelection()
+
             }
             else {
                 if (e.button == 0) {
@@ -166,10 +168,12 @@ export class Functionalities {
                     this.selectColumnEnd = this.selectColumnStart;
                     this.handleColumnOn = true;
 
+                    this.handleSelection()
 
                 }
             }
-            this.handleSelection()
+            // console.log("a")
+
 
         };
 
@@ -192,15 +196,19 @@ export class Functionalities {
                 this.renderer.renderCanvas();
                 this.updateInputPositionAndValue();
                 this.handleRectangleToMake();
+                this.handleSelection();
+
             }
             else if (this.isSelectingColumn) {
                 this.isInputOn = false
                 this.selectColumnEnd = getCurrColIndex(endXPos)
 
                 this.handleScrolling(e)
+                this.handleSelection();
+
 
             }
-            this.handleSelection();
+            // console.log("a")
 
         };
 
@@ -275,6 +283,8 @@ export class Functionalities {
             if (isResizable) {
                 this.isResizingVer = true;
                 resizingRow = rowInd;
+                this.handleSelection()
+
             }
             else {
 
@@ -291,10 +301,13 @@ export class Functionalities {
                     this.selectRowStart = getCurrRowIndex(startYPos);
                     this.selectRowEnd = this.selectRowStart;
                     this.handleRowOn = true;
+                    this.handleSelection()
+
 
                 }
             }
-            this.handleSelection()
+            // console.log("a")
+
 
         };
 
@@ -316,6 +329,8 @@ export class Functionalities {
                 this.renderer.renderCanvas();
                 // this.updateInputPositionAndValue();
                 this.handleRectangleToMake();
+                this.handleSelection()
+
             }
             else if (this.isSelectingRow) {
 
@@ -323,9 +338,12 @@ export class Functionalities {
                 this.selectRowEnd = getCurrRowIndex(endYPos)
 
                 this.handleScrolling(e)
+                this.handleSelection()
+
 
             }
-            this.handleSelection()
+            // console.log("a")
+
 
         };
 
@@ -790,6 +808,8 @@ export class Functionalities {
         this.sheet.ll.deleteRowsBulk(this.selectRowStart, this.selectRowEnd)
 
         this.sheet.renderer.renderCanvas();
+        // console.log("a")
+
         this.handleSelection()
     }
 
@@ -800,6 +820,10 @@ export class Functionalities {
 
         this.sheet.verticalCanvas.addEventListener('contextmenu', (e) => {
             e.preventDefault(); // Prevent the default context menu
+
+            if(!this.handleRowOn){
+                return
+            }
 
             // Get the x and y coordinates of the click
             const x = e.clientX;

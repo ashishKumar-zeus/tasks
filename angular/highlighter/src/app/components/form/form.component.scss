@@ -1,0 +1,15 @@
+@import '../../../mixins.scss';
+textarea{
+    @include resetCss();
+    width: 100%;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid gray;
+    resize: none; /* Prevent user from resizing manually */
+}
+
+.selectionOptions{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}

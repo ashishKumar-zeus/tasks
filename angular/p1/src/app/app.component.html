@@ -1,0 +1,9 @@
+
+<main class="main">
+  <p [innerHTML]="title" ></p>
+  <button (click)="buttonClicked()" [innerHTML]="buttonStatus" ></button>
+  <app-first [data] = "dataToSend" (eventSender) = "updateValueOfParent($event)"  ></app-first>
+  <p >Parent : {{dataToSend}}</p>
+</main>
+
+<router-outlet />

@@ -39,6 +39,8 @@ export class MinorFunctions {
 
     copyToClipboard2DArr(selectedCellsArray) {
 
+        console.log(selectedCellsArray)
+
         // Convert the 2D array to a tab-separated string
         const arrayToClipboardString = selectedCellsArray.map(row => row.join('->')).join('\n');
 
@@ -55,7 +57,7 @@ export class MinorFunctions {
         copyToClipboard(arrayToClipboardString);
 
     }
-    
+
 
     deleteFromLinkedList(start, end) {
         // List to store the desired structure
@@ -166,10 +168,6 @@ export class MinorFunctions {
                 const columnName = this.getColumnNameFromInd(j + colStart); // Get the column name
                 const value = dataArr[i][j]; // Get the value from the data array
 
-                // Log the email and column name (as in your original code)
-                // console.log(email);
-                // console.log(columnName);
-
                 // Set the value in the linked list
                 this.sheet.ll.setValueAtInd(i + rowStart, j + colStart, value);
 
@@ -188,7 +186,7 @@ export class MinorFunctions {
         this.sheet.renderer.renderCanvas();
         this.sheet.functionality.updateInputPositionAndValue();
 
-        console.log(batchUpdateArray);
+        // console.log(batchUpdateArray);
 
         this.sheet.handleApis.bulkUpdateToBackend(batchUpdateArray);
 

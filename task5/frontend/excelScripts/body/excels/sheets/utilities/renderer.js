@@ -299,11 +299,14 @@ export class Renderer {
             this.spreadsheetCnvCtx.textAlign = 'left';
             this.spreadsheetCnvCtx.textBaseline = 'bottom';
             this.spreadsheetCnvCtx.fillStyle = 'black';
+            let data = this.sheet.formulaParser.evaluateFormula(String(currRowEle.data));
             this.spreadsheetCnvCtx.fillText(
-                currRowEle.data,
+                data,
                 currCol.x - this.horizontallyScrolled + 10,
                 currRow.y - this.verticallyScrolled + currRow.height - 5
             );
+
+            console.log();
 
             // Restore canvas state to avoid clipping other elements
             this.spreadsheetCnvCtx.restore();
@@ -338,7 +341,6 @@ export class Renderer {
             if (!this.horizontalArr[j] || x >= this.horizontalCanvas.width) {
                 break;
             }
-
 
             (j < this.horizontalArr.length) ? x += this.horizontalArr[j].width : "";
         }

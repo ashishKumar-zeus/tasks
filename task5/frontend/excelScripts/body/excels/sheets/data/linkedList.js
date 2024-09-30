@@ -255,22 +255,13 @@ export class LinkedList {
 
         for (let i = startRowInd; i < numOfRows + startRowInd; i++) {
             this.verticalArr[i + 1].next = null;
-            console.log(i+1);
-            this.createNewNode(i+2 , 1, i+1);
+            console.log(i + 1);
+            this.createNewNode(i + 2, 1, i + 1);
         }
 
     }
 
 
-
-    insertACol(ind) {
-        let colInd = ind - 1;
-        // this.miniCanvas.addColAtInd(colInd);
-        // this.miniCanvas.renderCanvas();
-
-
-
-    }
 
     deleteRowsBulk(startIndex, endIndex) {
         let startRowInd = startIndex - 1;

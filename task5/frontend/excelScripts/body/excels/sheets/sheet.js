@@ -8,6 +8,7 @@ import { HandleApis } from './apis/handleApis.js';
 import { NavFunctionalities } from './utilities/navFunctionalitites.js';
 import { MinorFunctions } from './utilities/minorFunctions.js';
 import { Graph } from './utilities/graph.js';
+import { FormulaParser } from './utilities/FormulaParser.js';
 
 export class Sheet {
 
@@ -30,30 +31,30 @@ export class Sheet {
 
 
     createContextMenu() {
-        const contextMenu = document.createElement('div');
-        contextMenu.classList.add('contextMenu');
-        contextMenu.setAttribute('id', 'contextMenuHeaders')
-        contextMenu.style.display = 'none'; // Hide initially
-        document.body.appendChild(contextMenu);
+        // const contextMenu = document.createElement('div');
+        // contextMenu.classList.add('contextMenu');
+        // contextMenu.setAttribute('id', 'contextMenuHeaders')
+        // contextMenu.style.display = 'none'; // Hide initially
+        // document.body.appendChild(contextMenu);
 
-        // Add options to the context menu
-        const ul = document.createElement('ul');
-        const deleteOption = document.createElement('li');
-        deleteOption.textContent = 'Delete Selected Row';
-        deleteOption.setAttribute('id','deleteRowBtn')
-        ul.appendChild(deleteOption);
+        // // Add options to the context menu
+        // const ul = document.createElement('ul');
+        // const deleteOption = document.createElement('li');
+        // deleteOption.textContent = 'Delete Selected Row';
+        // deleteOption.setAttribute('id','deleteRowBtn')
+        // ul.appendChild(deleteOption);
 
-        const insertRowBefore = document.createElement('li');
-        insertRowBefore.textContent = 'Insert Row Before';
-        insertRowBefore.setAttribute('id','insertRowBeforeBtn');
-        ul.appendChild(insertRowBefore);
+        // const insertRowBefore = document.createElement('li');
+        // insertRowBefore.textContent = 'Insert Row Before';
+        // insertRowBefore.setAttribute('id','insertRowBeforeBtn');
+        // ul.appendChild(insertRowBefore);
 
-        const insertRowAfter = document.createElement('li');
-        insertRowAfter.textContent = 'Insert Row After';
-        insertRowAfter.setAttribute('id','insertRowAfterBtn');
-        ul.appendChild(insertRowAfter);
+        // const insertRowAfter = document.createElement('li');
+        // insertRowAfter.textContent = 'Insert Row After';
+        // insertRowAfter.setAttribute('id','insertRowAfterBtn');
+        // ul.appendChild(insertRowAfter);
 
-        contextMenu.appendChild(ul);
+        // contextMenu.appendChild(ul);
     }
 
     createGraphs() {
@@ -185,7 +186,7 @@ export class Sheet {
         //scalling canvas
         this.scallingCanvas();
 
-        // this.eventListeners = new EventListeners(this);
+        // this.eventListeners = new EventListeners(this);'
 
         this.handleApis = new HandleApis(this);
 
@@ -194,6 +195,8 @@ export class Sheet {
         this.minorFunctions = new MinorFunctions(this);
 
         this.ll = new LinkedList(this.headerCellsMaker, this.handleApis);
+
+        this.formulaParser = new FormulaParser(this.ll);
 
         this.renderer = new Renderer(this)
 
