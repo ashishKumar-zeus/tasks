@@ -1,3 +1,31 @@
-<p>word-highlighter works!</p>
-
-<p>{{textPhrase}}</p>
+<div class="word">
+    <div class="selection">
+        <div class="title">
+            <p>Set Selection *</p>
+            <div class="custom-checkbox">
+                <label>
+                    <input type="checkbox" id="selectAll">
+                    <span></span> Select All
+                </label>
+            </div>
+        </div>
+        <div class="selectionTextarea">{{textPhrase ? textPhrase :"No text phrase has been entered yet."}}</div>
+        <p *ngIf="!textPhrase">At least one selection is required.</p>    </div>
+        
+    <div class="selection">
+        <div class="title">
+            <p>Set Correct Selection *</p>
+            <div class="custom-checkbox disabled">
+                <label>
+                    <input type="checkbox" id="selectAll">
+                    <span></span> Select All
+                </label>
+            </div>
+        </div>
+        <div class="selectionTextarea">{{textPhrase ? textPhrase :"No text phrase has been entered yet."}}</div>
+    </div>
+    <div class="maxSelection">
+        Maximum number of answers that can be selected *
+        <input type="number" min="1">
+    </div>
+</div>

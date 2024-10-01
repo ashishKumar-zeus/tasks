@@ -1,0 +1,107 @@
+@import '../../../mixins.scss';
+
+.word {
+    margin-top: 5vh;
+    font-family: 'Quicksand';
+
+    >.selection {
+        margin: 3vh 0px;
+
+        >.title {
+            display: flex;
+            justify-content: space-between;
+
+
+            >p {
+                @include resetCss();
+                margin: 10px 0px;
+                font-size: 12px;
+            }
+
+            >.custom-checkbox {
+                display: flex;
+                align-items: center;
+
+                >label {
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    font-size: 14px;
+                    color: #1F7A54;
+
+                    >input[type="checkbox"] {
+                        position: absolute;
+                        opacity: 0;
+                        cursor: pointer;
+                    }
+
+                    >span {
+                        @include centerFlex();
+                        width: 14px;
+                        height: 14px;
+                        border: 2px solid #1F7A54; // Greenish border color
+                        background-color: white;
+                        margin-right: 8px;
+                    }
+
+                    >input[type="checkbox"]:checked+span {
+                        background-color: #1F7A54; // Greenish background when checked
+                    }
+
+                    >span:after {
+                        content: "";
+                        display: none;
+                        width: 5px;
+                        height: 10px;
+                        border: solid white;
+                        border-width: 0 2px 2px 0;
+                        transform: rotate(45deg);
+                    }
+
+                    >input[type="checkbox"]:checked+span:after {
+                        display: block;
+                    }
+                }
+            }
+
+            .disabled{
+                pointer-events: none;
+                opacity: 0.4;
+
+            }
+
+        }
+
+
+        >.selectionTextarea {
+            user-select: none;
+            padding: 10px;
+            min-height: 50px;
+            background-color: #F3FBFF;
+            font-size: 14px;
+        }
+
+        >p{
+            @include resetCss();
+            font-size: 12px;
+            color: #B00020;
+        }
+
+
+    }
+
+    
+    >.maxSelection{
+        font-size: 16px;
+        color: #222222;
+        margin-bottom: 3vh;
+
+        >input{
+            @include resetCss();
+            border-bottom: 1px solid black;
+            width:5vw;
+            text-align: center;
+        }
+    }
+
+}

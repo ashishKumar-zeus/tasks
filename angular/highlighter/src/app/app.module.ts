@@ -8,9 +8,9 @@ import { MainContainerComponent } from './components/main-container/main-contain
 import { FormComponent } from './components/form/form.component';
 import { WordHighlighterComponent } from './components/word-highlighter/word-highlighter.component';
 import { FormsModule } from '@angular/forms';
-import { SentenceHighlighterComponent } from './components/sentence-highlighter/sentence-highlighter.component';
-import { ParagraphHighlighterComponent } from './components/paragraph-highlighter/paragraph-highlighter.component';
-import { CustomHighlighterComponent } from './components/custom-highlighter/custom-highlighter.component';
+// import { SentenceHighlighterComponent } from './components/sentence-highlighter/sentence-highlighter.component';
+// import { ParagraphHighlighterComponent } from './components/paragraph-highlighter/paragraph-highlighter.component';
+// import { CustomHighlighterComponent } from './components/custom-highlighter/custom-highlighter.component';
 
 @NgModule({
   declarations: [
@@ -19,9 +19,9 @@ import { CustomHighlighterComponent } from './components/custom-highlighter/cust
     MainContainerComponent,
     FormComponent,
     WordHighlighterComponent,
-    SentenceHighlighterComponent,
-    ParagraphHighlighterComponent,
-    CustomHighlighterComponent
+    // SentenceHighlighterComponent,
+    // ParagraphHighlighterComponent,
+    // CustomHighlighterComponent
   ],
   imports: [
     BrowserModule,

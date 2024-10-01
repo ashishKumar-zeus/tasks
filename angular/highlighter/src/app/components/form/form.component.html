@@ -1,39 +1,55 @@
-<textarea [(ngModel)]='question' placeholder="Enter Question ?" id="question" class="textarea"></textarea>
-<textarea [(ngModel)]='textPhrase' placeholder="Enter Text Phrase" id="textPhrase" class="textarea"></textarea>
+<div class="form">
+    <div class="textAreaLabels">
+        <p>Question (Stem) *</p><textarea [(ngModel)]='question' name="question" placeholder="Enter Question (Stem)" id="question" class="textarea"></textarea>
+    </div>
+    <div class="textAreaLabels">
+        <p>Text Phrase *</p><textarea [(ngModel)]='textPhrase' name="textPhrase" placeholder="Enter Text Phrase" id="textPhrase" class="textarea"></textarea>
+    </div>
+    <!-- <p>{{textPhrase}}</p> -->
+    <div class="selectionOptions">
+        <p>Set Answer Type</p>
+        <div class="labels">
+            <label for="word" class="option-label">
+                <input type="radio" id="word" name="selectionMethod" value="word" [(ngModel)]="selectedOption">
+                <span></span> Word
+            </label>
+    
+            <label for="sentence" class="option-label">
+                <input type="radio" id="sentence" name="selectionMethod" value="sentence" [(ngModel)]="selectedOption">
+                <span></span> Sentence
+            </label>
+    
+            <label for="paragraph" class="option-label">
+                <input type="radio" id="paragraph" name="selectionMethod" value="paragraph" [(ngModel)]="selectedOption">
+                <span></span> Paragraph
+            </label>
+    
+            <label for="custom" class="option-label">
+                <input type="radio" id="custom" name="selectionMethod" value="custom" [(ngModel)]="selectedOption">
+                <span></span> Custom
+            </label>
+        </div>
+    </div>
 
-<p>{{textPhrase}}</p>
+    
+    <app-word-highlighter [textPhrase]="textPhrase"></app-word-highlighter>
 
-<div class="selectionOptions">
-    <label for="word">
-        <input type="radio" id="word" name="selectionMethod" value="word" [(ngModel)]="selectedOption" >Word
-    </label>
 
-    <label for="sentence">
-        <input type="radio" id="sentence" name="selectionMethod" value="sentence" [(ngModel)]="selectedOption"  >Sentence
-    </label>
+    <!-- <div *ngIf=" selectedOption === 'word' " class="selectedOption">
+        <app-word-highlighter [textPhrase]="textPhrase"></app-word-highlighter>
+    </div> -->
 
-    <label for="paragraph">
-        <input type="radio" id="paragraph" name="selectionMethod" value="paragraph" [(ngModel)]="selectedOption"  >Paragraph
-    </label>
+    <!-- <div *ngIf=" selectedOption === 'sentence' " class="selectedOption"> -->
+        <!-- <app-sentence-highlighter [textPhrase]="textPhrase"></app-sentence-highlighter> -->
+    <!-- </div> -->
 
-    <label for="custom">
-        <input type="radio" id="custom" name="selectionMethod" value="custom" [(ngModel)]="selectedOption"  >Custom
-    </label>
+    <!-- <div *ngIf=" selectedOption === 'paragraph' " class="selectedOption"> -->
+        <!-- <app-paragraph-highlighter [textPhrase]="textPhrase"></app-paragraph-highlighter> -->
+    <!-- </div> -->
+
+    <!-- <div *ngIf=" selectedOption === 'custom' " class="selectedOption"> -->
+        <!-- <app-custom-highlighter [textPhrase]="textPhrase"></app-custom-highlighter> -->
+    <!-- </div> -->
+
+
 </div>
-
-<div *ngIf=" selectedOption === 'word' " class="selectedOption">
-    <app-word-highlighter  [textPhrase]="textPhrase" ></app-word-highlighter>
-</div>
-
-<div *ngIf=" selectedOption === 'sentence' " class="selectedOption">
-    <app-sentence-highlighter  [textPhrase]="textPhrase" ></app-sentence-highlighter>
-</div>
-
-<div *ngIf=" selectedOption === 'paragraph' " class="selectedOption">
-    <app-paragraph-highlighter  [textPhrase]="textPhrase" ></app-paragraph-highlighter>
-</div>
-
-<div *ngIf=" selectedOption === 'custom' " class="selectedOption">
-    <app-custom-highlighter  [textPhrase]="textPhrase" ></app-custom-highlighter>
-</div>
-

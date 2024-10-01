@@ -1,0 +1,154 @@
+@import '../../../mixins.scss';
+
+
+.mainContainer {
+    width: 100%;
+    font-family: 'Quicksand';
+
+    >.headingWrapper {
+        width: 100%;
+        background-color: #3C4E62;
+
+        >.heading {
+            margin: 0px auto;
+            width: 95%;
+            height: 6vh;
+            @include centerFlex();
+            justify-content: space-evenly;
+            position: relative;
+            color: white;
+
+            >.goBack {
+                position: absolute;
+                left: 0;
+            }
+
+            >.buttons {
+                position: absolute;
+                right: 0;
+
+                >button {
+                    @include resetCss();
+                    background-color: #3FD28B;
+                    border-radius: 2px;
+                    padding: 8px 15px;
+                    margin-left: 15px;
+                }
+
+                button.disabled {
+                    opacity: 0.4;
+                }
+            }
+
+        }
+
+    }
+
+    >.highlighter {
+        background-color: #EEEEEE;
+        padding-bottom: 5vh;
+
+        >.subHeading {
+            height: 6vh;
+            width: 95%;
+            margin: 0px auto;
+
+            @include centerFlex();
+            justify-content: space-between;
+
+            >.subHeadingName {
+
+                font-size: 22px;
+                color: black;
+                font-weight: bold;
+
+                >span {
+                    font-size: 12px;
+                    color: grey;
+                }
+            }
+
+            >.subHeadingButtons {
+                >button {
+                    @include resetCss();
+                    background-color: #E2F8FE;
+                    padding: 8px 15px;
+                    color: #1F2834;
+                    border: 1px solid #00000029;
+                    box-shadow: 2px 2px 5px #00000029;
+                    margin-left: 15px;
+                }
+            }
+        }
+
+        >.steps {
+            width: 95%;
+            @include resetCss();
+            @include centerFlex();
+            justify-content: space-between;
+            margin: 10px auto;
+            background-color: #FFFFFF;
+            border-radius: 2px;
+            padding: 14px;
+
+            >.line {
+                flex: 1;
+                border-bottom: 1px solid #00000029;
+            }
+
+            .step {
+                @include resetCss();
+                display: flex;
+                align-items: center;
+
+                >i {
+                    @include resetCss();
+                    height: 30px;
+                    width: 30px;
+                    background-color: #3FD28B;
+                    border-radius: 50%;
+                    @include centerFlex();
+                    font-size: 12px;
+                    margin: 0px 0px;
+                }
+
+                >p {
+                    @include resetCss();
+                    font-weight: bold;
+                    margin: 0px 5px;
+                }
+
+            }
+        }
+
+        >.addFeedback{
+            @include resetCss();
+            display: flex;
+            align-items: center;
+            background-color: white;
+            height: 6vh;
+            width: 95%;
+            margin: 3vh auto;
+            color: #1F7A54;
+            padding: 14px;
+        }
+
+        .controls{
+            
+            @include resetCss();
+            @include centerFlex();
+            height: 6vh;
+            width: 95%;
+
+            button{
+                @include resetCss();
+                padding: 10px 18px;
+                background-color: #3FD28B;
+
+            }
+        }
+    }
+
+
+    }
+

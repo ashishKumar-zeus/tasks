@@ -1,15 +1,101 @@
 @import '../../../mixins.scss';
-textarea{
-    @include resetCss();
-    width: 100%;
-    outline: none;
-    border: none;
-    border-bottom: 1px solid gray;
-    resize: none; /* Prevent user from resizing manually */
-}
 
-.selectionOptions{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
+.form {
+    @include resetCss();
+    width: 95%;
+    background-color: white;
+    margin: 0px auto;
+    padding: 14px;
+
+
+    >.textAreaLabels {
+        font-size: 12px;
+        margin: 20px 0px;
+        color: #666666;
+
+        >textarea {
+            font-size: 16px;
+            color: #222222;
+            @include resetCss();
+            width: 100%;
+            outline: none;
+            border: none;
+            border-bottom: 1px solid gray;
+            resize: none;
+            font-family: 'Quicksand';
+            
+        }
+    }
+
+
+    >.selectionOptions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+    
+        > p {
+            @include resetCss();
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    
+        >.labels {
+            display: flex;
+            align-items: center;
+    
+            >.option-label {
+                display: flex;
+                align-items: center;
+                margin-right: 20px;
+                position: relative;
+    
+                >input[type="radio"] {
+                    position: absolute;
+                    opacity: 0;
+                    cursor: pointer;
+                }
+    
+                >input[type="radio"] + span {
+                    display: inline-block;
+                    width: 18px;
+                    height: 18px;
+                    border: 2px solid #1F7A54; // Greenish border color from image
+                    border-radius: 50%;
+                    position: relative;
+                    margin-right: 8px; // Space between custom radio and text
+                    transition: background-color 0.2s ease;
+                }
+    
+                >input[type="radio"]:checked + span {
+                    background-color: white; // Fill greenish color when checked
+                }
+    
+                >input[type="radio"] + span:after {
+                    content: "";
+                    display: block;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    background: #1F7A54; // White circle inside when selected
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    opacity: 0;
+                }
+    
+                >input[type="radio"]:checked + span:after {
+                    opacity: 1;
+                }
+    
+                >input[type="radio"]:hover + span {
+                    border-color: #1F7A54; // Optional: Darker hover border color
+                }
+            }
+        }
+    }
+    
+
+
 }
