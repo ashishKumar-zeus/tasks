@@ -64,7 +64,7 @@
                 }
             }
 
-            .disabled{
+            .disabled {
                 pointer-events: none;
                 opacity: 0.4;
 
@@ -79,27 +79,42 @@
             min-height: 50px;
             background-color: #F3FBFF;
             font-size: 14px;
+            overflow-wrap: break-word;
+            // word-break: break-all;
+            word-wrap: break-word;
+            /* For older browsers */
+            white-space: normal;
+            /* Ensure normal white space handling */
+
+            >.wordSpan {
+                display: inline-block;
+            }
+
+            >.wordSpan.selected{
+                background-color: yellow;
+            }
+
+
         }
 
-        >p{
+
+        >p {
             @include resetCss();
             font-size: 12px;
             color: #B00020;
         }
 
-
     }
 
-    
-    >.maxSelection{
+    >.maxSelection {
         font-size: 16px;
         color: #222222;
         margin-bottom: 3vh;
 
-        >input{
+        >input {
             @include resetCss();
             border-bottom: 1px solid black;
-            width:5vw;
+            width: 5vw;
             text-align: center;
         }
     }

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DataHandlingService } from 'src/app/services/data-handling.service';
+import { QuestionModel } from 'src/app/models/questionModel';
 
 @Component({
   selector: 'app-form',
@@ -7,18 +9,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormComponent implements OnInit {
 
-  question: string = '';
-  textPhrase: string = '';
-  selectedOption: string = 'word';
+  //inital data
+  formData: QuestionModel = {
+    question: '',
+    textPhrase: '',
+    selectedOption: '',
+    selectedIndex: []
+  };
 
-  constructor() {
-
+  constructor(private dataHandler: DataHandlingService) {
+    this.dataHandler = dataHandler;
   }
 
   ngOnInit() {
-    // this.handleEvents();
+    this.dataHandler.currentDataObservable.subscribe(data => {
+      this.formData = { ...data };
+    });
+    console.log(this.formData);
+    this.handleEvents();
+
   }
 
+  onInputChange() {
+    this.dataHandler.updateData(this.formData);
+  }
 
   handleEvents() {
     const textArea = document.querySelectorAll('.textarea') as NodeListOf<Element>;

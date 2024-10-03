@@ -1,0 +1,49 @@
+<div class="word">
+    <div class="selection">
+        <div class="title">
+            <p>Set Selection *</p>
+            <div class="custom-checkbox">
+                <label>
+                    <input type="checkbox" class="selectAll">
+                    <span></span> Select All
+                </label>
+            </div>
+        </div>
+
+
+        <div class="selectionTextarea">
+            <ng-container *ngIf="wordsList.length > 0; else noTextPhrase">
+                    <ng-container *ngFor="let word of wordsList; let i = index">
+                        <span class="wordSpan" [id]="i"
+                        >{{ word }}</span>
+                        <span *ngIf="i < wordsList.length - 1">&nbsp;</span>
+                    </ng-container>
+            </ng-container>
+            <ng-template #noTextPhrase>No text phrase has been entered yet.</ng-template>
+        </div>
+
+        <p *ngIf="!formData.textPhrase">At least one selection is required.</p>
+    </div>
+
+    <div class="selection">
+        <div class="title">
+            <p>Set Correct Selection *</p>
+            <div class="custom-checkbox disabled">
+                <label>
+                    <input type="checkbox" class="selectAll">
+                    <span></span> Select All
+                </label>
+            </div>
+        </div>
+        <div class="selectionTextarea">
+            <ng-container *ngIf="formData.textPhrase; else noTextPhrase">
+                {{formData.textPhrase}}
+            </ng-container>
+            <ng-template #noTextPhrase>No text phrase has been entered yet.</ng-template>
+        </div>
+    </div>
+    <div class="maxSelection">
+        Maximum number of answers that can be selected *
+        <input type="number" min="1">
+    </div>
+</div>
