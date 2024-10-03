@@ -80,7 +80,7 @@
             background-color: #F3FBFF;
             font-size: 14px;
             overflow-wrap: break-word;
-            // word-break: break-all;
+            word-break: break-all;
             word-wrap: break-word;
             /* For older browsers */
             white-space: normal;
@@ -90,8 +90,9 @@
                 display: inline-block;
             }
 
-            >.wordSpan.selected{
-                background-color: yellow;
+            >span.selected{
+                @include resetCss();
+                background-color: rgba(128, 128, 128, 0.279);
             }
 
 

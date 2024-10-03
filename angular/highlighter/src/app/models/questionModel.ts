@@ -2,5 +2,5 @@ export interface QuestionModel {
     question: string;
     textPhrase: string;
     selectedOption: string;
-    selectedIndex: [number, number][];
+    selectedIndex: Set<[number, number]>;
   }

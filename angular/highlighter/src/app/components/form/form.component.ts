@@ -14,7 +14,7 @@ export class FormComponent implements OnInit {
     question: '',
     textPhrase: '',
     selectedOption: '',
-    selectedIndex: []
+    selectedIndex: new Set<[number,number]>
   };
 
   constructor(private dataHandler: DataHandlingService) {

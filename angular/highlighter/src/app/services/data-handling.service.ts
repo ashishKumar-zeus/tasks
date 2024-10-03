@@ -13,7 +13,7 @@ export class DataHandlingService {
     question: '',
     textPhrase: '',
     selectedOption: 'word',
-    selectedIndex: [],
+    selectedIndex: new Set<[number, number]>(),
   });
 
   // Observable for components to subscribe to
