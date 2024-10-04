@@ -17,7 +17,7 @@ export class HighlighterComponent {
     selectedIndex: new Set<[number, number]>
   };
 
-  wordsList: string[] = [];
+  textPhraseList: string[] = [];
 
   isSelecting: boolean = false;
   startIndex: number = -1;
@@ -32,18 +32,109 @@ export class HighlighterComponent {
     //subscribing to data handlers data
     this.dataHandler.currentDataObservable.subscribe(data => {
       this.formData = { ...data };
-      this.wordsList = this.getWords(this.formData.textPhrase);
-      console.log(this.wordsList)
+
+      this.switchOption();
+
+      // this.textPhraseList = this.getSentences(this.formData.textPhrase);
+
+      console.log(this.textPhraseList)
     });
+  }
+
+  resetRange(){
+    this.formData.selectedIndex.clear();
+    this.startIndex = -1;
+    this.endIndex = -1;
+  }
+
+
+  switchOption(){
+    switch (this.formData.selectedOption) {
+      case 'word':
+        // this.resetRange();
+        this.textPhraseList = this.getWords(this.formData.textPhrase);
+        break;
+      case 'sentence':
+        // this.resetRange();
+        this.textPhraseList = this.getSentences(this.formData.textPhrase);
+        break;
+      case 'paragraph':
+        // this.resetRange();
+        this.textPhraseList = this.getParagraphs(this.formData.textPhrase);
+        break;
+      default:
+        // this.resetRange();
+        this.textPhraseList= this.getWords(this.formData.textPhrase);
+        break;
+    }
   }
 
 
   getWords(text: string): string[] {
-    if (text === '') return []
-    return text.trim().split(/\s+/).filter(word => word.length > 0);
+    if (text === '') return [];
+    
+    const result: string[] = [];
+    const regex = /(\S+|\n)/g; // Match words or newlines
+    
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+        result.push(match[0]);
+    }
+    
+    return result;
   }
 
+  //  getSentences(text: string): string[] { if (text === '') return [];
+    
+  //   const regex = /[^.!?\s][^.!?]*(?:[.!?]+|$)|\n/g;
+  //   const result = [];
+  //   let match;
+    
+  //   // Match sentences and newlines separately
+  //   while ((match = regex.exec(text)) !== null) {
+  //       if (match[0] !== '\n') {
+  //           result.push(match[0]);  // Trim the sentences
+  //       }
+  //   }
 
+  //   return result;
+  // }
+
+  getSentences(text: string): string[] {
+    const result = [];
+    let currentSentence = '';
+    
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        
+        if (char === '.') {
+            currentSentence += char;   // Add the dot to the current sentence
+            result.push(currentSentence.trim());  // Push the sentence with the dot
+            currentSentence = '';  // Reset for the next sentence
+        } else if (char === '\n') {
+            if (currentSentence) {
+                result.push(currentSentence.trim());  // Push the current sentence (without a dot)
+                currentSentence = '';  // Reset for the next sentence
+            }
+            result.push('\n');  // Push newline as a separate element
+        } else {
+            currentSentence += char;  // Continue building the sentence
+        }
+    }
+    
+    // Handle any remaining sentence at the end of the text
+    if (currentSentence) {
+        result.push(currentSentence.trim());
+    }
+    
+    return result;
+}
+
+
+  getParagraphs(text: string): string[] {
+    if (text === '') return [];
+    return text.match(/.+(\n|$)\n/g) || [];
+  }
 
 
   startSelection(event: MouseEvent) {
@@ -104,7 +195,7 @@ export class HighlighterComponent {
   }
 
   shouldSpaceBeSelected(index: number) {
-    if (index < 0 || index > this.wordsList.length - 1) return;
+    if (index < 0 || index > this.textPhraseList.length - 1) return;
 
     if (this.isSelected(index) && this.isSelected(index + 1)) {
       return true;
@@ -128,7 +219,7 @@ export class HighlighterComponent {
 
 
   isInRange(index: number) {
-
+    
     for (let range of this.formData.selectedIndex) {
       let [start, end] = range; // Destructure the start and end of the range
 
@@ -136,15 +227,9 @@ export class HighlighterComponent {
       if (index >= start && index <= end) {
         return true;
       }
-
-
     }
-
-
     return false;
   }
-
-
 
   getRange(index: number):[number,number] {
   
@@ -161,6 +246,11 @@ export class HighlighterComponent {
     return [-1,-1]
   }
 
+
+
+  hasNewline(text:string): boolean {
+    return text.includes('\n');
+  }
 
 
 

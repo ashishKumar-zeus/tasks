@@ -12,18 +12,20 @@
 
 
         <div class="selectionTextarea" (mouseup)="stopSelection($event)" (mouseleave)="stopSelection($event)">
-            <ng-container *ngIf="wordsList.length > 0; else noTextPhrase">
-                <ng-container *ngFor="let word of wordsList; let i = index">
-                    <span class="wordSpan" [id]="i" (mousedown)="startSelection($event)"
-                        (mousemove)="updateSelection($event)" [ngClass]="{ 'selected': isSelected(i) }">{{ word
-                        }}</span>
-                    <span *ngIf="i < wordsList.length - 1" [ngClass]="{'selected':shouldSpaceBeSelected(i)}">&nbsp;</span>
+            <ng-container *ngIf="textPhraseList.length > 0; else noTextPhrase">
+                <ng-container *ngFor="let text of textPhraseList; let i = index">
+                    <span class="textSpan" [id]="i" (mousedown)="startSelection($event)"
+                        (mousemove)="updateSelection($event)" [ngClass]="{ 'selected': isSelected(i) }">{{ text }}</span>
+                    <span *ngIf="i < textPhraseList.length - 1" [ngClass]="{'selected':shouldSpaceBeSelected(i)}">&nbsp;</span>
+                    <br *ngIf="text === '\n'">
                 </ng-container>
             </ng-container>
             <ng-template #noTextPhrase>No text phrase has been entered yet.</ng-template>
         </div>
 
-        <p *ngIf="!formData.textPhrase">At least one selection is required.</p>
+        
+
+        <p *ngIf="!(formData.selectedIndex.size > 0)">At least one selection is required.</p>
     </div>
 
     <div class="selection">
